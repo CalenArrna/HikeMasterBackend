@@ -19,7 +19,7 @@ public class HikeMasterUser implements UserDetails {
     @Column
     private String email;
     @Column
-    private String nickName;
+    private String username;
     @Column
     private String fullName;
     @Column
@@ -120,7 +120,7 @@ public class HikeMasterUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return nickName;
+        return username;
     }
 
     @Override
