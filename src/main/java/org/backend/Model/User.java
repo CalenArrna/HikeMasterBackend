@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -14,7 +15,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private long id;
-    private static final String ROLE_PREFIX="ROLE_";
+    private static final String ROLE_PREFIX = "ROLE_";
     @Column
     private String role;
     @Column
@@ -25,10 +26,28 @@ public class User implements UserDetails {
     private String name;
     @Column
     private String password;
-    @Column
-    private LocalDateTime loginDate;
     @ManyToMany
-    private Set<Authority>authorities=new HashSet<>();
+    private Set<Authority> authorities = new HashSet<>();
+    @Column
+    private boolean isDeactivated;
+    @Column
+    private boolean notification;
+
+    public boolean isDeactivated() {
+        return isDeactivated;
+    }
+
+    public void setDeactivated(boolean deactivated) {
+        isDeactivated = deactivated;
+    }
+
+    public boolean isNotification() {
+        return notification;
+    }
+
+    public void setNotification(boolean notification) {
+        this.notification = notification;
+    }
 
     public String getRole() {
         return role;
@@ -46,7 +65,7 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public GrantedAuthority setAuthority(String authority){
+    public GrantedAuthority setAuthority(String authority) {
 
         return new SimpleGrantedAuthority(authority);
     }
@@ -79,13 +98,6 @@ public class User implements UserDetails {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public LocalDateTime getLoginDate() {
-        return loginDate;
-    }
-
-    public void setLoginDate(LocalDateTime loginDate) {
-        this.loginDate = loginDate;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
