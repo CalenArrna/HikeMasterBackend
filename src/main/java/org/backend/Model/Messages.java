@@ -10,7 +10,7 @@ public class Messages {
     @Column
     private String text;
     @ManyToOne
-    private User user;
+    private SecUser user;
     @ManyToOne
     private HikeRoute hikeRoute;
 
@@ -30,11 +30,11 @@ public class Messages {
         this.text = text;
     }
 
-    public User getUser() {
+    public SecUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(SecUser user) {
         this.user = user;
     }
 

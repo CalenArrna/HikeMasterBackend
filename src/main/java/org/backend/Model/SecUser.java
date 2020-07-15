@@ -6,40 +6,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 @Entity
-@Component
-public class User implements UserDetails {
+public class SecUser {
     @Id
     @GeneratedValue
-    private long id;
-    @Column
+    private long user_id;
+    @Column(name = "role")
     private String role;
-    @Column
+    @Column(name = "email")
     private String email;
-    @Column
-    private String dateOfBirth;
-    @Column
+    @Column(name = "username")
     private String userName;
-    @Column
+    @Column(name = "fullname")
     private String fullName;
-    @Column
+    @Column(name = "password")
     private String password;
     @ManyToMany
     private Set<Authority> authorities = new HashSet<>();
-    @Column
+    @Column(name = "isdeactivate")
     private boolean isDeactivated;
-    @Column
+    @Column(name = "notification")
     private boolean notification;
 
     public long getId() {
-        return id;
+        return user_id;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.user_id = id;
     }
 
     public void setUsername(String username) {
@@ -96,7 +96,6 @@ public class User implements UserDetails {
     }
 
 
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -109,49 +108,5 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-        list.add(new SimpleGrantedAuthority(role));
-        return list;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return userName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
