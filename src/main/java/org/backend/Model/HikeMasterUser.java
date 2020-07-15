@@ -93,9 +93,7 @@ public class HikeMasterUser implements UserDetails {
     }
 
 
-    public static String getRolePrefix() {
-        return ROLE_PREFIX;
-    }
+
 
     public String getEmail() {
         return email;
@@ -108,27 +106,11 @@ public class HikeMasterUser implements UserDetails {
 /*    public String getUsername() {
         return username;
     }*/
-
-    public void setUsername(String userName) {
-        this.username = userName;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();

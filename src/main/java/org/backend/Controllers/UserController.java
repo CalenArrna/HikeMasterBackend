@@ -4,13 +4,11 @@ import org.backend.DTOs.ErrorDTO;
 import org.backend.DTOs.RegisterDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.DTOs.SuccessDTO;
-import org.backend.Model.User;
+import org.backend.Model.HikeMasterUser;
 import org.backend.Service.UserService;
 import org.backend.Service.ValidationService;
 import org.dozer.DozerBeanMapper;
 import org.passay.PasswordData;
-import org.passay.PasswordValidator;
-import org.passay.RuleResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -43,9 +41,9 @@ public class UserController {
         if (passwordValidation instanceof SuccessDTO 
                 && springValidation instanceof  SuccessDTO
                 && usernameValid){
-            User validUser = mapper.map(newUser, User.class);
-            validUser.setPassword(encoder.encode(validUser.getPassword()));
-            service.addUserToDatabase(validUser);
+            HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
+            validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
+            service.addUserToDatabase(validHikeMasterUser);
             return new SuccessDTO();
         }else {
             ErrorDTO errorDTO = new ErrorDTO();

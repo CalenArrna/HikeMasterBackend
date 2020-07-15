@@ -1,8 +1,7 @@
 package org.backend.Service;
 
 
-import org.backend.Model.User;
-import org.dozer.DozerBeanMapper;
+import org.backend.Model.HikeMasterUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.sql.ResultSet;
 
 
 @Service
@@ -26,15 +24,15 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean userExists(String name) {
-        User user = em.createQuery("select u from User u where u.username = :lookFor", User.class)
+        HikeMasterUser hikeMasterUser = em.createQuery("select u from HikeMasterUser u where u.username = :lookFor", HikeMasterUser.class)
                 .setParameter("lookFor",name)
                 .getSingleResult();
-        return user != null;
+        return hikeMasterUser != null;
     }
 
     @Transactional
-    public long addUserToDatabase(User user) {
-        em.persist(user);
+    public long addUserToDatabase(HikeMasterUser hikeMasterUser) {
+        em.persist(hikeMasterUser);
         long id = 1;
         return id;
     }

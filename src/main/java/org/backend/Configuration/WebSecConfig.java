@@ -1,7 +1,5 @@
 package org.backend.Configuration;
 
-import org.backend.Model.User;
-import org.backend.Service.UserService;
 import org.dozer.DozerBeanMapper;
 import org.passay.*;
 import org.springframework.context.annotation.Bean;
