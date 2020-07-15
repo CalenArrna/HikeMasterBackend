@@ -15,7 +15,6 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private long id;
-    private static final String ROLE_PREFIX = "ROLE_";
     @Column
     private String role;
     @Column
@@ -23,7 +22,9 @@ public class User implements UserDetails {
     @Column
     private String dateOfBirth;
     @Column
-    private String name;
+    private String userName;
+    @Column
+    private String fullName;
     @Column
     private String password;
     @ManyToMany
@@ -32,6 +33,30 @@ public class User implements UserDetails {
     private boolean isDeactivated;
     @Column
     private boolean notification;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        username = username;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
 
     public boolean isDeactivated() {
         return isDeactivated;
@@ -70,13 +95,7 @@ public class User implements UserDetails {
         return new SimpleGrantedAuthority(authority);
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -102,7 +121,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-        list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role));
+        list.add(new SimpleGrantedAuthority(role));
         return list;
     }
 
@@ -113,7 +132,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return userName;
     }
 
     @Override

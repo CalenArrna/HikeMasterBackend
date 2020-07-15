@@ -1,0 +1,7 @@
+org/backend/Configuration/WebSecConfig.class
+org/backend/Service/UserService.class
+org/backend/Application.class
+org/backend/Model/User.class
+org/backend/Model/Messages.class
+org/backend/Model/Authority.class
+org/backend/Model/HikeRoute.class

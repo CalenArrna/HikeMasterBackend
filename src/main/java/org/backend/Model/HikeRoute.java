@@ -1,7 +1,7 @@
 package org.backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jdk.javadoc.internal.doclets.toolkit.util.Utils;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,13 +30,7 @@ public class HikeRoute {
     @Column
     private int view;
 
-    //"hikeID": "{hikeID}",
-    //        "coordinate": “{coordinate}",
-    //        "tour_lenght": "{tour_lenght}"
-    //        "level_rise": "{level_rise}"
-    //        "difficulity": "{difficulity}"
-    //        "view": "{view}"
-    //        "distance": "{distance}"
+
 
 
     public double getDistanceFromLoc() {
