@@ -1,7 +1,7 @@
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Application.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Model/User.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Model/Messages.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Model/HikeRoute.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Service/UserService.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Configuration/WebSecConfig.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Model/Authority.java
+/home/balage/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Model/User.java
+/home/balage/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Model/Authority.java
+/home/balage/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Model/Messages.java
+/home/balage/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Application.java
+/home/balage/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Model/HikeRoute.java
+/home/balage/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Configuration/WebSecConfig.java
+/home/balage/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Service/UserService.java

@@ -10,12 +10,9 @@ public class Messages {
     @Column
     private String text;
     @ManyToOne
-    private User user;
+    private HikeMasterUser hikeMasterUser;
     @ManyToOne
     private HikeRoute hikeRoute;
-
-    public Messages() {
-    }
 
     public long getMassageId() {
         return massageId;
@@ -33,12 +30,12 @@ public class Messages {
         this.text = text;
     }
 
-    public User getUser() {
-        return user;
+    public HikeMasterUser getHikeMasterUser() {
+        return hikeMasterUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setHikeMasterUser(HikeMasterUser hikeMasterUser) {
+        this.hikeMasterUser = hikeMasterUser;
     }
 
     public HikeRoute getHikeRoute() {

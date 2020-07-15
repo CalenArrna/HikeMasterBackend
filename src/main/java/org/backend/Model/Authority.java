@@ -12,7 +12,7 @@ public class Authority {
     @Column
     private String roleName;
     @ManyToMany(mappedBy = "authorities",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<User> securityUsers= new HashSet<>();
+    private Set<HikeMasterUser> securityUsers= new HashSet<>();
 
 
     public long getId() {
@@ -31,11 +31,11 @@ public class Authority {
         this.roleName = roleName;
     }
 
-    public Set<User> getSecurityUsers() {
+    public Set<HikeMasterUser> getSecurityUsers() {
         return securityUsers;
     }
 
-    public void setSecurityUsers(Set<User> securityUsers) {
+    public void setSecurityUsers(Set<HikeMasterUser> securityUsers) {
         this.securityUsers = securityUsers;
     }
 }
