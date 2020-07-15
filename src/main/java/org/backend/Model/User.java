@@ -5,7 +5,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -20,13 +19,12 @@ public class User implements UserDetails {
     @Column
     private String email;
     @Column
-    private String dateOfBirth;
+    private String username;
     @Column
-    private String name;
+    private String fullName;
     @Column
     private String password;
-    @Column
-    private LocalDateTime loginDate;
+
     @ManyToMany
     private Set<Authority>authorities=new HashSet<>();
 
@@ -51,16 +49,16 @@ public class User implements UserDetails {
         return new SimpleGrantedAuthority(authority);
     }
 
-    public String getName() {
-        return name;
+    public long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public static String getRolePrefix() {
+        return ROLE_PREFIX;
     }
 
     public String getEmail() {
@@ -71,20 +69,28 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
+/*    public String getUsername() {
+        return username;
+    }*/
+
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public String getFullName() {
+        return fullName;
     }
 
-    public LocalDateTime getLoginDate() {
-        return loginDate;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public void setLoginDate(LocalDateTime loginDate) {
-        this.loginDate = loginDate;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     @Override
@@ -101,7 +107,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return username;
     }
 
     @Override
