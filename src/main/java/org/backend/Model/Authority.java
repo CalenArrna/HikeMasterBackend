@@ -8,19 +8,19 @@ import java.util.Set;
 public class Authority {
     @Id
     @GeneratedValue
-    private long authority_id;
+    private long id;
     @Column
     private String roleName;
     @ManyToMany(mappedBy = "authorities",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<SecUser> securityUsers= new HashSet<>();
+    private Set<HikeMasterUser> securityUsers= new HashSet<>();
 
 
     public long getId() {
-        return authority_id;
+        return id;
     }
 
     public void setId(long id) {
-        this.authority_id = id;
+        this.id = id;
     }
 
     public String getRoleName() {
@@ -31,11 +31,11 @@ public class Authority {
         this.roleName = roleName;
     }
 
-    public Set<SecUser> getSecurityUsers() {
+    public Set<HikeMasterUser> getSecurityUsers() {
         return securityUsers;
     }
 
-    public void setSecurityUsers(Set<SecUser> securityUsers) {
+    public void setSecurityUsers(Set<HikeMasterUser> securityUsers) {
         this.securityUsers = securityUsers;
     }
 }

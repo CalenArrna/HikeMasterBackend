@@ -24,7 +24,7 @@ public class HikeRoute {
     @Column
     private int levelRise;
     @Column
-    private int difficulty;
+    private String difficulty;
     @Column
     private double distanceFromLoc;
     @Column
@@ -65,11 +65,11 @@ public class HikeRoute {
         this.levelRise = levelRise;
     }
 
-    public int getDifficulty() {
+    public String getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
 
