@@ -1,5 +1,7 @@
 package org.backend.Configuration;
 
+import org.dozer.DozerBeanMapper;
+import org.passay.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -41,6 +43,14 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public DozerBeanMapper dozerBeanMapper () {
+        return new DozerBeanMapper();
+    }
 
+    @Bean
+    public PasswordValidator passwordValidator () {
+        return new PasswordValidator(new WhitespaceRule(), new UsernameRule(), new LengthRule(8,16));
+    }
 
 }

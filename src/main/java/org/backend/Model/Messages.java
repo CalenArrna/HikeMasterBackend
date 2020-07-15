@@ -46,4 +46,3 @@ public class Messages {
         this.hikeRoute = hikeRoute;
     }
 }
-
