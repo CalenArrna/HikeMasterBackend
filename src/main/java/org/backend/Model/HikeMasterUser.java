@@ -6,12 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Component
-public class User implements UserDetails {
+public class HikeMasterUser implements UserDetails {
     @Id
     @GeneratedValue
     private long id;
@@ -20,9 +19,7 @@ public class User implements UserDetails {
     @Column
     private String email;
     @Column
-    private String dateOfBirth;
-    @Column
-    private String userName;
+    private String nickName;
     @Column
     private String fullName;
     @Column
@@ -96,7 +93,6 @@ public class User implements UserDetails {
     }
 
 
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -109,30 +105,22 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
 
 
-    @Override
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
         list.add(new SimpleGrantedAuthority(role));
         return list;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
     public String getUsername() {
-        return userName;
+        return nickName;
     }
 
     @Override
