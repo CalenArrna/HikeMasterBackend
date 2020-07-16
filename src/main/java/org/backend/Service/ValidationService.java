@@ -6,9 +6,13 @@ import org.backend.DTOs.SuccessDTO;
 import org.passay.PasswordData;
 import org.passay.PasswordValidator;
 import org.passay.RuleResult;
+import org.passay.RuleResultDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
+import java.util.List;
 
 
 @Service
@@ -30,7 +34,8 @@ public class ValidationService {
             return new SuccessDTO();
         } else {
             ErrorDTO errorDTO = new ErrorDTO();
-            result.getDetails();
+            List<RuleResultDetail> errorList = result.getDetails();
+            errorDTO.setPassword(errorList.get(0).getErrorCodes());
             return errorDTO;
         }
     }
@@ -38,13 +43,18 @@ public class ValidationService {
     public boolean validateUsername(PasswordData passwordData) {
         return !userService.userExists(passwordData.getUsername());
     }
-    
-    public ResponseDTO validateSpringResults (BindingResult bindingResult) {
+
+    public ResponseDTO validateSpringResults(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorDTO errorDTO = new ErrorDTO();
-            
+            List<ObjectError> errorList = bindingResult.getAllErrors();
+            String[] errors = new String[errorList.size()];
+            for (int i = 0; i < errorList.size(); i++) {
+                errors[i] = errorList.get(i).toString();
+            }
+            errorDTO.setUsername(errors);
             return errorDTO;
-        }else {
+        } else {
             return new SuccessDTO();
         }
     }

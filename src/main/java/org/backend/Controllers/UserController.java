@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -21,25 +22,27 @@ import javax.validation.Valid;
 public class UserController {
     
     private DozerBeanMapper mapper;
-    private UserService service = new UserService();
+    private UserService service;
     private PasswordEncoder encoder;
     private ValidationService validationService;
-    
+
     @Autowired
-    public UserController(DozerBeanMapper mapper, ValidationService validationService, PasswordEncoder enc) {
+    public UserController(DozerBeanMapper mapper, UserService service, PasswordEncoder encoder, ValidationService validationService) {
         this.mapper = mapper;
-        this.encoder = enc;
+        this.service = service;
+        this.encoder = encoder;
         this.validationService = validationService;
     }
+
     @PostMapping(value = "/registration")
-    public ResponseDTO registration(@Valid RegisterDTO newUser, BindingResult bindingResult) {
+    public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         PasswordData passwordData = mapper.map(newUser,PasswordData.class);
         ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
         boolean usernameValid = validationService.validateUsername(passwordData);
         ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
         
         if (passwordValidation instanceof SuccessDTO 
-                && springValidation instanceof  SuccessDTO
+                && springValidation instanceof SuccessDTO
                 && usernameValid){
             HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
             validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
