@@ -1,5 +1,6 @@
 package org.backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,9 @@ public class HikeMasterUser implements UserDetails {
     private boolean isDeactivated;
     @Column
     private boolean notification;
+    @JsonIgnore
+    @OneToMany
+    private List<Messages> UserMessagesList = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -37,6 +41,14 @@ public class HikeMasterUser implements UserDetails {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public List<Messages> getUserMessagesList() {
+        return UserMessagesList;
+    }
+
+    public void setUserMessagesList(List<Messages> userMessagesList) {
+        UserMessagesList = userMessagesList;
     }
 
     public void setUsername(String username) {

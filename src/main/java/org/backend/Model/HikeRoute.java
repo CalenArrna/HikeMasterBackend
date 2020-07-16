@@ -1,6 +1,9 @@
 package org.backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.backend.enums.RouteType;
+import org.backend.enums.TourDifficulty;
+import org.backend.enums.TourType;
 
 
 import javax.persistence.*;
@@ -24,14 +27,37 @@ public class HikeRoute {
     @Column
     private int levelRise;
     @Column
-    private int difficulty;
+    private TourDifficulty difficulty;
     @Column
     private double distanceFromLoc;
     @Column
-    private int view;
+    private RouteType routeType;
+    @Column
+    private TourType tourType;
 
+    public TourDifficulty getDifficulty() {
+        return difficulty;
+    }
 
+    public void setDifficulty(TourDifficulty difficulty) {
+        this.difficulty = difficulty;
+    }
 
+    public RouteType getRouteType() {
+        return routeType;
+    }
+
+    public void setRouteType(RouteType routeType) {
+        this.routeType = routeType;
+    }
+
+    public TourType getTourType() {
+        return tourType;
+    }
+
+    public void setTourType(TourType tourType) {
+        this.tourType = tourType;
+    }
 
     public double getDistanceFromLoc() {
         return distanceFromLoc;
@@ -39,14 +65,6 @@ public class HikeRoute {
 
     public void setDistanceFromLoc(double distanceFromLoc) {
         this.distanceFromLoc = distanceFromLoc;
-    }
-
-    public int getView() {
-        return view;
-    }
-
-    public void setView(int view) {
-        this.view = view;
     }
 
     public double getTourLenght() {
@@ -65,13 +83,6 @@ public class HikeRoute {
         this.levelRise = levelRise;
     }
 
-    public int getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
-    }
 
     public long getRouteId() {
         return routeId;

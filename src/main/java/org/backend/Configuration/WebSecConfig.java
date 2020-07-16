@@ -30,7 +30,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/rest/csrf", "/rest/hike_route", "/registration").permitAll()
+                .antMatchers("/rest/csrf", "/hike_route/{route_id}", "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().invalidateHttpSession(true)
                 .clearAuthentication(true).logoutSuccessUrl("/login_page").deleteCookies("JSESSIONID").permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
