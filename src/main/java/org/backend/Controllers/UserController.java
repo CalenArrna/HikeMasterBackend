@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -32,14 +33,14 @@ public class UserController {
         this.validationService = validationService;
     }
     @PostMapping(value = "/registration")
-    public ResponseDTO registration(@Valid RegisterDTO newUser, BindingResult bindingResult) {
+    public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         PasswordData passwordData = mapper.map(newUser,PasswordData.class);
         ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
         boolean usernameValid = validationService.validateUsername(passwordData);
         ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
         
         if (passwordValidation instanceof SuccessDTO 
-                && springValidation instanceof  SuccessDTO
+                && springValidation instanceof SuccessDTO
                 && usernameValid){
             HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
             validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));

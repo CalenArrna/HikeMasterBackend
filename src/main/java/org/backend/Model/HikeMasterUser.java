@@ -11,19 +11,19 @@ import java.util.*;
 @Entity
 @Component
 public class HikeMasterUser implements UserDetails {
-    @Id
-    @GeneratedValue
-    private long id;
-    @Column
-    private String role;
-    @Column
-    private String email;
     @Column
     private String username;
     @Column
     private String fullName;
     @Column
+    private String email;
+    @Column
     private String password;
+    @Id
+    @GeneratedValue
+    private long id;
+    @Column
+    private String role;
     @ManyToMany
     private Set<Authority> authorities = new HashSet<>();
     @Column
@@ -39,8 +39,8 @@ public class HikeMasterUser implements UserDetails {
         this.id = id;
     }
 
-    public void setUsername(String username) {
-        username = username;
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     public String getFullName() {
@@ -50,10 +50,7 @@ public class HikeMasterUser implements UserDetails {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
+    
 
     public boolean isDeactivated() {
         return isDeactivated;
@@ -74,6 +71,10 @@ public class HikeMasterUser implements UserDetails {
     public String getRole() {
         return role;
     }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public Set<Authority> getAuthorityList() {
         return authorities;
@@ -83,17 +84,9 @@ public class HikeMasterUser implements UserDetails {
         this.authorities = authorityList;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public GrantedAuthority setAuthority(String authority) {
-
-        return new SimpleGrantedAuthority(authority);
-    }
-
-
-
+//    public GrantedAuthority setAuthority(String authority) {
+//        return new SimpleGrantedAuthority(authority);
+//    }
 
     public String getEmail() {
         return email;
@@ -103,25 +96,21 @@ public class HikeMasterUser implements UserDetails {
         this.email = email;
     }
 
-/*    public String getUsername() {
-        return username;
-    }*/
-    
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-        list.add(new SimpleGrantedAuthority(role));
-        return list;
-    }
-
     public String getPassword() {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+//    public String getUsername(){
+//        return username;
+//    } 
+        
     @Override
     public String getUsername() {
         return username;
@@ -145,5 +134,12 @@ public class HikeMasterUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+        list.add(new SimpleGrantedAuthority(role));
+        return list;
     }
 }

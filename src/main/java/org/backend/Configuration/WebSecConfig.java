@@ -24,16 +24,25 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin()
-                .loginPage("/login_page")
-                .defaultSuccessUrl("/messages")
-                .permitAll()
-                .and()
+        http.csrf().disable()
+//                .formLogin()
+//                .loginPage("/login_page")
+//                .defaultSuccessUrl("/messages")
+//                .permitAll()
+//                .and()
                 .authorizeRequests()
                 .antMatchers("/rest/csrf", "/rest/hike_route", "/registration").permitAll()
-                .anyRequest().authenticated()
-                .and().logout().invalidateHttpSession(true)
-                .clearAuthentication(true).logoutSuccessUrl("/login_page").deleteCookies("JSESSIONID").permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .anyRequest()
+                .authenticated();
+//                .and()
+//                .logout()
+//                .invalidateHttpSession(true)
+//                .clearAuthentication(true)
+//                .logoutSuccessUrl("/login_page")
+//                .deleteCookies("JSESSIONID")
+//                .permitAll()
+//                .and()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     }
 
@@ -52,5 +61,6 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
     public PasswordValidator passwordValidator () {
         return new PasswordValidator(new WhitespaceRule(), new UsernameRule(), new LengthRule(8,16));
     }
+    
 
 }
