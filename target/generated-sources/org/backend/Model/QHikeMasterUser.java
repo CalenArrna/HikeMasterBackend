@@ -30,13 +30,13 @@ public class QHikeMasterUser extends EntityPathBase<HikeMasterUser> {
 
     public final BooleanPath isDeactivated = createBoolean("isDeactivated");
 
-    public final StringPath nickName = createString("nickName");
-
     public final BooleanPath notification = createBoolean("notification");
 
     public final StringPath password = createString("password");
 
     public final StringPath role = createString("role");
+
+    public final StringPath username = createString("username");
 
     public QHikeMasterUser(String variable) {
         super(HikeMasterUser.class, forVariable(variable));

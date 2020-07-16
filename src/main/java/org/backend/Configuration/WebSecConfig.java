@@ -1,5 +1,7 @@
 package org.backend.Configuration;
 
+import org.dozer.DozerBeanMapper;
+import org.passay.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,21 +19,18 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecConfig extends WebSecurityConfigurerAdapter {
 
-
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-                .loginPage("/login_page")
-                .defaultSuccessUrl("/messages")
+                .loginPage("/rest/login")
+                .defaultSuccessUrl("https://www.google.hu/?hl=hu")
                 .permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/rest/csrf", "/rest/hike_route", "/registration").permitAll()
+                .antMatchers("/csrf", "/hike_route", "/registration","/rest/login").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().invalidateHttpSession(true)
-                .clearAuthentication(true).logoutSuccessUrl("/login_page").deleteCookies("JSESSIONID").permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .clearAuthentication(true).logoutSuccessUrl("/login").deleteCookies("JSESSIONID").permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     }
 
@@ -41,6 +40,14 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public DozerBeanMapper dozerBeanMapper () {
+        return new DozerBeanMapper();
+    }
 
+    @Bean
+    public PasswordValidator passwordValidator () {
+        return new PasswordValidator(new WhitespaceRule(), new UsernameRule(), new LengthRule(8,16));
+    }
 
 }

@@ -16,12 +16,12 @@ public class HikeController {
     public HikeController(HikeRouteService hikeRouteService) {
         this.hikeRouteService=hikeRouteService;
     }
-    @GetMapping(value = "/hike_routes")
-    public List<HikeRoute> getHikeRoutes(@RequestParam(value = "length",required = false) double length,
-                                         @RequestParam(value = "level",required = false) int level,
-                                         @RequestParam(value = "difficultly",required = false) String difficultly,
-                                         @RequestParam(value = "distance",required = false) double distance,
-                                         @RequestParam(value = "spectacle",required = false) String spectacle
+    @GetMapping(value = "/hike_route")
+    public List<HikeRoute> getHikeRoutes(@RequestParam(value = "length",required =false,defaultValue = "200") double length,
+                                         @RequestParam(value = "level",required = false,defaultValue = "1") int level,
+                                         @RequestParam(value = "difficultly",required = false,defaultValue = "") String difficultly,
+                                         @RequestParam(value = "distance",required = false,defaultValue = "10") double distance,
+                                         @RequestParam(value = "spectacle",required = false) Integer spectacle
                                          ){
 
         return hikeRouteService.findHikeRoutesByParams( length,level,difficultly,distance,spectacle);

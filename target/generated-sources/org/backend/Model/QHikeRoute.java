@@ -22,7 +22,7 @@ public class QHikeRoute extends EntityPathBase<HikeRoute> {
 
     public final NumberPath<Double> coordinates = createNumber("coordinates", Double.class);
 
-    public final NumberPath<Integer> difficulty = createNumber("difficulty", Integer.class);
+    public final StringPath difficulty = createString("difficulty");
 
     public final NumberPath<Double> distanceFromLoc = createNumber("distanceFromLoc", Double.class);
 

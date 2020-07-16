@@ -1,8 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "org.hibernate.tool.schema.internal",
-      "type": "java.lang.String",
-      "description": "Description for org.hibernate.tool.schema.internal."
-  }
-] }

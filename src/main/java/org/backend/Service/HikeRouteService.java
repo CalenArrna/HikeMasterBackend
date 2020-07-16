@@ -14,12 +14,12 @@ import java.util.List;
 public class HikeRouteService {
      @PersistenceContext
     EntityManager hikeRouteEntityManager;
-    public List<HikeRoute> findHikeRoutesByParams( double length,int level,String difficultly,double distance,String spectacle){
+    public List<HikeRoute> findHikeRoutesByParams( double length,int level,String difficultly,double distance,int spectacle){
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
         QHikeRoute hikeRoute= QHikeRoute.hikeRoute;
         BooleanBuilder booleanBuilder=new BooleanBuilder();
         if(length!=0){
-            booleanBuilder.and(hikeRoute.tourLenght.eq(length));
+            booleanBuilder.and(hikeRoute.tourLenght.between(0,length));
         }
         if (level!=0){
             booleanBuilder.and(hikeRoute.levelRise.eq(level));
@@ -30,10 +30,12 @@ public class HikeRouteService {
         if(StringUtils.isNotBlank(difficultly)){
             booleanBuilder.and(hikeRoute.difficulty.like(difficultly));
         }
-        if(StringUtils.isNotBlank(spectacle)){
-            booleanBuilder.and(hikeRoute.difficulty.like(spectacle));
+        if(spectacle!=0){
+            booleanBuilder.and(hikeRoute.view.eq(spectacle));
         }
-       return queryFactory.selectFrom(hikeRoute).where(booleanBuilder).fetch();
+       return queryFactory.selectFrom(hikeRoute)
+               .where(booleanBuilder)
+               .fetch();
     }
 
 }

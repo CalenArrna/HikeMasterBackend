@@ -24,7 +24,7 @@ public class QAuthority extends EntityPathBase<Authority> {
 
     public final StringPath roleName = createString("roleName");
 
-    public final SetPath<HikeMasterUser, QHikeMasterUser> securityUsers = this.<HikeMasterUser, QHikeMasterUser>createSet("securityUsers", HikeMasterUser.class, QHikeMasterUser.class, PathInits.DIRECT2);
+    public final SetPath<HikeMasterUser, QHikeMasterUser> securityHikeMasterUsers = this.<HikeMasterUser, QHikeMasterUser>createSet("securityHikeMasterUsers", HikeMasterUser.class, QHikeMasterUser.class, PathInits.DIRECT2);
 
     public QAuthority(String variable) {
         super(Authority.class, forVariable(variable));

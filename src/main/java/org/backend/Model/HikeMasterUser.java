@@ -19,7 +19,7 @@ public class HikeMasterUser implements UserDetails {
     @Column
     private String email;
     @Column
-    private String nickName;
+    private String username;
     @Column
     private String fullName;
     @Column
@@ -93,9 +93,7 @@ public class HikeMasterUser implements UserDetails {
     }
 
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+
 
     public String getEmail() {
         return email;
@@ -105,9 +103,15 @@ public class HikeMasterUser implements UserDetails {
         this.email = email;
     }
 
-
-
-
+/*    public String getUsername() {
+        return username;
+    }*/
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
         list.add(new SimpleGrantedAuthority(role));
@@ -120,7 +124,7 @@ public class HikeMasterUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return nickName;
+        return username;
     }
 
     @Override
