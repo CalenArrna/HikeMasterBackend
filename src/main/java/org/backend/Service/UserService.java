@@ -2,6 +2,7 @@ package org.backend.Service;
 
 
 import org.backend.Model.HikeMasterUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String name) {
         return null;
     }
-
+    @Transactional
     public boolean userExists(String name) {
         return !em.createQuery("select u from HikeMasterUser u where u.username = :lookFor", HikeMasterUser.class)
                 .setParameter("lookFor", name)

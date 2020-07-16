@@ -22,16 +22,18 @@ import javax.validation.Valid;
 public class UserController {
     
     private DozerBeanMapper mapper;
-    private UserService service = new UserService();
+    private UserService service;
     private PasswordEncoder encoder;
     private ValidationService validationService;
-    
+
     @Autowired
-    public UserController(DozerBeanMapper mapper, ValidationService validationService, PasswordEncoder enc) {
+    public UserController(DozerBeanMapper mapper, UserService service, PasswordEncoder encoder, ValidationService validationService) {
         this.mapper = mapper;
-        this.encoder = enc;
+        this.service = service;
+        this.encoder = encoder;
         this.validationService = validationService;
     }
+
     @PostMapping(value = "/registration")
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         PasswordData passwordData = mapper.map(newUser,PasswordData.class);
