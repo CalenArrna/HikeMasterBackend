@@ -35,7 +35,12 @@ public class ValidationService {
         } else {
             ErrorDTO errorDTO = new ErrorDTO();
             List<RuleResultDetail> errorList = result.getDetails();
-            errorDTO.setPassword(errorList.get(0).getErrorCodes());
+            int errorCount = errorList.size();
+            String[] passwordErrors = new String[errorCount];
+            for (int i = 0; i < errorCount; i++) {
+                passwordErrors[i] = errorList.get(i).getErrorCode();
+            }
+            errorDTO.setPassword(passwordErrors);
             return errorDTO;
         }
     }
@@ -46,13 +51,8 @@ public class ValidationService {
 
     public ResponseDTO validateSpringResults(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            ErrorDTO errorDTO = new ErrorDTO();
             List<ObjectError> errorList = bindingResult.getAllErrors();
-            String[] errors = new String[errorList.size()];
-            for (int i = 0; i < errorList.size(); i++) {
-                errors[i] = errorList.get(i).toString();
-            }
-            errorDTO.setUsername(errors);
+            ErrorDTO errorDTO = ErrorDTO.getSpringErrorsDTO(errorList);
             return errorDTO;
         } else {
             return new SuccessDTO();

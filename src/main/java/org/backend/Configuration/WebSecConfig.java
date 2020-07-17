@@ -1,6 +1,10 @@
 package org.backend.Configuration;
 
+import org.backend.DTOs.ErrorDTO;
+import org.backend.DTOs.ResponseDTO;
 import org.dozer.DozerBeanMapper;
+import org.dozer.loader.api.BeanMappingBuilder;
+import org.dozer.loader.api.TypeMappingOptions;
 import org.passay.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 
-
 @EnableWebSecurity
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecConfig extends WebSecurityConfigurerAdapter {
-
-
 
 
     @Override
@@ -53,14 +54,21 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DozerBeanMapper dozerBeanMapper () {
-        return new DozerBeanMapper();
+    public DozerBeanMapper dozerBeanMapper() {
+        DozerBeanMapper dozer = new DozerBeanMapper();
+        dozer.addMapping(new BeanMappingBuilder() {
+            @Override
+            protected void configure() {
+                mapping(ResponseDTO.class, ErrorDTO.class, TypeMappingOptions.mapNull(false));
+            }
+        });
+        return dozer;
     }
 
     @Bean
-    public PasswordValidator passwordValidator () {
-        return new PasswordValidator(new WhitespaceRule(), new UsernameRule(), new LengthRule(8,16));
+    public PasswordValidator passwordValidator() {
+        return new PasswordValidator(new WhitespaceRule(), new UsernameRule(), new LengthRule(8, 16));
     }
-    
+
 
 }

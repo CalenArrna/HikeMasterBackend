@@ -1,5 +1,10 @@
 package org.backend.DTOs;
 
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+
+import java.util.List;
+
 public class ErrorDTO extends ResponseDTO{
     String[] username;
     String[] email;
@@ -40,5 +45,37 @@ public class ErrorDTO extends ResponseDTO{
 
     public void setFullName(String[] fullName) {
         this.fullName = fullName;
+    }
+    
+    public static ErrorDTO getPasswordConfirmationErrorDTO () {
+        String[] errorMessage = new String[1];
+        errorMessage[0] = "password and confirmation password do not match";
+        ErrorDTO passConfError =  new ErrorDTO();
+        passConfError.setPassword(errorMessage);
+        return passConfError;
+    }
+
+    public static ErrorDTO getSpringErrorsDTO (List<ObjectError> errorList) {
+        ErrorDTO springErrors = new ErrorDTO();
+        for (ObjectError objectError : errorList) {
+            switch (((FieldError)objectError).getField()){
+                case "username" : 
+                    String[] errorUsername = new String[1];
+                    errorUsername[0] = objectError.getDefaultMessage();
+                    springErrors.setUsername(errorUsername);
+                    break;
+                case "email":
+                    String[] errorEmail = new String[1];
+                    errorEmail[0] = objectError.getDefaultMessage();
+                    springErrors.setEmail(errorEmail);
+                    break;
+                case "fullName":
+                    String[] errorFullName = new String[1];
+                    errorFullName[0] = objectError.getDefaultMessage();
+                    springErrors.setFullName(errorFullName);
+                    break;
+            }
+        }
+        return springErrors;
     }
 }

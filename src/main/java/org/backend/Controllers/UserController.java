@@ -8,6 +8,9 @@ import org.backend.Model.HikeMasterUser;
 import org.backend.Service.UserService;
 import org.backend.Service.ValidationService;
 import org.dozer.DozerBeanMapper;
+import org.dozer.loader.DozerBuilder;
+import org.dozer.loader.api.BeanMappingBuilder;
+import org.dozer.loader.api.TypeMappingOptions;
 import org.passay.PasswordData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +39,9 @@ public class UserController {
 
     @PostMapping(value = "/registration")
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
+        if (!newUser.getPassword().equals(newUser.getPasswordConfirm())) {
+            return ErrorDTO.getPasswordConfirmationErrorDTO();
+        }
         PasswordData passwordData = mapper.map(newUser,PasswordData.class);
         ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
         boolean usernameValid = validationService.validateUsername(passwordData);
@@ -51,7 +57,8 @@ public class UserController {
         }else {
             ErrorDTO errorDTO = new ErrorDTO();
             mapper.map(springValidation, errorDTO);
-            mapper.map(passwordValidation, errorDTO);
+            assert passwordValidation instanceof ErrorDTO;
+            errorDTO.setPassword(((ErrorDTO) passwordValidation).getPassword());
             return errorDTO;
         }
     }
