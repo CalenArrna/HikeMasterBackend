@@ -43,13 +43,16 @@ public class UserController {
             return ErrorDTO.getPasswordConfirmationErrorDTO();
         }
         PasswordData passwordData = mapper.map(newUser,PasswordData.class);
-        ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
         boolean usernameValid = validationService.validateUsername(passwordData);
+        if (!usernameValid) {
+            return ErrorDTO.getUsernameAlreadyExistErrorDTO();
+        }
+        
+        ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
         ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
         
         if (passwordValidation instanceof SuccessDTO 
-                && springValidation instanceof SuccessDTO
-                && usernameValid){
+                && springValidation instanceof SuccessDTO){
             HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
             validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
             service.addUserToDatabase(validHikeMasterUser);

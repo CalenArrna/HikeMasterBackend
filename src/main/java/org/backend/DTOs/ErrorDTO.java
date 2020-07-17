@@ -55,6 +55,14 @@ public class ErrorDTO extends ResponseDTO{
         return passConfError;
     }
 
+    public static ErrorDTO getUsernameAlreadyExistErrorDTO () {
+        String[] errorMessage = new String[1];
+        errorMessage[0] = "username already exist";
+        ErrorDTO usernameAlreadyExists =  new ErrorDTO();
+        usernameAlreadyExists.setUsername(errorMessage);
+        return usernameAlreadyExists;
+    }
+
     public static ErrorDTO getSpringErrorsDTO (List<ObjectError> errorList) {
         ErrorDTO springErrors = new ErrorDTO();
         for (ObjectError objectError : errorList) {
