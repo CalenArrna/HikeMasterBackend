@@ -15,9 +15,9 @@ public class HikeRouteService {
 
     @Transactional
     public HikeRoute hikeRouteDetails(long hikeRouteId){
-        return em.createQuery("select h from HikeRoute h", HikeRoute.class).getResultList()
-                .stream()
-                .filter(hikeRoute -> hikeRoute.getRouteId() == hikeRouteId).collect(Collectors.toList()).get(0);
+        return em.createQuery("select h from HikeRoute h where h.routeId = :hikeRouteId", HikeRoute.class)
+                .setParameter("hikeRouteId", hikeRouteId)
+                .getSingleResult();
     }
 
 }

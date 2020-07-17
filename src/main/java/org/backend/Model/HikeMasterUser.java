@@ -1,5 +1,6 @@
 package org.backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,25 +12,28 @@ import java.util.*;
 @Entity
 @Component
 public class HikeMasterUser implements UserDetails {
-    @Column
-    private String username;
-    @Column
-    private String fullName;
-    @Column
-    private String email;
-    @Column
-    private String password;
     @Id
     @GeneratedValue
     private long id;
     @Column
     private String role;
+    @Column
+    private String email;
+    @Column
+    private String username;
+    @Column
+    private String fullName;
+    @Column
+    private String password;
     @ManyToMany
     private Set<Authority> authorities = new HashSet<>();
     @Column
     private boolean isDeactivated;
     @Column
     private boolean notification;
+    @JsonIgnore
+    @OneToMany
+    private List<Messages> UserMessagesList = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -39,9 +43,15 @@ public class HikeMasterUser implements UserDetails {
         this.id = id;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
+    public List<Messages> getUserMessagesList() {
+        return UserMessagesList;
     }
+
+    public void setUserMessagesList(List<Messages> userMessagesList) {
+        UserMessagesList = userMessagesList;
+    }
+
+
 
     public String getFullName() {
         return fullName;
@@ -50,7 +60,7 @@ public class HikeMasterUser implements UserDetails {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
-    
+
 
     public boolean isDeactivated() {
         return isDeactivated;
@@ -71,7 +81,7 @@ public class HikeMasterUser implements UserDetails {
     public String getRole() {
         return role;
     }
-    
+
     public void setRole(String role) {
         this.role = role;
     }
@@ -109,8 +119,8 @@ public class HikeMasterUser implements UserDetails {
     }
 //    public String getUsername(){
 //        return username;
-//    } 
-        
+//    }
+
     @Override
     public String getUsername() {
         return username;

@@ -5,6 +5,7 @@ import org.backend.Service.HikeRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,9 +18,9 @@ public class HikeRouteController {
         this.hikeRouteService = hikeRouteService;
     }
 
-    @GetMapping(value = "/hikeRouteId")
-    public HikeRoute getHikeRouteDetails(long hikeRouteId) {
-        return hikeRouteService.hikeRouteDetails(hikeRouteId);
+    @GetMapping(value = "/hike_route/{route_Id}")
+    public HikeRoute getHikeRouteDetails(@PathVariable Long route_Id) {
+        return hikeRouteService.hikeRouteDetails(route_Id);
     }
 
 }
