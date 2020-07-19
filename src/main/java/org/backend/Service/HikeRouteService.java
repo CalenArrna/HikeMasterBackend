@@ -25,33 +25,40 @@ public class HikeRouteService {
 
     @PersistenceContext
     EntityManager hikeRouteEntityManager;
-    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly, int length, int levelRise, Double rate) {
+
+    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly,Integer length,Integer levelRise, Double rate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
-        QHikeRoute hikeRoute=QHikeRoute.hikeRoute;
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         if(StringUtils.isNotBlank(tourType)){
-            booleanBuilder.and(hikeRoute.tourType.like(tourType));
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourType.like(tourType));
         }
         if(StringUtils.isNotBlank(routeType)) {
-            booleanBuilder.and(hikeRoute.routeType.like(routeType));
+            booleanBuilder.and(QHikeRoute.hikeRoute.routeType.like(routeType));
         }
         if(StringUtils.isNotBlank(difficultly)){
-            booleanBuilder.and(hikeRoute.difficulty.like(difficultly));
+            booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(difficultly));
         }
-        if(length!=0){
-            booleanBuilder.and(hikeRoute.tourLenght.between(0,length));
+        if(length!=null){
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(length));
         }
-        if (levelRise!=0){
-            booleanBuilder.and(hikeRoute.levelRise.between(0,levelRise));
+        if (levelRise!=null){
+            booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(levelRise));
         }
         if(rate!=0){
-            booleanBuilder.and(hikeRoute.rate.eq(rate));
+            booleanBuilder.and(QHikeRoute.hikeRoute.rate.eq(rate));
         }
 
-       return queryFactory.selectFrom(hikeRoute)
-               .where(booleanBuilder)
-               .fetch();
+        List<HikeRoute> routes = queryFactory.selectFrom(QHikeRoute.hikeRoute)
+                .where(booleanBuilder)
+                .fetch();
+
+        if (routes==null){
+            return null;
+        }else {
+            return routes;
+        }
+
     }
 
 

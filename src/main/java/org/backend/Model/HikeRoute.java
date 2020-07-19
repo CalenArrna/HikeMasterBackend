@@ -18,7 +18,7 @@ public class HikeRoute {
     @Column
     private double coordinates;
     @Column
-    private int tourLenght;
+    private int tourLength;
     @Column
     private int levelRise;
     @Column
@@ -62,12 +62,12 @@ public class HikeRoute {
         this.distanceFromLoc = distanceFromLoc;
     }
 
-    public int getTourLenght() {
-        return tourLenght;
+    public int getTourLength() {
+        return tourLength;
     }
 
-    public void setTourLenght(int tourLenght) {
-        this.tourLenght = tourLenght;
+    public void setTourLength(int tourLength) {
+        this.tourLength = tourLength;
     }
 
     public int getLevelRise() {

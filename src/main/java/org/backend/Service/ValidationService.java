@@ -1,8 +1,8 @@
 package org.backend.Service;
 
-import org.backend.DTOs.ErrorDTO;
+import org.backend.DTOs.HikeMasterUserErrorDTO;
 import org.backend.DTOs.ResponseDTO;
-import org.backend.DTOs.SuccessDTO;
+import org.backend.DTOs.HikeMasterUserSuccessDTO;
 import org.passay.PasswordData;
 import org.passay.PasswordValidator;
 import org.passay.RuleResult;
@@ -31,12 +31,17 @@ public class ValidationService {
     public ResponseDTO validatePassword(PasswordData passwordData) {
         RuleResult result = passwordValidator.validate(passwordData);
         if (result.isValid()) {
-            return new SuccessDTO();
+            return new HikeMasterUserSuccessDTO();
         } else {
-            ErrorDTO errorDTO = new ErrorDTO();
+            HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
             List<RuleResultDetail> errorList = result.getDetails();
-            errorDTO.setPassword(errorList.get(0).getErrorCodes());
-            return errorDTO;
+            int errorCount = errorList.size();
+            String[] passwordErrors = new String[errorCount];
+            for (int i = 0; i < errorCount; i++) {
+                passwordErrors[i] = errorList.get(i).getErrorCode();
+            }
+            hikeMasterUserErrorDTO.setPassword(passwordErrors);
+            return hikeMasterUserErrorDTO;
         }
     }
 
@@ -46,16 +51,11 @@ public class ValidationService {
 
     public ResponseDTO validateSpringResults(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            ErrorDTO errorDTO = new ErrorDTO();
             List<ObjectError> errorList = bindingResult.getAllErrors();
-            String[] errors = new String[errorList.size()];
-            for (int i = 0; i < errorList.size(); i++) {
-                errors[i] = errorList.get(i).toString();
-            }
-            errorDTO.setUsername(errors);
-            return errorDTO;
+            HikeMasterUserErrorDTO hikeMasterUserErrorDTO = HikeMasterUserErrorDTO.getSpringErrorsDTO(errorList);
+            return hikeMasterUserErrorDTO;
         } else {
-            return new SuccessDTO();
+            return new HikeMasterUserSuccessDTO();
         }
     }
 }

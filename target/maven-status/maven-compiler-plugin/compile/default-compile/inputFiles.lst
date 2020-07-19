@@ -1,8 +1,6 @@
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/ErrorDTO.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/ResponseDTO.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/RegisterDTO.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Model/Messages.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Controllers/HikeController.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Service/UserService.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/target/generated-sources/org/backend/Model/QAuthority.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Controllers/HikeRouteController.java
@@ -11,11 +9,13 @@
 /home/elod/IdeaProjects/HikeMasterBackEnd/target/generated-sources/org/backend/Model/QHikeRoute.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Service/HikeRouteService.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Model/Authority.java
+/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/HikeMasterUserSuccessDTO.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Application.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/HikeRouteDTO.java
+/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/HikeMasterUserErrorDTO.java
+/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/HikeRouteSuccessDTO.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Service/ValidationService.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Model/HikeRoute.java
-/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/SuccessDTO.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/target/generated-sources/org/backend/Model/QHikeMasterUser.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Configuration/WebSecConfig.java
+/home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/DTOs/HikeRouteErrorDTO.java
 /home/elod/IdeaProjects/HikeMasterBackEnd/src/main/java/org/backend/Controllers/UserController.java

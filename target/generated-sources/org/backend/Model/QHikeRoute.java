@@ -36,7 +36,7 @@ public class QHikeRoute extends EntityPathBase<HikeRoute> {
 
     public final StringPath routeType = createString("routeType");
 
-    public final NumberPath<Double> tourLenght = createNumber("tourLenght", Double.class);
+    public final NumberPath<Integer> tourLength = createNumber("tourLength", Integer.class);
 
     public final StringPath tourType = createString("tourType");
 
