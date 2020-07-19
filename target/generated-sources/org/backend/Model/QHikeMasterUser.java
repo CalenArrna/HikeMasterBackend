@@ -36,6 +36,8 @@ public class QHikeMasterUser extends EntityPathBase<HikeMasterUser> {
 
     public final StringPath role = createString("role");
 
+    public final ListPath<Messages, QMessages> UserMessagesList = this.<Messages, QMessages>createList("UserMessagesList", Messages.class, QMessages.class, PathInits.DIRECT2);
+
     public final StringPath username = createString("username");
 
     public QHikeMasterUser(String variable) {

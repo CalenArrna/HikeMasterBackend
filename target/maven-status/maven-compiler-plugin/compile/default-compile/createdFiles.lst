@@ -6,6 +6,7 @@ org/backend/DTOs/SuccessDTO.class
 org/backend/Model/Messages.class
 org/backend/Model/QHikeMasterUser.class
 org/backend/Model/Authority.class
+org/backend/DTOs/HikeRouteDTO.class
 org/backend/Model/HikeRoute.class
 org/backend/Model/HikeMasterUser.class
 org/backend/Configuration/WebSecConfig.class
@@ -13,6 +14,7 @@ org/backend/Service/UserService.class
 org/backend/Application.class
 org/backend/DTOs/RegisterDTO.class
 org/backend/Controllers/UserController.class
+org/backend/Controllers/HikeRouteController.class
 org/backend/DTOs/ErrorDTO.class
 org/backend/Controllers/HikeController.class
 org/backend/DTOs/ResponseDTO.class
