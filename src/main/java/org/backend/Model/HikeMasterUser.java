@@ -28,9 +28,9 @@ public class HikeMasterUser implements UserDetails {
     @ManyToMany
     private Set<Authority> authorities = new HashSet<>();
     @Column
-    private boolean isDeactivated;
+    private Boolean isDeactivated;
     @Column
-    private boolean notification;
+    private Boolean notification;
     @JsonIgnore
     @OneToMany
     private List<Messages> UserMessagesList = new ArrayList<>();

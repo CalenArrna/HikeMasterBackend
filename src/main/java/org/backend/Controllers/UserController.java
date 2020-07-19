@@ -4,6 +4,7 @@ import org.backend.DTOs.HikeMasterUserErrorDTO;
 import org.backend.DTOs.RegisterDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.DTOs.HikeMasterUserSuccessDTO;
+import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Service.UserService;
 import org.backend.Service.ValidationService;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -38,6 +39,8 @@ public class UserController {
 
     @PostMapping(value = "/registration")
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
+        Authority userAuthority = service.getUserAuthority();
+
         if (!newUser.getPassword().equals(newUser.getPasswordConfirm())) {
             return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
         }
@@ -55,7 +58,10 @@ public class UserController {
             HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
             validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
             service.addUserToDatabase(validHikeMasterUser);
-            return new HikeMasterUserSuccessDTO();
+            validHikeMasterUser.getAuthorityList().add(userAuthority);
+            userAuthority.getSecurityHikeMasterUsers().add(validHikeMasterUser);
+            validHikeMasterUser.setRole(userAuthority.getRoleName());
+            return new HikeMasterUserSuccessDTO(validHikeMasterUser.getRole());
         }else {
             HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
             mapper.map(springValidation, hikeMasterUserErrorDTO);
@@ -66,7 +72,14 @@ public class UserController {
     }
 
     @RequestMapping (value = "/login",method = RequestMethod.POST)
-    public HikeMasterUser userLogin(@RequestBody HikeMasterUser hikeMasterUser){
-      return service.loginUser(hikeMasterUser.getUsername(),hikeMasterUser.getPassword());
+    public ResponseDTO userLogin(@RequestBody HikeMasterUser hikeMasterUser){
+      List <HikeMasterUser> hikeMasterUser1 = service.loginUser(hikeMasterUser.getUsername(), hikeMasterUser.getPassword());
+        if (hikeMasterUser1!=null){
+            return new HikeMasterUserSuccessDTO(hikeMasterUser1.get(0).getRole());
+        }
+        else{
+            return new HikeMasterUserErrorDTO();
+        }
+
     }
 }
