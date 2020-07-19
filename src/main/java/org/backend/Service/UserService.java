@@ -21,6 +21,14 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String name) {
+        try{
+            return   em.createQuery("select u from HikeMasterUser u where u.username = :name", HikeMasterUser.class )
+                    .setParameter("name", name)
+                    .getSingleResult();
+        }
+        catch (Exception e){
+            e.getStackTrace();
+        }
         return null;
     }
     @Transactional

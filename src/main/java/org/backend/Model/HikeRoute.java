@@ -5,7 +5,6 @@ import org.backend.enums.RouteType;
 import org.backend.enums.TourDifficulty;
 import org.backend.enums.TourType;
 
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class HikeRoute {
     private long routeId;
     @JsonIgnore
     @OneToMany
-    private  List<Messages>messages=new ArrayList<>();
+    private  List<Message>messages=new ArrayList<>();
     @Column
     private double rate;
     @Column
@@ -28,8 +27,6 @@ public class HikeRoute {
     private int levelRise;
     @Column
     private TourDifficulty difficulty;
-    @Column
-    private double distanceFromLoc;
     @Column
     private RouteType routeType;
     @Column
@@ -59,13 +56,6 @@ public class HikeRoute {
         this.tourType = tourType;
     }
 
-    public double getDistanceFromLoc() {
-        return distanceFromLoc;
-    }
-
-    public void setDistanceFromLoc(double distanceFromLoc) {
-        this.distanceFromLoc = distanceFromLoc;
-    }
 
     public double getTourLenght() {
         return tourLenght;
@@ -92,11 +82,11 @@ public class HikeRoute {
         this.routeId = routeId;
     }
 
-    public List<Messages> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<Messages> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 

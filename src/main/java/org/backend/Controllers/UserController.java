@@ -55,4 +55,9 @@ public class UserController {
             return errorDTO;
         }
     }
+
+   // @PostMapping(value = "/login_page")
+   // public HikeMasterUser loginUser(RegisterDTO registerDTO){
+   //     service.loadUserByUsername(registerDTO.getUsername());
+   // }
 }

@@ -33,7 +33,7 @@ public class HikeMasterUser implements UserDetails {
     private boolean notification;
     @JsonIgnore
     @OneToMany
-    private List<Messages> UserMessagesList = new ArrayList<>();
+    private List<Message> userMessageList = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -43,12 +43,12 @@ public class HikeMasterUser implements UserDetails {
         this.id = id;
     }
 
-    public List<Messages> getUserMessagesList() {
-        return UserMessagesList;
+    public List<Message> getUserMessageList() {
+        return userMessageList;
     }
 
-    public void setUserMessagesList(List<Messages> userMessagesList) {
-        UserMessagesList = userMessagesList;
+    public void setUserMessageList(List<Message> userMessageList) {
+        this.userMessageList = userMessageList;
     }
 
 
