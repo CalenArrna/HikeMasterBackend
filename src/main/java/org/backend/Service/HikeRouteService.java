@@ -26,7 +26,7 @@ public class HikeRouteService {
     @PersistenceContext
     EntityManager hikeRouteEntityManager;
 
-    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly,Integer length,Integer levelRise, Double rate) {
+    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly,Integer length,Integer levelRise, Integer rate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 

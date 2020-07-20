@@ -30,7 +30,7 @@ public class HikeRouteController {
                                      @RequestParam(value = "difficultly",required = false,defaultValue = "") String difficultly,
                                      @RequestParam(value = "tour_length",required =false) Integer length,
                                      @RequestParam(value = "level_rise",required = false) Integer levelRise,
-                                     @RequestParam(value = "rate",required = false,defaultValue = "0") Double rate
+                                     @RequestParam(value = "rate",required = false,defaultValue = "0") Integer rate
                                          ){
 
         List<HikeRoute> hikeRoutesByParams = hikeRouteService.findHikeRoutesByParams(tourType, routeType, difficultly, length, levelRise, rate);
