@@ -1,10 +1,6 @@
 package org.backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.backend.enums.RouteType;
-import org.backend.enums.TourDifficulty;
-import org.backend.enums.TourType;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,47 +18,56 @@ public class HikeRoute {
     @Column
     private double coordinates;
     @Column
-    private double tourLenght;
+    private int tourLength;
     @Column
     private int levelRise;
     @Column
-    private TourDifficulty difficulty;
+    private String difficulty;
     @Column
-    private RouteType routeType;
+    private double distanceFromLoc;
     @Column
-    private TourType tourType;
+    private String routeType;
+    @Column
+    private String tourType;
 
-    public TourDifficulty getDifficulty() {
+    public String getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(TourDifficulty difficulty) {
+    public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
 
-    public RouteType getRouteType() {
+    public String getRouteType() {
         return routeType;
     }
 
-    public void setRouteType(RouteType routeType) {
+    public void setRouteType(String routeType) {
         this.routeType = routeType;
     }
 
-    public TourType getTourType() {
+    public String getTourType() {
         return tourType;
     }
 
-    public void setTourType(TourType tourType) {
+    public void setTourType(String tourType) {
         this.tourType = tourType;
     }
 
-
-    public double getTourLenght() {
-        return tourLenght;
+    public double getDistanceFromLoc() {
+        return distanceFromLoc;
     }
 
-    public void setTourLenght(double tourLenght) {
-        this.tourLenght = tourLenght;
+    public void setDistanceFromLoc(double distanceFromLoc) {
+        this.distanceFromLoc = distanceFromLoc;
+    }
+
+    public int getTourLength() {
+        return tourLength;
+    }
+
+    public void setTourLength(int tourLength) {
+        this.tourLength = tourLength;
     }
 
     public int getLevelRise() {

@@ -1,8 +1,8 @@
 package org.backend.Service;
 
 
+import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class UserService implements UserDetailsService {
 
     @PersistenceContext
     EntityManager em;
-    
+
 
     @Override
     public UserDetails loadUserByUsername(String name) {
@@ -43,5 +43,15 @@ public class UserService implements UserDetailsService {
         em.persist(hikeMasterUser);
     }
 
+    public HikeMasterUser loginUser(String username, String password){
+      return   em.createQuery("SELECT u FROM HikeMasterUser u WHERE u.username= :username AND u.password= :password",HikeMasterUser.class)
+              .setParameter("username",username)
+              .setParameter("password",password)
+              .getSingleResult();
+    }
+
+    public Authority getUserAuthority(){
+        return em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'",Authority.class).getSingleResult();
+    }
 
 }
