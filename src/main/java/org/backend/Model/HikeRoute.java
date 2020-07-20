@@ -14,9 +14,9 @@ public class HikeRoute {
     @OneToMany
     private  List<Message>messages=new ArrayList<>();
     @Column
-    private double rate;
+    private Integer rate;
     @Column
-    private double coordinates;
+    private Integer coordinates;
     @Column
     private int tourLength;
     @Column
@@ -95,19 +95,12 @@ public class HikeRoute {
         this.messages = messages;
     }
 
-    public double getRate() {
-        return rate;
-    }
 
-    public void setRate(double rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 
-    public double getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(double coordinates) {
+    public void setCoordinates(Integer coordinates) {
         this.coordinates = coordinates;
     }
 }
