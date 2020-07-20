@@ -3,7 +3,7 @@ package org.backend.Model;
 import javax.persistence.*;
 
 @Entity
-public class Messages {
+public class Message {
     @Id
     @GeneratedValue
     private long massageId;
@@ -13,6 +13,16 @@ public class Messages {
     private HikeMasterUser hikeMasterUser;
     @ManyToOne
     private HikeRoute hikeRoute;
+    @Column
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public long getMassageId() {
         return massageId;

@@ -3,8 +3,10 @@ package org.backend.Service;
 
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
@@ -15,12 +17,23 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @PersistenceContext
     EntityManager em;
 
 
     @Override
     public UserDetails loadUserByUsername(String name) {
+        try{
+            return   em.createQuery("select u from HikeMasterUser u where u.username = :name", HikeMasterUser.class )
+                    .setParameter("name", name)
+                    .getSingleResult();
+        }
+        catch (Exception e){
+            e.getStackTrace();
+        }
         return null;
     }
     @Transactional
@@ -37,6 +50,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<HikeMasterUser> loginUser(String username, String password){
+       // password = passwordEncoder.encode(password);
         List<HikeMasterUser> hikeMasterUser = em.createQuery("SELECT u FROM HikeMasterUser u WHERE u.username= :username AND u.password= :password", HikeMasterUser.class)
                 .setParameter("username", username)
                 .setParameter("password", password)
@@ -50,5 +64,6 @@ public class UserService implements UserDetailsService {
     public Authority getUserAuthority(){
         return em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'",Authority.class).getSingleResult();
     }
+
 
 }

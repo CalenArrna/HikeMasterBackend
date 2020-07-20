@@ -26,14 +26,14 @@ public class HikeMasterUser implements UserDetails {
     @Column
     private String password;
     @ManyToMany
-    private Set<Authority> authorities = new HashSet<>();
+    private Set<Authority> authoritySet = new HashSet<>();
     @Column
     private Boolean isDeactivated;
     @Column
     private Boolean notification;
     @JsonIgnore
     @OneToMany
-    private List<Messages> UserMessagesList = new ArrayList<>();
+    private List<Message> userMessageList = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -43,12 +43,12 @@ public class HikeMasterUser implements UserDetails {
         this.id = id;
     }
 
-    public List<Messages> getUserMessagesList() {
-        return UserMessagesList;
+    public List<Message> getUserMessageList() {
+        return userMessageList;
     }
 
-    public void setUserMessagesList(List<Messages> userMessagesList) {
-        UserMessagesList = userMessagesList;
+    public void setUserMessageList(List<Message> userMessageList) {
+        this.userMessageList = userMessageList;
     }
 
 
@@ -87,16 +87,25 @@ public class HikeMasterUser implements UserDetails {
     }
 
     public Set<Authority> getAuthorityList() {
-        return authorities;
+        return authoritySet;
     }
 
     public void setAuthorityList(Set<Authority> authorityList) {
-        this.authorities = authorityList;
+        this.authoritySet = authorityList;
     }
 
 //    public GrantedAuthority setAuthority(String authority) {
 //        return new SimpleGrantedAuthority(authority);
 //    }
+
+
+    public Set<Authority> getAuthoritySet() {
+        return authoritySet;
+    }
+
+    public void setAuthoritySet(Set<Authority> authoritySet) {
+        this.authoritySet = authoritySet;
+    }
 
     public String getEmail() {
         return email;
@@ -146,7 +155,6 @@ public class HikeMasterUser implements UserDetails {
         return true;
     }
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
         list.add(new SimpleGrantedAuthority(role));

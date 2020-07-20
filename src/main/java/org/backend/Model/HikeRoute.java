@@ -12,7 +12,7 @@ public class HikeRoute {
     private long routeId;
     @JsonIgnore
     @OneToMany
-    private  List<Messages>messages=new ArrayList<>();
+    private  List<Message>messages=new ArrayList<>();
     @Column
     private Integer rate;
     @Column
@@ -87,11 +87,11 @@ public class HikeRoute {
         this.routeId = routeId;
     }
 
-    public List<Messages> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<Messages> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 

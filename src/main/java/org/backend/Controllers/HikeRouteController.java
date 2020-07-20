@@ -4,7 +4,9 @@ import org.backend.DTOs.HikeRouteErrorDTO;
 import org.backend.DTOs.HikeRouteSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.Message;
 import org.backend.Service.HikeRouteService;
+import org.backend.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +16,12 @@ import java.util.List;
 public class HikeRouteController {
 
     HikeRouteService hikeRouteService;
+    MessageService messageService;
 
     @Autowired
-    public HikeRouteController(HikeRouteService hikeRouteService) {
+    public HikeRouteController(HikeRouteService hikeRouteService, MessageService messageService) {
         this.hikeRouteService = hikeRouteService;
+        this.messageService = messageService;
     }
 
     @GetMapping(value = "/hike_route/{route_Id}")
