@@ -12,6 +12,8 @@ import org.dozer.loader.DozerBuilder;
 import org.dozer.loader.api.BeanMappingBuilder;
 import org.dozer.loader.api.TypeMappingOptions;
 import org.passay.PasswordData;
+import org.postgis.Geometry;
+import org.postgis.GeometryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -47,10 +49,9 @@ public class UserController {
         if (!usernameValid) {
             return ErrorDTO.getUsernameAlreadyExistErrorDTO();
         }
-        
         ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
         ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
-        
+       
         if (passwordValidation instanceof SuccessDTO 
                 && springValidation instanceof SuccessDTO){
             HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
