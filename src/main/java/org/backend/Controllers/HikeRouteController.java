@@ -28,23 +28,17 @@ public class HikeRouteController {
     public HikeRoute getHikeRouteDetails(@PathVariable Long route_Id) {
         return hikeRouteService.hikeRouteDetails(route_Id);
     }
-    @GetMapping(value = "/hike_route")
-    public ResponseDTO getHikeRoutes(@RequestParam(value = "tour_type",required = false,defaultValue = "") String tourType,
-                                     @RequestParam(value = "route_type",required = false,defaultValue = "") String routeType,
-                                     @RequestParam(value = "difficultly",required = false,defaultValue = "") String difficultly,
-                                     @RequestParam(value = "tour_length",required =false) Integer length,
-                                     @RequestParam(value = "level_rise",required = false) Integer levelRise,
-                                     @RequestParam(value = "rate",required = false,defaultValue = "0") Integer rate
-                                         ){
 
-        List<HikeRoute> hikeRoutesByParams = hikeRouteService.findHikeRoutesByParams(tourType, routeType, difficultly, length, levelRise, rate);
-        if(hikeRoutesByParams.isEmpty()){
+    @PostMapping(value = "/hike_route")
+    public ResponseDTO postHikeRoute(String tour_type,String route_type,String difficultly,Integer tour_length,Integer level_rise,Integer rate){
+        List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(tour_type, route_type, difficultly, tour_length, level_rise, rate);
+        if(routesByParams.isEmpty()){
             return new HikeRouteErrorDTO();
         }else{
             HikeRouteSuccessDTO hikeRouteSuccessDTO= new HikeRouteSuccessDTO();
-            hikeRouteSuccessDTO.setHikeRoutes(hikeRoutesByParams);
+            hikeRouteSuccessDTO.setHikeRoutes(routesByParams);
             return hikeRouteSuccessDTO;
         }
-
     }
+
 }
