@@ -33,7 +33,7 @@ public class HikeRouteService {
     @PersistenceContext
     EntityManager hikeRouteEntityManager;
 
-    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly,Integer length,Integer levelRise, Double rate) {
+    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly,Integer length,Integer levelRise, Integer rate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
@@ -52,7 +52,7 @@ public class HikeRouteService {
         if (levelRise!=null){
             booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(levelRise));
         }
-        if(rate!=0){
+        if(rate!=null){
             booleanBuilder.and(QHikeRoute.hikeRoute.rate.eq(rate));
         }
 
@@ -66,8 +66,11 @@ public class HikeRouteService {
             return routes;
         }
 
+
     }
-
-
+    @Transactional
+    public void deleteHikeRoute(long routeId){
+       hikeRouteEntityManager.createQuery("DELETE FROM HikeRoute r WHERE r.routeId =: routeId",HikeRoute.class).setParameter("routeId",routeId).getSingleResult();
+    }
 
     }
