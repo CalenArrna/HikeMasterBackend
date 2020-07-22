@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @EnableWebSecurity
 @Configuration
@@ -27,28 +28,40 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //  http.requiresChannel().anyRequest().requiresSecure();
+        //  http.headers().httpStrictTransportSecurity();
+        //  http.logout().disable();
+        //  http.formLogin().disable();
+        //  http.authorizeRequests()
+        //          .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_route/{route_Id}").permitAll()
+        //          .anyRequest()
+        //          .authenticated()
+        //          .and()
+        //          .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         http.csrf().disable()
 //                .formLogin()
+//                .and()
 //                .loginPage("/login_page")
-//                .defaultSuccessUrl("/messages")
+
 //                .permitAll()
 //                .and()
                 .authorizeRequests()
-                .antMatchers("/csrf","/hike_route","/registration","/login").permitAll()
+                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_route/{route_Id}").permitAll()
                 .anyRequest()
-                .authenticated();
-//                .and()
-//                .logout()
-//                .invalidateHttpSession(true)
-//                .clearAuthentication(true)
-//                .logoutSuccessUrl("/login_page")
-//                .deleteCookies("JSESSIONID")
-//                .permitAll()
+                .authenticated()
+                .and()
+                .oauth2Login();
+//               .and()
+//               .logout()
+//               .invalidateHttpSession(true)
+//               .clearAuthentication(true)
+
+//               .deleteCookies("JSESSIONID")
+//               .permitAll()
 //                .and()
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     }
-
 
 
     @Bean
@@ -72,6 +85,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
     public PasswordValidator passwordValidator() {
         return new PasswordValidator(new WhitespaceRule(), new UsernameRule(), new LengthRule(8, 16));
     }
+
     @Bean
     public UserDetails userDetailsService(HikeMasterUser hikeMasterUser) {
         UserService userService = new UserService();

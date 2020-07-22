@@ -70,7 +70,6 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseDTO userLogin(@RequestBody HikeMasterUser hikeMasterUser) {
-
         List<HikeMasterUser> hikeMasterUser1 = service.loginUser(hikeMasterUser.getUsername(), hikeMasterUser.getPassword());
         if (hikeMasterUser1 != null) {
             return new HikeMasterUserSuccessDTO(hikeMasterUser1.get(0).getRole());

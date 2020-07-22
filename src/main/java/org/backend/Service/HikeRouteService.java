@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,9 +19,15 @@ public class HikeRouteService {
 
     @Transactional
     public HikeRoute hikeRouteDetails(long hikeRouteId) {
-        return em.createQuery("select h from HikeRoute h where h.routeId = :hikeRouteId", HikeRoute.class)
+        List<HikeRoute> hikeRouteList = em.createQuery("select h from HikeRoute h where h.routeId = :hikeRouteId", HikeRoute.class)
                 .setParameter("hikeRouteId", hikeRouteId)
-                .getSingleResult();
+                .getResultList();
+        if (hikeRouteList.isEmpty()){
+            return null;
+        }
+        else{
+            return hikeRouteList.get(0);
+        }
     }
 
     @PersistenceContext
