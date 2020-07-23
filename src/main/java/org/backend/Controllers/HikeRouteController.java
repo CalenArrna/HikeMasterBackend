@@ -26,8 +26,16 @@ public class HikeRouteController {
     }
 
     @GetMapping(value = "/hike_route/{route_Id}")
-    public HikeRoute getHikeRouteDetails(@PathVariable Long route_Id) {
-        return hikeRouteService.hikeRouteDetails(route_Id);
+    public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
+        HikeRoute hikeRoute = hikeRouteService.hikeRouteDetails(route_Id);
+        if (hikeRoute == null){
+            return new HikeRouteErrorDTO();
+        }
+        else{
+            HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
+            hikeRouteSuccessDTO.setHikeRoute(hikeRoute);
+            return hikeRouteSuccessDTO;
+        }
     }
 
     @PostMapping(value = "/hike_route")
@@ -41,5 +49,4 @@ public class HikeRouteController {
             return hikeRouteSuccessDTO;
         }
     }
-
 }

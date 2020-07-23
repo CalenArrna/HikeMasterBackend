@@ -9,7 +9,7 @@ import java.util.List;
 public class HikeRoute {
     @Id
     @GeneratedValue
-    private long routeId;
+    private Long routeId;
     @JsonIgnore
     @OneToMany
     private  List<Message>messages=new ArrayList<>();

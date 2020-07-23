@@ -3,4 +3,5 @@ out/
 *.iml
 *.jar
 *.lst
-target/
+target/*
+*.class

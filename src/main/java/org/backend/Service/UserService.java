@@ -1,6 +1,5 @@
 package org.backend.Service;
 
-
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -26,16 +26,16 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String name) {
-        try{
-            return   em.createQuery("select u from HikeMasterUser u where u.username = :name", HikeMasterUser.class )
+        try {
+            return em.createQuery("select u from HikeMasterUser u where u.username = :name", HikeMasterUser.class)
                     .setParameter("name", name)
                     .getSingleResult();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.getStackTrace();
         }
         return null;
     }
+
     @Transactional
     public boolean userExists(String name) {
         return !em.createQuery("select u from HikeMasterUser u where u.username = :lookFor", HikeMasterUser.class)
@@ -49,20 +49,21 @@ public class UserService implements UserDetailsService {
         em.persist(hikeMasterUser);
     }
 
-    public List<HikeMasterUser> loginUser(String username, String password){
-       // password = passwordEncoder.encode(password);
-        List<HikeMasterUser> hikeMasterUser = em.createQuery("SELECT u FROM HikeMasterUser u WHERE u.username= :username AND u.password= :password", HikeMasterUser.class)
+    public List<HikeMasterUser> loginUser(String username, String password) {
+        List<HikeMasterUser> hikeMasterUser = em.createQuery("SELECT u FROM HikeMasterUser u WHERE u.username= :username", HikeMasterUser.class)
                 .setParameter("username", username)
-                .setParameter("password", password)
                 .getResultList();
-        if(!hikeMasterUser.isEmpty()){
+
+        if (!hikeMasterUser.isEmpty()) {
+            hikeMasterUser.get(0).setPassword(passwordEncoder.encode(password));
             return hikeMasterUser;
-        }else {
+        } else {
             return null;
         }
     }
-    public Authority getUserAuthority(){
-        return em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'",Authority.class).getSingleResult();
+
+    public Authority getUserAuthority() {
+        return em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'", Authority.class).getSingleResult();
     }
 
 
