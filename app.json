@@ -1,8 +1,0 @@
-{
-  "name": "Messenger example app for progmatic: Java",
-  "description": "A Java app, to demonstrate some Spring features",
-  "addons": [ "heroku-postgresql" ],
-  "expo": {
-    
-  }
-}

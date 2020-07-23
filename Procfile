@@ -1,1 +1,0 @@
-web: java -jar target/HikeMaster-1.0-SNAPSHOT.jar
