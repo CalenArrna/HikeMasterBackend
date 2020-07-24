@@ -46,7 +46,7 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-    public ResponseDTO postHikeRoute(@RequestBody String tour_type, @RequestBody String route_type,@RequestBody String difficultly, @RequestBody Integer tour_length,@RequestBody Integer level_rise, @RequestBody Integer rate) {
+    public ResponseDTO postHikeRoute(@RequestBody String tour_type, String route_type, String difficultly, Integer tour_length, Integer level_rise,Integer rate) {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(tour_type, route_type, difficultly, tour_length, level_rise, rate);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO();
