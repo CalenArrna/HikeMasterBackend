@@ -1,6 +1,7 @@
 package org.backend.Service;
 
 import org.backend.DTOs.HikeMasterUserErrorDTO;
+import org.backend.DTOs.RegisterDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.DTOs.HikeMasterUserSuccessDTO;
 import org.passay.PasswordData;
@@ -47,6 +48,10 @@ public class ValidationService {
 
     public boolean validateUsername(PasswordData passwordData) {
         return !userService.userExists(passwordData.getUsername());
+    }
+
+    public boolean emailIsInDatabase(RegisterDTO newUser) {
+        return userService.isEmailExists(newUser.getEmail());
     }
 
     public ResponseDTO validateSpringResults(BindingResult bindingResult) {

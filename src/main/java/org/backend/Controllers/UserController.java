@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class UserController {
@@ -38,13 +39,17 @@ public class UserController {
     @PostMapping(value = "/registration")
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         Authority userAuthority = service.getUserAuthority();
+        PasswordData passwordData = mapper.map(newUser, PasswordData.class);
+        boolean usernameValid = validationService.validateUsername(passwordData);
+        boolean emailExistInDatabase = validationService.emailIsInDatabase(newUser);
         if (!newUser.getPassword().equals(newUser.getPasswordConfirm())) {
             return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
         }
-        PasswordData passwordData = mapper.map(newUser, PasswordData.class);
-        boolean usernameValid = validationService.validateUsername(passwordData);
         if (!usernameValid) {
             return HikeMasterUserErrorDTO.getUsernameAlreadyExistErrorDTO();
+        }
+        if (emailExistInDatabase) {
+            return HikeMasterUserErrorDTO.getEmailAlreadyExistErrorDTO();
         }
 
         ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
@@ -52,22 +57,30 @@ public class UserController {
 
         if (passwordValidation instanceof HikeMasterUserSuccessDTO
                 && springValidation instanceof HikeMasterUserSuccessDTO) {
-            HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
-            validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
-            validHikeMasterUser.getAuthoritySet().add(userAuthority);
-            userAuthority.getSecurityHikeMasterUsers().add(validHikeMasterUser);
-            validHikeMasterUser.setRole(userAuthority.getRoleName());
-            service.addUserToDatabase(validHikeMasterUser);
-            return new HikeMasterUserSuccessDTO(validHikeMasterUser.getRole());
+            return addValidUserToDatabase(newUser, userAuthority);
         } else {
-            HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
-            mapper.map(springValidation, hikeMasterUserErrorDTO);
-            assert passwordValidation instanceof HikeMasterUserErrorDTO;
-            hikeMasterUserErrorDTO.setPassword(((HikeMasterUserErrorDTO) passwordValidation).getPassword());
-            return hikeMasterUserErrorDTO;
+            return collectErrorsToDTO(passwordValidation,springValidation);
         }
     }
 
+    private ResponseDTO addValidUserToDatabase(RegisterDTO newUser, Authority userAuthority) {
+        HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
+        validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
+        validHikeMasterUser.getAuthoritySet().add(userAuthority);
+        userAuthority.getSecurityHikeMasterUsers().add(validHikeMasterUser);
+        validHikeMasterUser.setRole(userAuthority.getRoleName());
+        service.addUserToDatabase(validHikeMasterUser);
+        return new HikeMasterUserSuccessDTO(validHikeMasterUser.getRole());
+    }
+    
+    private ResponseDTO collectErrorsToDTO (ResponseDTO passwordValidation, ResponseDTO springValidation) {
+        HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
+        mapper.map(springValidation, hikeMasterUserErrorDTO);
+        assert passwordValidation instanceof HikeMasterUserErrorDTO;
+        hikeMasterUserErrorDTO.setPassword(((HikeMasterUserErrorDTO) passwordValidation).getPassword());
+        return hikeMasterUserErrorDTO;
+    }
+    
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseDTO userLogin(@RequestBody HikeMasterUser hikeMasterUser) {
         List<HikeMasterUser> hikeMasterUser1 = service.loginUser(hikeMasterUser.getUsername(), hikeMasterUser.getPassword());
