@@ -39,7 +39,7 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping(value = "/api/registration")
+    @PostMapping(value = "/registration")
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         Authority userAuthority = service.getUserAuthority();
         PasswordData passwordData = mapper.map(newUser, PasswordData.class);

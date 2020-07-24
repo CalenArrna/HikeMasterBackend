@@ -53,13 +53,11 @@ public class UserService implements UserDetailsService {
         List<HikeMasterUser> hikeMasterUser = em.createQuery("SELECT u FROM HikeMasterUser u WHERE u.username= :username", HikeMasterUser.class)
                 .setParameter("username", username)
                 .getResultList();
-
-        if (!hikeMasterUser.isEmpty()) {
-            hikeMasterUser.get(0).setPassword(passwordEncoder.encode(password));
+        passwordEncoder.matches(password, hikeMasterUser.get(0).getPassword());
+        if (username.equals(hikeMasterUser.get(0).getUsername()) && passwordEncoder.matches(password, hikeMasterUser.get(0).getPassword())){
             return hikeMasterUser;
-        } else {
-            return null;
         }
+        return null;
     }
 
     public Authority getUserAuthority() {
