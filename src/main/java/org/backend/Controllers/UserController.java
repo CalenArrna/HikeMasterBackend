@@ -42,6 +42,9 @@ public class UserController {
         PasswordData passwordData = mapper.map(newUser, PasswordData.class);
         boolean usernameValid = validationService.validateUsername(passwordData);
         boolean emailExistInDatabase = validationService.emailIsInDatabase(newUser);
+        ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
+        ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
+        
         if (!newUser.getPassword().equals(newUser.getPasswordConfirm())) {
             return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
         }
@@ -51,12 +54,9 @@ public class UserController {
         if (emailExistInDatabase) {
             return HikeMasterUserErrorDTO.getEmailAlreadyExistErrorDTO();
         }
-
-        ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
-        ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
-
-        if (passwordValidation instanceof HikeMasterUserSuccessDTO
-                && springValidation instanceof HikeMasterUserSuccessDTO) {
+        
+        if (passwordValidation.getSuccess()
+                && springValidation.getSuccess()) {
             return addValidUserToDatabase(newUser, userAuthority);
         } else {
             return collectErrorsToDTO(passwordValidation,springValidation);
@@ -76,7 +76,6 @@ public class UserController {
     private ResponseDTO collectErrorsToDTO (ResponseDTO passwordValidation, ResponseDTO springValidation) {
         HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
         mapper.map(springValidation, hikeMasterUserErrorDTO);
-        assert passwordValidation instanceof HikeMasterUserErrorDTO;
         hikeMasterUserErrorDTO.setPassword(((HikeMasterUserErrorDTO) passwordValidation).getPassword());
         return hikeMasterUserErrorDTO;
     }

@@ -67,7 +67,7 @@ public class HikeMasterUserErrorDTO extends ResponseDTO{
         String[] errorMessage = new String[1];
         errorMessage[0] = "email already exist";
         HikeMasterUserErrorDTO usernameAlreadyExists =  new HikeMasterUserErrorDTO();
-        usernameAlreadyExists.setUsername(errorMessage);
+        usernameAlreadyExists.setEmail(errorMessage);
         return usernameAlreadyExists;
     }
 
