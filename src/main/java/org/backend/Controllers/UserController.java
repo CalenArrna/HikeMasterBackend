@@ -36,7 +36,7 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping(value = "/registration")
+    @PostMapping(value = "/api/registration")
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         Authority userAuthority = service.getUserAuthority();
         if (!newUser.getPassword().equals(newUser.getPasswordConfirm())) {
