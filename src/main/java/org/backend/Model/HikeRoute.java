@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.backend.enums.RouteType;
 import org.backend.enums.TourDifficulty;
 import org.backend.enums.TourType;
+import org.hibernate.annotations.Type;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
+import org.postgis.PGgeometry;
 
 
 import javax.persistence.*;
@@ -20,8 +24,9 @@ public class HikeRoute {
     private  List<Messages>messages=new ArrayList<>();
     @Column
     private double rate;
-    @Column
-    private double coordinates;
+    @Column(columnDefinition = "Geometry")
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    private Geometry routeLine;
     @Column
     private double tourLenght;
     @Column
@@ -83,6 +88,13 @@ public class HikeRoute {
         this.levelRise = levelRise;
     }
 
+    public Geometry getRouteLine() {
+        return routeLine;
+    }
+
+    public void setRouteLine(LineString routeLine) {
+        this.routeLine = routeLine;
+    }
 
     public long getRouteId() {
         return routeId;
@@ -107,14 +119,7 @@ public class HikeRoute {
     public void setRate(double rate) {
         this.rate = rate;
     }
-
-    public double getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(double coordinates) {
-        this.coordinates = coordinates;
-    }
+    
 }
 
 
