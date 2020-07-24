@@ -1,149 +1,52 @@
 package org.backend.Controllers;
 
-import org.backend.Repository.MessageRepository;
-import org.backend.Model.Message;
+import org.backend.DTOs.HikeRouteErrorDTO;
+import org.backend.DTOs.HikeRouteSuccessDTO;
+import org.backend.DTOs.ResponseDTO;
+import org.backend.Model.HikeRoute;
+import org.backend.Repository.HikeRouteRepository;
 import org.backend.Service.HikeRouteService;
-import org.backend.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-public class AdminController implements MessageRepository {
+public class AdminController {
     HikeRouteService hikeRouteService;
-    MessageService messageService;
+    HikeRouteService messageService;
+    @Autowired
+    HikeRouteRepository hikeRouteRepository;
 
     @Autowired
-    public AdminController(HikeRouteService hikeRouteService, MessageService messageService) {
+    public AdminController(HikeRouteService hikeRouteService, HikeRouteService messageService) {
         this.hikeRouteService = hikeRouteService;
         this.messageService = messageService;
-    }
-
-    @Override
-    public List<Message> findAll() {
-        return null;
-    }
-
-    @Override
-    public List<Message> findAll(Sort sort) {
-        return null;
-    }
-
-    @Override
-    public Page<Message> findAll(Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public List<Message> findAllById(Iterable<Long> iterable) {
-        return null;
-    }
-
-    @Override
-    public long count() {
-        return 0;
-    }
-
-    @Override
-    @DeleteMapping("/{hikerouteId}")
-    public void deleteById(Long aLong) {
 
     }
+    @DeleteMapping("/hike_routes/{hikeRouteId}")
+    public ResponseDTO deleteHikeRoute(@PathVariable long hikeRouteId){
+        Optional<HikeRoute> hikeRoute=hikeRouteRepository.findById(hikeRouteId);
+        if(hikeRoute.isPresent()){
+            hikeRouteRepository.deleteById(hikeRouteId);
+            return new HikeRouteSuccessDTO();
 
-    @Override
-    public void delete(Message message) {
+        }else {
+            return new HikeRouteErrorDTO();
+        }
 
-    }
-
-    @Override
-    public void deleteAll(Iterable<? extends Message> iterable) {
-
-    }
-
-    @Override
-    public void deleteAll() {
 
     }
-
-    @Override
-    public <S extends Message> S save(S s) {
-        return null;
+    @GetMapping("/hike_routes")
+    public List<HikeRoute> getAllHikeRoute(){
+        return hikeRouteRepository.findAll();
     }
 
-    @Override
-    public <S extends Message> List<S> saveAll(Iterable<S> iterable) {
-        return null;
+    @PutMapping("/hike_routes")
+    public List<HikeRoute> modifyHikeRoute(@RequestBody HikeRoute hikeRoute ){
+        hikeRouteRepository.save(hikeRoute);
+    return hikeRouteRepository.findAll();
     }
 
-    @Override
-    public Optional<Message> findById(Long aLong) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean existsById(Long aLong) {
-        return false;
-    }
-
-    @Override
-    public void flush() {
-
-    }
-
-    @Override
-    public <S extends Message> S saveAndFlush(S s) {
-        return null;
-    }
-
-    @Override
-    public void deleteInBatch(Iterable<Message> iterable) {
-
-    }
-
-    @Override
-    public void deleteAllInBatch() {
-
-    }
-
-    @Override
-    public Message getOne(Long aLong) {
-        return null;
-    }
-
-    @Override
-    public <S extends Message> Optional<S> findOne(Example<S> example) {
-        return Optional.empty();
-    }
-
-    @Override
-    public <S extends Message> List<S> findAll(Example<S> example) {
-        return null;
-    }
-
-    @Override
-    public <S extends Message> List<S> findAll(Example<S> example, Sort sort) {
-        return null;
-    }
-
-    @Override
-    public <S extends Message> Page<S> findAll(Example<S> example, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public <S extends Message> long count(Example<S> example) {
-        return 0;
-    }
-
-    @Override
-    public <S extends Message> boolean exists(Example<S> example) {
-        return false;
-    }
 }

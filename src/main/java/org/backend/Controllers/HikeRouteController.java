@@ -1,6 +1,5 @@
 package org.backend.Controllers;
 
-
 import org.backend.DTOs.HikeRouteErrorDTO;
 import org.backend.DTOs.HikeRouteSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
@@ -14,27 +13,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class HikeRouteController {
 
     HikeRouteService hikeRouteService;
-    MessageService messageService;
-    @Autowired
-    MessageRepository messageRepository;
-    @Autowired
+    HikeRouteService messageService;
     HikeRouteRepository hikeRouteRepository;
+    MessageRepository messageRepository;
 
     @Autowired
-    public HikeRouteController(HikeRouteService hikeRouteService, MessageService messageService) {
+    public HikeRouteController(HikeRouteService hikeRouteService, HikeRouteService messageService,HikeRouteRepository hikeRouteRepository, MessageRepository messageRepository) {
         this.hikeRouteService = hikeRouteService;
         this.messageService = messageService;
+        this.hikeRouteRepository=hikeRouteRepository;
+        this.messageRepository = messageRepository;
     }
 
     @GetMapping(value = "/hike_route/{route_Id}")
     public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
         HikeRoute hikeRoute = hikeRouteService.hikeRouteDetails(route_Id);
-        if (hikeRoute == null) {
+        if (hikeRoute == null){
             return new HikeRouteErrorDTO();
         } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();

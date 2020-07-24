@@ -9,10 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,10 +19,10 @@ public class MessageService {
     @PersistenceContext
     EntityManager em;
 
-    @Autowired
-    public MessageService(EntityManager em) {
-        this.em = em;
-    }
+   // @Autowired
+   // public MessageService(EntityManager em) {
+   //     this.em = em;
+   // }
 
     @Transactional
     public List<Message> addMessage(Message message, Long routeId) {

@@ -30,12 +30,11 @@ public class HikeRoute {
     @Column
     private String tourType;
     @Column
-    private String routeTitle;
+    private String text;
     @Column
-    private String routeText;
-
-    public void setRouteId(Long routeId) {
-        this.routeId = routeId;
+    private String title;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
     public Integer getRate() {
@@ -46,21 +45,23 @@ public class HikeRoute {
         return coordinates;
     }
 
-    public String getRouteTitle() {
-        return routeTitle;
+    public String getSubScribe() {
+        return text;
     }
 
-    public void setRouteTitle(String routeTitle) {
-        this.routeTitle = routeTitle;
+    public void setSubScribe(String subScribe) {
+        this.text = subScribe;
     }
 
-    public String getRouteText() {
-        return routeText;
+    public String getTitle() {
+        return title;
     }
 
-    public void setRouteText(String routeText) {
-        this.routeText = routeText;
+    public void setTitle(String title) {
+        this.title = title;
     }
+
+
 
     public String getDifficulty() {
         return difficulty;
@@ -110,8 +111,7 @@ public class HikeRoute {
         this.levelRise = levelRise;
     }
 
-
-    public Long getRouteId() {
+    public long getRouteId() {
         return routeId;
     }
 
@@ -122,11 +122,6 @@ public class HikeRoute {
     public List<Message> getMessages() {
         return messages;
     }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
 
     public void setRate(Integer rate) {
         this.rate = rate;

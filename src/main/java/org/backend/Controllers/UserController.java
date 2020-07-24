@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-//@EnableOAuth2Sso
 public class UserController {
 
     private DozerBeanMapper mapper;

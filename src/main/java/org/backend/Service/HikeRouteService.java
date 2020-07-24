@@ -1,9 +1,9 @@
 package org.backend.Service;
 
-import org.backend.Model.HikeRoute;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.backend.Model.HikeRoute;
 import org.backend.Model.QHikeRoute;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class HikeRouteService {
+public class HikeRouteService  {
     @PersistenceContext
     EntityManager em;
 
@@ -33,18 +33,22 @@ public class HikeRouteService {
     @PersistenceContext
     EntityManager hikeRouteEntityManager;
 
-    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly,Integer length,Integer levelRise, Integer rate) {
+    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly, Integer length, Integer levelRise, Integer rate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         if(StringUtils.isNotBlank(tourType)){
             booleanBuilder.and(QHikeRoute.hikeRoute.tourType.like(tourType));
         }
+
         if(StringUtils.isNotBlank(routeType)) {
             booleanBuilder.and(QHikeRoute.hikeRoute.routeType.like(routeType));
         }
         if(StringUtils.isNotBlank(difficultly)){
             booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(difficultly));
+        }
+        if(rate!=null){
+            booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe(rate));
         }
         if(length!=null){
             booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(length));
@@ -52,9 +56,7 @@ public class HikeRouteService {
         if (levelRise!=null){
             booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(levelRise));
         }
-        if(rate!=null){
-            booleanBuilder.and(QHikeRoute.hikeRoute.rate.eq(rate));
-        }
+
 
         List<HikeRoute> routes = queryFactory.selectFrom(QHikeRoute.hikeRoute)
                 .where(booleanBuilder)
@@ -68,9 +70,8 @@ public class HikeRouteService {
 
 
     }
-    @Transactional
-    public void deleteHikeRoute(long routeId){
-       hikeRouteEntityManager.createQuery("DELETE FROM HikeRoute r WHERE r.routeId =: routeId",HikeRoute.class).setParameter("routeId",routeId).getSingleResult();
-    }
 
-    }
+
+
+
+}
