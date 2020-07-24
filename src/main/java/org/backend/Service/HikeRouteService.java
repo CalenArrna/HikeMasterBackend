@@ -3,10 +3,12 @@ package org.backend.Service;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.backend.DTOs.HikeRouteDTO;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.QHikeRoute;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -31,28 +33,28 @@ public class HikeRouteService {
     @PersistenceContext
     EntityManager hikeRouteEntityManager;
 
-    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly, Integer length, Integer levelRise, Integer rate) {
+    public List<HikeRoute> findHikeRoutesByParams(HikeRouteDTO hikeRouteDTO) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if (StringUtils.isNotBlank(tourType)) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.tourType.like(tourType));
+        if (StringUtils.isNotBlank(hikeRouteDTO.getTourType())) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourType.like(hikeRouteDTO.getTourType()));
         }
 
-        if (StringUtils.isNotBlank(routeType)) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.routeType.like(routeType));
+        if (StringUtils.isNotBlank(hikeRouteDTO.getRouteType())) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.routeType.like(hikeRouteDTO.getRouteType()));
         }
-        if (StringUtils.isNotBlank(difficultly)) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(difficultly));
+        if (StringUtils.isNotBlank(hikeRouteDTO.getDifficulty())) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(hikeRouteDTO.getDifficulty()));
         }
-        if (rate != null) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe(rate));
+        if (hikeRouteDTO.getTourLength() != null) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(hikeRouteDTO.getTourLength()));
         }
-        if (length != null) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(length));
+        if (hikeRouteDTO.getLevelRise() != null) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(hikeRouteDTO.getLevelRise()));
         }
-        if (levelRise != null) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(levelRise));
+        if (hikeRouteDTO.getRate() != null) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe((hikeRouteDTO.getRate())));
         }
 
 

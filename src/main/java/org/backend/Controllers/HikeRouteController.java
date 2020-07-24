@@ -1,5 +1,6 @@
 package org.backend.Controllers;
 
+import org.backend.DTOs.HikeRouteDTO;
 import org.backend.DTOs.HikeRouteErrorDTO;
 import org.backend.DTOs.HikeRouteSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
@@ -44,13 +45,8 @@ public class HikeRouteController {
 
     @PostMapping(value = "/hike_route")
 
-    public ResponseDTO postHikeRoute(@RequestParam(required = false) String tour_type,
-                                     @RequestParam(required = false) String route_type,
-                                     @RequestParam(required = false) String difficultly,
-                                     @RequestParam(required = false) Integer tour_length,
-                                     @RequestParam(required = false) Integer level_rise,
-                                     @RequestParam(required = false) Integer rate) {
-        List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(tour_type, route_type, difficultly, tour_length, level_rise, rate);
+    public ResponseDTO postHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
+        List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO();
         } else {
