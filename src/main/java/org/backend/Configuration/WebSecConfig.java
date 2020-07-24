@@ -8,6 +8,8 @@ import org.dozer.DozerBeanMapper;
 import org.dozer.loader.api.BeanMappingBuilder;
 import org.dozer.loader.api.TypeMappingOptions;
 import org.passay.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -34,7 +36,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
 //                .permitAll()
 //                .and()
                 .authorizeRequests()
-                .antMatchers("/csrf","/hike_route","/registration","/login", "/hike_route/{route_Id}","/{hikerouteId}").permitAll()
+                .antMatchers("/csrf","/hike_route","/registration","/login", "/hike_route/{route_Id}","/{hikerouteId}", "/hike_route/{route_Id}/messages").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -50,7 +52,6 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     }
-
 
 
     @Bean

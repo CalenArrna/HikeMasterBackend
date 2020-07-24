@@ -1,10 +1,13 @@
 package org.backend.Controllers;
 
+
 import org.backend.DTOs.HikeRouteErrorDTO;
 import org.backend.DTOs.HikeRouteSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
+import org.backend.Repository.HikeRouteRepository;
+import org.backend.Repository.MessageRepository;
 import org.backend.Service.HikeRouteService;
 import org.backend.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,10 @@ public class HikeRouteController {
 
     HikeRouteService hikeRouteService;
     MessageService messageService;
+    @Autowired
+    MessageRepository messageRepository;
+    @Autowired
+    HikeRouteRepository hikeRouteRepository;
 
     @Autowired
     public HikeRouteController(HikeRouteService hikeRouteService, MessageService messageService) {
@@ -27,10 +34,9 @@ public class HikeRouteController {
     @GetMapping(value = "/hike_route/{route_Id}")
     public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
         HikeRoute hikeRoute = hikeRouteService.hikeRouteDetails(route_Id);
-        if (hikeRoute == null){
+        if (hikeRoute == null) {
             return new HikeRouteErrorDTO();
-        }
-        else{
+        } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
             hikeRouteSuccessDTO.setHikeRoute(hikeRoute);
             return hikeRouteSuccessDTO;
@@ -38,14 +44,25 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-    public ResponseDTO postHikeRoute(String tour_type,String route_type,String difficultly,Integer tour_length,Integer level_rise,Integer rate){
+    public ResponseDTO postHikeRoute(String tour_type, String route_type, String difficultly, Integer tour_length, Integer level_rise, Integer rate) {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(tour_type, route_type, difficultly, tour_length, level_rise, rate);
-        if(routesByParams.isEmpty()){
+        if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO();
-        }else{
-            HikeRouteSuccessDTO hikeRouteSuccessDTO= new HikeRouteSuccessDTO();
+        } else {
+            HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
             hikeRouteSuccessDTO.setHikeRoutes(routesByParams);
             return hikeRouteSuccessDTO;
+        }
+    }
+
+    @RequestMapping(value = "/hike_route/{route_Id}/messages", method = RequestMethod.POST)
+    public String addMessageToRoute(@PathVariable Long route_Id, @RequestBody Message message ) {
+        if(hikeRouteRepository.findById(route_Id).isPresent()){
+            hikeRouteRepository.findById(route_Id).get().getMessages().add(messageRepository.save(message));
+            return "success";
+        }
+        else {
+            return "failed";
         }
     }
 }

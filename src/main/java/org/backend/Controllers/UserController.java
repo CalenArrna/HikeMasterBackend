@@ -11,14 +11,19 @@ import org.backend.Service.ValidationService;
 import org.dozer.DozerBeanMapper;
 import org.passay.PasswordData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
+//@EnableOAuth2Sso
 public class UserController {
 
     private DozerBeanMapper mapper;
@@ -76,6 +81,7 @@ public class UserController {
         } else {
             return new HikeMasterUserErrorDTO();
         }
-
     }
+
+
 }

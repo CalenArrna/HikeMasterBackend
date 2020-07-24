@@ -29,6 +29,38 @@ public class HikeRoute {
     private String routeType;
     @Column
     private String tourType;
+    @Column
+    private String routeTitle;
+    @Column
+    private String routeText;
+
+    public void setRouteId(Long routeId) {
+        this.routeId = routeId;
+    }
+
+    public Integer getRate() {
+        return rate;
+    }
+
+    public Integer getCoordinates() {
+        return coordinates;
+    }
+
+    public String getRouteTitle() {
+        return routeTitle;
+    }
+
+    public void setRouteTitle(String routeTitle) {
+        this.routeTitle = routeTitle;
+    }
+
+    public String getRouteText() {
+        return routeText;
+    }
+
+    public void setRouteText(String routeText) {
+        this.routeText = routeText;
+    }
 
     public String getDifficulty() {
         return difficulty;
