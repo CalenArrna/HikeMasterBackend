@@ -18,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -78,7 +77,9 @@ public class UserController {
     private ResponseDTO collectErrorsToDTO (ResponseDTO passwordValidation, ResponseDTO springValidation) {
         HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
         mapper.map(springValidation, hikeMasterUserErrorDTO);
-        hikeMasterUserErrorDTO.setPassword(((HikeMasterUserErrorDTO) passwordValidation).getPassword());
+        if (!passwordValidation.getSuccess()) {
+            hikeMasterUserErrorDTO.setPassword(((HikeMasterUserErrorDTO) passwordValidation).getPassword());
+        }
         return hikeMasterUserErrorDTO;
     }
 
@@ -97,6 +98,4 @@ public class UserController {
             return new HikeMasterUserErrorDTO();
         }
     }
-
-
 }
