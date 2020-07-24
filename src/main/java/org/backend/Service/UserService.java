@@ -76,5 +76,10 @@ public class UserService implements UserDetailsService {
         return em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'", Authority.class).getSingleResult();
     }
 
-
+    @Transactional
+    public boolean isEmailExists(String email) {
+        return !em.createQuery("select u from HikeMasterUser u where u.email = :lookFor", HikeMasterUser.class)
+                .setParameter("lookFor", email)
+                .getResultList().isEmpty();
+    }
 }

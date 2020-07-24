@@ -35,6 +35,10 @@ public class HikeMasterUser implements UserDetails {
     @OneToMany
     private List<Message> userMessageList = new ArrayList<>();
 
+    public HikeMasterUser() {
+        this.isDeactivated = false;
+    }
+
     public long getId() {
         return id;
     }
@@ -50,8 +54,7 @@ public class HikeMasterUser implements UserDetails {
     public void setUserMessageList(List<Message> userMessageList) {
         this.userMessageList = userMessageList;
     }
-
-
+    
 
     public String getFullName() {
         return fullName;
