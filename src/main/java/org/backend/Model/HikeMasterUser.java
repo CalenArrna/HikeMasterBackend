@@ -52,7 +52,6 @@ public class HikeMasterUser implements UserDetails {
     }
 
 
-
     public String getFullName() {
         return fullName;
     }

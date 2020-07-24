@@ -1,6 +1,7 @@
 package org.backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ public class HikeRoute {
     private Long routeId;
     @JsonIgnore
     @OneToMany
-    private  List<Message>messages=new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
     @Column
     private Integer rate;
     @Column
@@ -33,6 +34,29 @@ public class HikeRoute {
     private String text;
     @Column
     private String title;
+    @OneToMany
+    private List<Pictures> picturesList = new ArrayList<>();
+
+    public void setRouteId(Long routeId) {
+        this.routeId = routeId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public List<Pictures> getPicturesList() {
+        return picturesList;
+    }
+
+    public void setPicturesList(List<Pictures> picturesList) {
+        this.picturesList = picturesList;
+    }
+
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
@@ -60,7 +84,6 @@ public class HikeRoute {
     public void setTitle(String title) {
         this.title = title;
     }
-
 
 
     public String getDifficulty() {

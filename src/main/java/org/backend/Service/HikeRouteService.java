@@ -9,11 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class HikeRouteService  {
+public class HikeRouteService {
     @PersistenceContext
     EntityManager em;
 
@@ -22,10 +21,9 @@ public class HikeRouteService  {
         List<HikeRoute> hikeRouteList = em.createQuery("select h from HikeRoute h where h.routeId = :hikeRouteId", HikeRoute.class)
                 .setParameter("hikeRouteId", hikeRouteId)
                 .getResultList();
-        if (hikeRouteList.isEmpty()){
+        if (hikeRouteList.isEmpty()) {
             return null;
-        }
-        else{
+        } else {
             return hikeRouteList.get(0);
         }
     }
@@ -37,23 +35,23 @@ public class HikeRouteService  {
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if(StringUtils.isNotBlank(tourType)){
+        if (StringUtils.isNotBlank(tourType)) {
             booleanBuilder.and(QHikeRoute.hikeRoute.tourType.like(tourType));
         }
 
-        if(StringUtils.isNotBlank(routeType)) {
+        if (StringUtils.isNotBlank(routeType)) {
             booleanBuilder.and(QHikeRoute.hikeRoute.routeType.like(routeType));
         }
-        if(StringUtils.isNotBlank(difficultly)){
+        if (StringUtils.isNotBlank(difficultly)) {
             booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(difficultly));
         }
-        if(rate!=null){
+        if (rate != null) {
             booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe(rate));
         }
-        if(length!=null){
+        if (length != null) {
             booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(length));
         }
-        if (levelRise!=null){
+        if (levelRise != null) {
             booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(levelRise));
         }
 
@@ -62,16 +60,14 @@ public class HikeRouteService  {
                 .where(booleanBuilder)
                 .fetch();
 
-        if (routes==null){
+        if (routes == null) {
             return null;
-        }else {
+        } else {
             return routes;
         }
 
 
     }
-
-
 
 
 }

@@ -1,22 +1,22 @@
 package org.backend.DTOs;
 
 
-public class HikeRouteErrorDTO extends ResponseDTO{
+public class HikeRouteErrorDTO extends ResponseDTO {
 
-   private String[] routeId;
-   private String[] messages;
-   private String[] rate;
-   private String[] coordinates;
-   private String[] tourLength;
-   private String[] levelRise;
-   private String[] difficulty;
-   private String[] distanceFromLoc;
-   private String[] routeType;
-   private String[] tourType;
+    private String[] routeId;
+    private String[] messages;
+    private String[] rate;
+    private String[] coordinates;
+    private String[] tourLength;
+    private String[] levelRise;
+    private String[] difficulty;
+    private String[] distanceFromLoc;
+    private String[] routeType;
+    private String[] tourType;
 
     public HikeRouteErrorDTO() {
 
-        success=false;
+        success = false;
     }
 
     public String[] getRouteId() {

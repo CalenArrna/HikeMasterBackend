@@ -5,12 +5,12 @@ import org.springframework.validation.ObjectError;
 
 import java.util.List;
 
-public class HikeMasterUserErrorDTO extends ResponseDTO{
+public class HikeMasterUserErrorDTO extends ResponseDTO {
     String[] username;
     String[] email;
     String[] password;
     String[] fullName;
-    
+
     public HikeMasterUserErrorDTO() {
         this.success = false;
     }
@@ -46,28 +46,28 @@ public class HikeMasterUserErrorDTO extends ResponseDTO{
     public void setFullName(String[] fullName) {
         this.fullName = fullName;
     }
-    
-    public static HikeMasterUserErrorDTO getPasswordConfirmationErrorDTO () {
+
+    public static HikeMasterUserErrorDTO getPasswordConfirmationErrorDTO() {
         String[] errorMessage = new String[1];
         errorMessage[0] = "password and confirmation password do not match";
-        HikeMasterUserErrorDTO passConfError =  new HikeMasterUserErrorDTO();
+        HikeMasterUserErrorDTO passConfError = new HikeMasterUserErrorDTO();
         passConfError.setPassword(errorMessage);
         return passConfError;
     }
 
-    public static HikeMasterUserErrorDTO getUsernameAlreadyExistErrorDTO () {
+    public static HikeMasterUserErrorDTO getUsernameAlreadyExistErrorDTO() {
         String[] errorMessage = new String[1];
         errorMessage[0] = "username already exist";
-        HikeMasterUserErrorDTO usernameAlreadyExists =  new HikeMasterUserErrorDTO();
+        HikeMasterUserErrorDTO usernameAlreadyExists = new HikeMasterUserErrorDTO();
         usernameAlreadyExists.setUsername(errorMessage);
         return usernameAlreadyExists;
     }
 
-    public static HikeMasterUserErrorDTO getSpringErrorsDTO (List<ObjectError> errorList) {
+    public static HikeMasterUserErrorDTO getSpringErrorsDTO(List<ObjectError> errorList) {
         HikeMasterUserErrorDTO springErrors = new HikeMasterUserErrorDTO();
         for (ObjectError objectError : errorList) {
-            switch (((FieldError)objectError).getField()){
-                case "username" : 
+            switch (((FieldError) objectError).getField()) {
+                case "username":
                     String[] errorUsername = new String[1];
                     errorUsername[0] = objectError.getDefaultMessage();
                     springErrors.setUsername(errorUsername);

@@ -10,17 +10,17 @@ public class RegisterDTO {
     @NotNull
     @Size(min = 3, max = 30)
     private String username;
-    
+
     @NotNull
     @Size(min = 5, max = 30)
     private String fullName;
-   
+
     @NotNull
     @Email
     private String email;
-    
+
     private String password;
-  
+
     private String passwordConfirm;
 
     public RegisterDTO() {

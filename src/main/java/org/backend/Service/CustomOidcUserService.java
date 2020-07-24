@@ -42,7 +42,7 @@ public class CustomOidcUserService extends OidcUserService {
 
     public OidcUser processOidcUser(OidcUserRequest userRequest, OidcUser oidcUser) {
         GoogleUserInfo googleUserInfo = new GoogleUserInfo(oidcUser.getAttributes());
-        if (em.createQuery("SELECT u from HikeMasterUser u WHERE u.email=:mail",HikeMasterUser.class).setParameter("mail",googleUserInfo.getEmail()).getResultList()!=null) {
+        if (em.createQuery("SELECT u from HikeMasterUser u WHERE u.email=:mail", HikeMasterUser.class).setParameter("mail", googleUserInfo.getEmail()).getResultList() != null) {
             HikeMasterUser user = new HikeMasterUser();
             Authority userAuthority = userService.getUserAuthority();
             user.setEmail(googleUserInfo.getEmail());

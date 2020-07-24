@@ -8,6 +8,7 @@ import org.backend.Repository.HikeRouteRepository;
 import org.backend.Service.HikeRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,28 +26,30 @@ public class AdminController {
         this.messageService = messageService;
 
     }
+
     @DeleteMapping("/hike_routes/{hikeRouteId}")
-    public ResponseDTO deleteHikeRoute(@PathVariable long hikeRouteId){
-        Optional<HikeRoute> hikeRoute=hikeRouteRepository.findById(hikeRouteId);
-        if(hikeRoute.isPresent()){
+    public ResponseDTO deleteHikeRoute(@PathVariable long hikeRouteId) {
+        Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
+        if (hikeRoute.isPresent()) {
             hikeRouteRepository.deleteById(hikeRouteId);
             return new HikeRouteSuccessDTO();
 
-        }else {
+        } else {
             return new HikeRouteErrorDTO();
         }
 
 
     }
+
     @GetMapping("/hike_routes")
-    public List<HikeRoute> getAllHikeRoute(){
+    public List<HikeRoute> getAllHikeRoute() {
         return hikeRouteRepository.findAll();
     }
 
     @PutMapping("/hike_routes")
-    public List<HikeRoute> modifyHikeRoute(@RequestBody HikeRoute hikeRoute ){
+    public List<HikeRoute> modifyHikeRoute(@RequestBody HikeRoute hikeRoute) {
         hikeRouteRepository.save(hikeRoute);
-    return hikeRouteRepository.findAll();
+        return hikeRouteRepository.findAll();
     }
 
 }
