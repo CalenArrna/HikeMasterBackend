@@ -71,6 +71,11 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/user_role")
+    public String getUserRole(HikeMasterUser hikeMasterUser){
+        return service.getRoleOfUser(hikeMasterUser);
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseDTO userLogin(@RequestBody HikeMasterUser hikeMasterUser) {
         List<HikeMasterUser> hikeMasterUser1 = service.loginUser(hikeMasterUser.getUsername(), hikeMasterUser.getPassword());

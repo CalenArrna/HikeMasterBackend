@@ -36,6 +36,16 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
+    public String getRoleOfUser(HikeMasterUser hikeMasterUser) {
+        if (hikeMasterUser.getRole().equals("USER")) {
+            return "USER";
+        } else if (hikeMasterUser.getRole().equals("ADMIN")) {
+            return "ADMIN";
+        } else {
+            return "ANONYMUS";
+        }
+    }
+
     @Transactional
     public boolean userExists(String name) {
         return !em.createQuery("select u from HikeMasterUser u where u.username = :lookFor", HikeMasterUser.class)
@@ -53,13 +63,13 @@ public class UserService implements UserDetailsService {
         List<HikeMasterUser> hikeMasterUser = em.createQuery("SELECT u FROM HikeMasterUser u WHERE u.username= :username", HikeMasterUser.class)
                 .setParameter("username", username)
                 .getResultList();
+        passwordEncoder.matches(password, hikeMasterUser.get(0).getPassword());
 
-        if (!hikeMasterUser.isEmpty()) {
-            hikeMasterUser.get(0).setPassword(passwordEncoder.encode(password));
-            return hikeMasterUser;
-        } else {
-            return null;
+        if (username.equals(hikeMasterUser.get(0).getUsername()) && passwordEncoder.matches(password, hikeMasterUser.get(0).getPassword())){
+                return hikeMasterUser;
         }
+
+        return null;
     }
 
     public Authority getUserAuthority() {

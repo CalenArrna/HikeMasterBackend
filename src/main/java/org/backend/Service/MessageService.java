@@ -3,12 +3,12 @@ package org.backend.Service;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -18,11 +18,6 @@ public class MessageService {
 
     @PersistenceContext
     EntityManager em;
-
-   // @Autowired
-   // public MessageService(EntityManager em) {
-   //     this.em = em;
-   // }
 
     @Transactional
     public List<Message> addMessage(Message message, Long routeId) {
@@ -41,14 +36,14 @@ public class MessageService {
         return getRouteMessageList(routeId);
     }
 
-    public List<Message> getRouteMessageList(Long routeId){
-       return em.createQuery("select h from HikeRoute h where h.routeId = :routeId", HikeRoute.class)
+    public List<Message> getRouteMessageList(Long routeId) {
+        return em.createQuery("select h from HikeRoute h where h.routeId = :routeId", HikeRoute.class)
                 .setParameter("routeId", routeId)
                 .getResultList().get(0).getMessages();
     }
 
     @Transactional
-    public void addMessageToMessageList(Message message, Long routeId){
+    public void addMessageToMessageList(Message message, Long routeId) {
         em.createQuery("select h from HikeRoute h where h.routeId = :routeId", HikeRoute.class)
                 .setParameter("routeId", routeId)
                 .getResultList().get(0).getMessages().add(message);
