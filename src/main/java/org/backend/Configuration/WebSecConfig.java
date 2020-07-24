@@ -33,7 +33,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/csrf","/hike_route","/registration","/login","/hike_routes/{route_Id}","/","/favicon.ico","/hike_routes").permitAll()
+                .antMatchers("/csrf","/hike_route","/registration","/login","/hike_routes/{route_Id}","/","/favicon.ico","/hike_routes","/api/registration").permitAll()
                 .anyRequest()
                 .authenticated();
 
