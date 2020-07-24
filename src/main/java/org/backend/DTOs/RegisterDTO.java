@@ -10,17 +10,20 @@ public class RegisterDTO {
     @NotNull
     @Size(min = 3, max = 30)
     private String username;
-
+    
     @NotNull
     @Size(min = 5, max = 30)
     private String fullName;
-
+   
     @NotNull
     @Email
     private String email;
 
-    private String password;
+    @NotNull
+    private Boolean notification;
 
+    private String password;
+  
     private String passwordConfirm;
 
     public RegisterDTO() {
@@ -48,6 +51,14 @@ public class RegisterDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isNotification() {
+        return notification;
+    }
+
+    public void setNotification(boolean notification) {
+        this.notification = notification;
     }
 
     public String getPassword() {

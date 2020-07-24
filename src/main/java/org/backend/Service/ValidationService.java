@@ -1,6 +1,7 @@
 package org.backend.Service;
 
 import org.backend.DTOs.HikeMasterUserErrorDTO;
+import org.backend.DTOs.RegisterDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.DTOs.HikeMasterUserSuccessDTO;
 import org.passay.PasswordData;
@@ -29,31 +30,38 @@ public class ValidationService {
 
 
     public ResponseDTO validatePassword(PasswordData passwordData) {
-        RuleResult result = passwordValidator.validate(passwordData);
-        if (result.isValid()) {
+        RuleResult validationResult = passwordValidator.validate(passwordData);
+        if (validationResult.isValid()) {
             return new HikeMasterUserSuccessDTO();
         } else {
-            HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
-            List<RuleResultDetail> errorList = result.getDetails();
-            int errorCount = errorList.size();
-            String[] passwordErrors = new String[errorCount];
-            for (int i = 0; i < errorCount; i++) {
-                passwordErrors[i] = errorList.get(i).getErrorCode();
-            }
-            hikeMasterUserErrorDTO.setPassword(passwordErrors);
-            return hikeMasterUserErrorDTO;
+            return collectPasswordErrorsToDTO(validationResult);
         }
+    }
+
+    private ResponseDTO collectPasswordErrorsToDTO(RuleResult result) {
+        HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
+        List<RuleResultDetail> errorList = result.getDetails();
+        int errorCount = errorList.size();
+        String[] passwordErrors = new String[errorCount];
+        for (int i = 0; i < errorCount; i++) {
+            passwordErrors[i] = errorList.get(i).getErrorCode();
+        }
+        hikeMasterUserErrorDTO.setPassword(passwordErrors);
+        return hikeMasterUserErrorDTO;
     }
 
     public boolean validateUsername(PasswordData passwordData) {
         return !userService.userExists(passwordData.getUsername());
     }
 
+    public boolean emailIsInDatabase(RegisterDTO newUser) {
+        return userService.isEmailExists(newUser.getEmail());
+    }
+
     public ResponseDTO validateSpringResults(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<ObjectError> errorList = bindingResult.getAllErrors();
-            HikeMasterUserErrorDTO hikeMasterUserErrorDTO = HikeMasterUserErrorDTO.getSpringErrorsDTO(errorList);
-            return hikeMasterUserErrorDTO;
+            return HikeMasterUserErrorDTO.getSpringErrorsDTO(errorList);
         } else {
             return new HikeMasterUserSuccessDTO();
         }
