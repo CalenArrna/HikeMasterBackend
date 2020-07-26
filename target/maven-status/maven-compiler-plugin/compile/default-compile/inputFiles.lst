@@ -1,4 +1,5 @@
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Controllers/UserController.java
+/home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/CoordinateDistanceCalculator/Haversine.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/DTOs/ResponseDTO.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/DTOs/SuccessDTO.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Service/HikeRouteService.java
@@ -17,3 +18,4 @@
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/enums/RouteType.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/DTOs/ErrorDTO.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Model/HikeMasterUser.java
+/home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/DTOs/HikeRouteErrorDTO.java

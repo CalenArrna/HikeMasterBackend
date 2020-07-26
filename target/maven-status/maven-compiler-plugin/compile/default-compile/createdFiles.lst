@@ -1,4 +1,5 @@
 org/backend/Service/HikeRouteService.class
+org/backend/CoordinateDistanceCalculator/Haversine.class
 org/backend/Service/ValidationService.class
 org/backend/enums/TourType.class
 org/backend/DTOs/SuccessDTO.class
@@ -8,6 +9,7 @@ org/backend/Model/HikeRoute.class
 org/backend/Model/HikeMasterUser.class
 org/backend/Configuration/WebSecConfig.class
 org/backend/Service/UserService.class
+org/backend/DTOs/HikeRouteErrorDTO.class
 org/backend/Application.class
 org/backend/Controllers/UserController.class
 org/backend/DTOs/RegisterDTO.class

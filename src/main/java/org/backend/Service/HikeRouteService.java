@@ -20,12 +20,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+//TODO: username to creation
+//TODO: TimeStamp
+//TODO: HIkreRoute ERrror messages
 
 
 @Service
 public class HikeRouteService {
-    private MultipartFile fileToConvert = null;
     @PersistenceContext
     EntityManager em;
 
@@ -38,43 +40,28 @@ public class HikeRouteService {
 
     @Transactional
     public void createNewHikeRouteFrom(MultipartFile kml) throws XMLStreamException {
-        fileToConvert = kml; //TODO: get it without field
-        LineString lineString = getLineStringOfFile();
-        em.createNativeQuery("INSERT INTO hike_route (route_line) VALUE (?)")
-                .setParameter(1,lineString)
-                .executeUpdate();
+        HikeRoute newHikeRoute = createHikeRouteObject(kml);
+        em.persist(newHikeRoute);
     }
     
-    private HikeRoute createHikeRouteObject (LineString lineString) {
-        HikeRoute route = new HikeRoute();
-        route.setRouteLine(lineString);
+    private HikeRoute createHikeRouteObject (MultipartFile kml) throws XMLStreamException {
+        List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
+        HikeRoute route = HikeRoute.createRouteFrom(coordinates);
+        route.setRouteKML(kml.toString());
         return route;
     }
-
-    private LineString getLineStringOfFile() throws XMLStreamException {
-        GeometryFactory factory = new GeometryFactory();
-        Coordinate[] routeCoordinates = getCoordinatesFromKml();
-        return factory.createLineString(routeCoordinates);
-    }
-
-    private Coordinate[] getCoordinatesFromKml() throws XMLStreamException {
-        List<Coordinate> list = parseKmlToListOfCoordinates();
-        Coordinate[] coordinates = new Coordinate[1];
-        coordinates = list.toArray(coordinates);
-        return coordinates;
-    }
-
-    private List<Coordinate> parseKmlToListOfCoordinates () throws XMLStreamException {
+    
+    private List<Coordinate> parseKmlToListOfCoordinates (MultipartFile kml) throws XMLStreamException {
         List<Coordinate> listOfCoordinates = new ArrayList<>();
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(getValidFileStream());
+        XMLEventReader eventReader = inputFactory.createXMLEventReader(getValidFileStream(kml));
         while (eventReader.hasNext()){
             XMLEvent nextEvent = eventReader.nextEvent();
             if (nextEvent.isStartElement()) {
                 StartElement startElement = nextEvent.asStartElement();
                 if (startElement.getName().getLocalPart().equals("coord")){
                     nextEvent = eventReader.nextEvent();
-                    String coordinates = nextEvent.asCharacters().getData(); //TODO : How to get data from there? This point kills
+                    String coordinates = nextEvent.asCharacters().getData();
                     listOfCoordinates.add(getCoordinateFrom(coordinates));
                 }
             }
@@ -91,10 +78,9 @@ public class HikeRouteService {
     }
     //TODO: Repair databaseconnection, now have to drop database...
 
-    private InputStream getValidFileStream() {
+    private InputStream getValidFileStream(MultipartFile kml) {
         try {
-            InputStream stream = fileToConvert.getInputStream();
-            return stream;
+            return kml.getInputStream();
         } catch (IOException e) {
             throw new RuntimeException(e); //TODO: do a valid exception/error handling!!!
         }
