@@ -16,6 +16,7 @@ org/backend/DTOs/RegisterDTO.class
 org/backend/enums/TourDifficulty.class
 org/backend/Controllers/HikeRouteController.class
 org/backend/DTOs/ErrorDTO.class
+org/backend/DTOs/MarkerDTO.class
 org/backend/DTOs/ResponseDTO.class
 org/backend/Configuration/WebSecConfig$1.class
 org/backend/enums/RouteType.class

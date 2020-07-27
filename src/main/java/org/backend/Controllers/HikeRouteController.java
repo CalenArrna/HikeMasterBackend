@@ -1,10 +1,7 @@
 package org.backend.Controllers;
 
 
-import org.backend.DTOs.ErrorDTO;
-import org.backend.DTOs.HikeRouteErrorDTO;
-import org.backend.DTOs.ResponseDTO;
-import org.backend.DTOs.SuccessDTO;
+import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
 import org.backend.Service.HikeRouteService;
 
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.stream.XMLStreamException;
+import java.util.List;
 
 @RestController
 public class HikeRouteController {
@@ -33,13 +31,19 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/createHikeRoute")
-    public ResponseDTO createHikeRoute(@RequestParam("file")MultipartFile kml) throws XMLStreamException {
-        try{
-        hikeRouteService.createNewHikeRouteFrom(kml);
-        return new SuccessDTO();
-        }catch (Exception exception) {
+    public ResponseDTO createHikeRoute(@RequestParam("file") MultipartFile kml) throws XMLStreamException {
+        try {
+            hikeRouteService.createNewHikeRouteFrom(kml);
+            return new SuccessDTO();
+        } catch (Exception exception) {
             return new HikeRouteErrorDTO(exception.getMessage());//TODO: make a proper error handling here!
         }
+    }
+
+    @PostMapping(value = "/rest/hike_route/area")
+    public List<MarkerDTO> getHikeRouteListOfArea(@RequestParam double latitude, @RequestParam double longitude,
+                                                  @RequestParam int radius) {
+        return hikeRouteService.hikeRouteInArea(latitude, longitude, radius);
     }
 
 }

@@ -16,9 +16,11 @@ public class HikeRoute {
     @Id
     @GeneratedValue
     private long routeId;
+    @Column
+    private String title;
     @JsonIgnore
     @OneToMany
-    private  List<Messages>messages=new ArrayList<>();
+    private List<Messages> messages = new ArrayList<>();
     @Column
     private double rate;
     @Column
@@ -165,11 +167,19 @@ public class HikeRoute {
     public void setTourType(TourType tourType) {
         this.tourType = tourType;
     }
-    
-    public static HikeRoute createRouteFrom (List<Coordinate> list) {
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public static HikeRoute createRouteFrom(List<Coordinate> list) {
         HikeRoute route = new HikeRoute();
         Coordinate start = list.get(0);
-        Coordinate end = list.get(list.size()-1);
+        Coordinate end = list.get(list.size() - 1);
         route.setEndLat(end.x);
         route.setEndLong(end.y);
         route.setStartLat(start.x);
@@ -178,38 +188,38 @@ public class HikeRoute {
         route.setLevelRise(calculateElevation(list));
         return route;
     }
-    
-    public static int calculateElevation (List<Coordinate> list) {
-        Coordinate max = list.stream().max( (Coordinate c1, Coordinate c2) -> (int) (c1.getZ() - (c2.getZ()))).get();
-        Coordinate min = list.stream().min( (Coordinate c1, Coordinate c2) -> (int) (c1.getZ() - (c2.getZ()))).get();
+
+    public static int calculateElevation(List<Coordinate> list) {
+        Coordinate max = list.stream().max((Coordinate c1, Coordinate c2) -> (int) (c1.getZ() - (c2.getZ()))).get();
+        Coordinate min = list.stream().min((Coordinate c1, Coordinate c2) -> (int) (c1.getZ() - (c2.getZ()))).get();
         return (int) (max.getZ() - min.getZ());
-    } 
-    
-    public static double calculateTourLength (List<Coordinate> list) { // TODO: make it work with timeStamps
+    }
+
+    public static double calculateTourLength(List<Coordinate> list) { // TODO: make it work with timeStamps
         List<Coordinate> shortenedList = shortenListToMinutes(list);
         double elevation = 0;
         Coordinate coordinate1 = null;
         for (Coordinate coordinate2 : shortenedList) {
             if (coordinate1 != null) {
-                elevation += Haversine.distance(coordinate1.getX(),coordinate1.getY(),
+                elevation += Haversine.distance(coordinate1.getX(), coordinate1.getY(),
                         coordinate2.getX(), coordinate2.getY());
             }
             coordinate1 = coordinate2;
         }
         return elevation;
     }
-    
-    private static List<Coordinate> shortenListToMinutes (List<Coordinate> list) {
+
+    private static List<Coordinate> shortenListToMinutes(List<Coordinate> list) {
         List<Coordinate> shortList = new ArrayList<>();
         int originalListSize = list.size();
         int iterationNumber = originalListSize / 60;
         int actIdx = 0;
-        for (int i = 0; i < iterationNumber ; i++) {
+        for (int i = 0; i < iterationNumber; i++) {
             shortList.add(list.get(actIdx));
             actIdx += 60;
         }
         if (list.size() % 60 > 0) {
-            shortList.add(list.get(originalListSize-1));
+            shortList.add(list.get(originalListSize - 1));
         }
         return shortList;
     }

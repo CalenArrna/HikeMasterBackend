@@ -10,6 +10,7 @@
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Service/ValidationService.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Controllers/HikeRouteController.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/enums/TourType.java
+/home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/DTOs/MarkerDTO.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Model/Authority.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Controllers/RegistrationController.java
 /home/progmatic-4/IdeaProjects/HikeMasterBackend/src/main/java/org/backend/Service/UserService.java

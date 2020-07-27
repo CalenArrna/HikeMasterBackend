@@ -32,7 +32,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
 //                .permitAll()
 //                .and()
                 .authorizeRequests()
-                .antMatchers("/rest/csrf", "/rest/hike_route", "/registration", "/createHikeRoute").permitAll()
+                .antMatchers("/rest/csrf", "/rest/hike_route/*", "/registration", "/createHikeRoute").permitAll()
                 .anyRequest()
                 .authenticated();
 //                .and()
