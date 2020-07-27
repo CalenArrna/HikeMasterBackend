@@ -70,6 +70,18 @@ public class HikeRouteService {
 
 
     }
+    @Transactional
+    public void addNewHikeRoute(HikeRouteDTO hikeRouteDTO){
+        HikeRoute hikeRoute=new HikeRoute();
+        hikeRoute.setRate(hikeRouteDTO.getRate());
+        hikeRoute.setDifficulty(hikeRouteDTO.getDifficulty());
+        hikeRoute.setTourType(hikeRouteDTO.getTourType());
+        hikeRoute.setRouteType(hikeRouteDTO.getRouteType());
+        hikeRoute.setText(hikeRouteDTO.getDescription());
+        hikeRoute.setTitle(hikeRouteDTO.getTitle());
+        em.persist(hikeRoute);
+
+    }
 
 
 }

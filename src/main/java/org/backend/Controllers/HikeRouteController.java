@@ -45,7 +45,7 @@ public class HikeRouteController {
 
     @PostMapping(value = "/hike_route")
 
-    public ResponseDTO postHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
+    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO();
@@ -64,5 +64,12 @@ public class HikeRouteController {
         } else {
             return "failed";
         }
+    }
+
+    @PostMapping(value = "/hike_route/upload")
+    public ResponseDTO addNewHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO){
+            hikeRouteService.addNewHikeRoute(hikeRouteDTO);
+            return new HikeRouteSuccessDTO();
+
     }
 }
