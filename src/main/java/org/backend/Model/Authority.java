@@ -1,11 +1,13 @@
 package org.backend.Model;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Authority {
+public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue
     private long id;
@@ -37,6 +39,11 @@ public class Authority {
 
     public void setSecurityHikeMasterUsers(Set<HikeMasterUser> securityHikeMasterUsers) {
         this.securityHikeMasterUsers = securityHikeMasterUsers;
+    }
+
+    @Override
+    public String getAuthority() {
+        return roleName;
     }
 }
 

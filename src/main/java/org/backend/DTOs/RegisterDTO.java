@@ -18,10 +18,10 @@ public class RegisterDTO {
     @NotNull
     @Email
     private String email;
-
-  //  @NotNull
+    
+   // @NotNull
    // private Boolean notification;
-
+    
     private String password;
   
     private String passwordConfirm;
@@ -53,13 +53,13 @@ public class RegisterDTO {
         this.email = email;
     }
 
-//    public boolean isNotification() {
-//        return notification;
-//    }
+   // public boolean isNotification() {
+   //     return notification;
+   // }
 //
-//    public void setNotification(boolean notification) {
-//        this.notification = notification;
-//    }
+   // public void setNotification(boolean notification) {
+   //     this.notification = notification;
+   // }
 
     public String getPassword() {
         return password;

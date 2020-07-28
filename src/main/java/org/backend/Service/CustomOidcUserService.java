@@ -21,7 +21,6 @@ public class CustomOidcUserService extends OidcUserService {
     @PersistenceContext
     EntityManager em;
 
-
     UserService userService;
 
     @Autowired

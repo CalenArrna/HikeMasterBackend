@@ -11,14 +11,11 @@ import org.backend.Service.ValidationService;
 import org.dozer.DozerBeanMapper;
 import org.passay.PasswordData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -42,11 +39,15 @@ public class UserController {
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         Authority userAuthority = service.getUserAuthority();
         PasswordData passwordData = mapper.map(newUser, PasswordData.class);
+        HikeMasterUser user = new HikeMasterUser();
+        user.getAuthoritySet().add(userAuthority);
+        userAuthority.getSecurityHikeMasterUsers().add(user);
+        user.setRole(userAuthority.getRoleName());
         boolean usernameValid = validationService.validateUsername(passwordData);
         boolean emailExistInDatabase = validationService.emailIsInDatabase(newUser);
         ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
         ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
-        
+
         if (!newUser.getPassword().equals(newUser.getPasswordConfirm())) {
             return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
         }
@@ -56,12 +57,12 @@ public class UserController {
         if (emailExistInDatabase) {
             return HikeMasterUserErrorDTO.getEmailAlreadyExistErrorDTO();
         }
-        
+
         if (passwordValidation.getSuccess()
                 && springValidation.getSuccess()) {
             return addValidUserToDatabase(newUser, userAuthority);
         } else {
-            return collectErrorsToDTO(passwordValidation,springValidation);
+            return collectErrorsToDTO(passwordValidation, springValidation);
         }
     }
 
@@ -74,8 +75,8 @@ public class UserController {
         service.addUserToDatabase(validHikeMasterUser);
         return new HikeMasterUserSuccessDTO(validHikeMasterUser.getRole());
     }
-    
-    private ResponseDTO collectErrorsToDTO (ResponseDTO passwordValidation, ResponseDTO springValidation) {
+
+    private ResponseDTO collectErrorsToDTO(ResponseDTO passwordValidation, ResponseDTO springValidation) {
         HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
         mapper.map(springValidation, hikeMasterUserErrorDTO);
         if (!passwordValidation.getSuccess()) {
@@ -83,14 +84,13 @@ public class UserController {
         }
         return hikeMasterUserErrorDTO;
     }
-    
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseDTO userLogin(@RequestBody HikeMasterUser hikeMasterUser) {
-        List<HikeMasterUser> hikeMasterUser1 = service.loginUser(hikeMasterUser.getUsername(), hikeMasterUser.getPassword());
-        if (hikeMasterUser1 != null) {
-            return new HikeMasterUserSuccessDTO(hikeMasterUser1.get(0).getRole());
-        } else {
-            return new HikeMasterUserErrorDTO();
-        }
+
+    @GetMapping(value = "/user_role")
+    public String getUserRole(HikeMasterUser hikeMasterUser) {
+        return service.getRoleOfUser(hikeMasterUser);
     }
+
+
+
+
 }

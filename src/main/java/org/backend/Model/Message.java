@@ -1,6 +1,9 @@
 package org.backend.Model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Message {
@@ -15,6 +18,17 @@ public class Message {
     private HikeRoute hikeRoute;
     @Column
     private String title;
+    @Column
+    @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm")
+    private LocalDateTime messageDate;
+
+    public LocalDateTime getMessageDate() {
+        return messageDate;
+    }
+
+    public void setMessageDate(LocalDateTime messageDate) {
+        this.messageDate = messageDate;
+    }
 
     public String getTitle() {
         return title;
