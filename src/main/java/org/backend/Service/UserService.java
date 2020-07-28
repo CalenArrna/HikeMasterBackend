@@ -17,8 +17,8 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+   // @Autowired
+   // PasswordEncoder passwordEncoder;
 
     @PersistenceContext
     EntityManager em;
@@ -53,24 +53,11 @@ public class UserService implements UserDetailsService {
                 .getResultList().isEmpty();
     }
 
-
     @Transactional
     public void addUserToDatabase(HikeMasterUser hikeMasterUser) {
         em.persist(hikeMasterUser);
     }
 
-    public List<HikeMasterUser> loginUser(String username, String password) {
-        List<HikeMasterUser> hikeMasterUser = em.createQuery("SELECT u FROM HikeMasterUser u WHERE u.username= :username", HikeMasterUser.class)
-                .setParameter("username", username)
-                .getResultList();
-        passwordEncoder.matches(password, hikeMasterUser.get(0).getPassword());
-
-        if (username.equals(hikeMasterUser.get(0).getUsername()) && passwordEncoder.matches(password, hikeMasterUser.get(0).getPassword())){
-                return hikeMasterUser;
-        }
-
-        return null;
-    }
 
     public Authority getUserAuthority() {
         return em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'", Authority.class).getSingleResult();
