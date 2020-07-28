@@ -78,7 +78,7 @@ public class HikeRouteService {
             booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe(rate));
         }
         if(length!=null){
-            booleanBuilder.and(QHikeRoute.hikeRoute.tourLenght.loe(length));
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(length));
         }
         if (levelRise!=null){
             booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(levelRise));

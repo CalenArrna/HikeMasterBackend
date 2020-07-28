@@ -81,7 +81,7 @@ public class HikeRouteController {
 
     @RequestMapping(value = "/hike_route/{route_Id}/messages", method = RequestMethod.POST)
     public String addMessageToRoute(@PathVariable Long route_Id, @RequestBody Message message ) {
-        if (hikeRouteRepository.findById(route_Id).isPresent()) {
+        if (hikeRouteRepository.findById(route_Id).isPresent()){
             message.setHikeRoute(hikeRouteRepository.findById(route_Id).get());
             message.setMessageDate(LocalDateTime.now());
 

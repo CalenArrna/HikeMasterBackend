@@ -4,7 +4,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
 @Entity
 public class Message {
     @Id
@@ -70,3 +69,5 @@ public class Message {
         this.hikeRoute = hikeRoute;
     }
 }
+
+
