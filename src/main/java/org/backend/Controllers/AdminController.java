@@ -33,7 +33,7 @@ public class AdminController {
             return new HikeRouteSuccessDTO();
 
         }else {
-            return new HikeRouteErrorDTO();
+            return new HikeRouteErrorDTO("Valami hiba van!"); // TODO: Need valid message!
         }
 
 

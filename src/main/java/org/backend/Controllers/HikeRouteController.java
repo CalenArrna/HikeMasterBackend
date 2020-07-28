@@ -1,8 +1,6 @@
 package org.backend.Controllers;
 
-import org.backend.DTOs.HikeRouteErrorDTO;
-import org.backend.DTOs.HikeRouteSuccessDTO;
-import org.backend.DTOs.ResponseDTO;
+import org.backend.DTOs.*;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
@@ -16,9 +14,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import javax.xml.stream.XMLStreamException;
 import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class HikeRouteController {
@@ -42,7 +43,7 @@ public class HikeRouteController {
     public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
         HikeRoute hikeRoute = hikeRouteService.hikeRouteDetails(route_Id);
         if (hikeRoute == null){
-            return new HikeRouteErrorDTO();
+            return new HikeRouteErrorDTO("Itt is hiba van"); //TODO: also need valid message
         } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
             hikeRouteSuccessDTO.setHikeRoute(hikeRoute);
@@ -54,12 +55,28 @@ public class HikeRouteController {
     public ResponseDTO postHikeRoute(String tour_type, String route_type, String difficultly, Integer tour_length, Integer level_rise, Integer rate) {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(tour_type, route_type, difficultly, tour_length, level_rise, rate);
         if (routesByParams.isEmpty()) {
-            return new HikeRouteErrorDTO();
+            return new HikeRouteErrorDTO("Hiba van itt is"); //TODO: need valid error message
         } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
             hikeRouteSuccessDTO.setHikeRoutes(routesByParams);
             return hikeRouteSuccessDTO;
         }
+    }
+
+    @PostMapping(value = "/createHikeRoute")
+    public ResponseDTO createHikeRoute(@RequestParam("file") MultipartFile kml) throws XMLStreamException {
+        try {
+            hikeRouteService.createNewHikeRouteFrom(kml);
+            return new HikeRouteSuccessDTO();
+        } catch (Exception exception) {
+            return new HikeRouteErrorDTO(exception.getMessage());//TODO: make a proper error handling here!
+        }
+    }
+
+    @PostMapping(value = "/rest/hike_route/area")
+    public List<MarkerDTO> getHikeRouteListOfArea(@RequestParam double latitude, @RequestParam double longitude,
+                                                  @RequestParam int radius) {
+        return hikeRouteService.hikeRouteInArea(latitude, longitude, radius);
     }
 
     @RequestMapping(value = "/hike_route/{route_Id}/messages", method = RequestMethod.POST)
