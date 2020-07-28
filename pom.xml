@@ -147,11 +147,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>net.postgis</groupId>
-            <artifactId>postgis-jdbc</artifactId>
-            <version>2.5.0</version>
-        </dependency>
 
         <!-- jpa, crud repository -->
         <dependency>
@@ -165,8 +160,6 @@
             <version>5.4.18.Final</version>
         </dependency>
 
-
-
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
@@ -179,11 +172,14 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>spring-boot-email-core</artifactId>
+            <version>0.5.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -26,6 +26,7 @@ public class UserController {
     private PasswordEncoder encoder;
     private ValidationService validationService;
 
+
     @Autowired
     public UserController(DozerBeanMapper mapper, UserService service, PasswordEncoder encoder, ValidationService validationService) {
         this.mapper = mapper;
@@ -33,6 +34,7 @@ public class UserController {
         this.encoder = encoder;
         this.validationService = validationService;
         this.service = service;
+
     }
 
     @PostMapping(value = "/registration")
@@ -89,8 +91,6 @@ public class UserController {
     public String getUserRole(HikeMasterUser hikeMasterUser) {
         return service.getRoleOfUser(hikeMasterUser);
     }
-
-
 
 
 }

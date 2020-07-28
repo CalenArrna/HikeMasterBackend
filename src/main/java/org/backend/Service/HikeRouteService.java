@@ -80,7 +80,7 @@ public class HikeRouteService {
             booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(hikeRouteDTO.getDifficulty()));
         }
         if (hikeRouteDTO.getTourLength() != null) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(hikeRouteDTO.getTourLength()));
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourLenght.loe(hikeRouteDTO.getTourLength()));
         }
         if (hikeRouteDTO.getLevelRise() != null) {
             booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(hikeRouteDTO.getLevelRise()));

@@ -63,7 +63,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/rest/hike_route/area").permitAll()
+                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/rest/hike_route/area","/contact").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -126,7 +126,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://hikemaster-fe.herokuapp.com/"));
+        configuration.setAllowedOrigins(Arrays.asList("https://hikemaster-fe.herokuapp.com","http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH"));
         // setAllowCredentials(true) is important, otherwise:
