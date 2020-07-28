@@ -1,7 +1,4 @@
-.idea/
-out/
 *.iml
-*.jar
-*.lst
-target/*
-*.class
+.idea/
+target/
+hikemasterprog/

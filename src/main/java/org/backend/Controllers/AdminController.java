@@ -8,7 +8,6 @@ import org.backend.Repository.HikeRouteRepository;
 import org.backend.Service.HikeRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,6 @@ public class AdminController {
         this.messageService = messageService;
 
     }
-
     @DeleteMapping("/hike_routes/{hikeRouteId}")
     public ResponseDTO deleteHikeRoute(@PathVariable long hikeRouteId) {
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
@@ -34,13 +32,12 @@ public class AdminController {
             hikeRouteRepository.deleteById(hikeRouteId);
             return new HikeRouteSuccessDTO();
 
-        } else {
-            return new HikeRouteErrorDTO();
+        }else {
+            return new HikeRouteErrorDTO("Valami hiba van!"); // TODO: Need valid message!
         }
 
 
     }
-
     @GetMapping("/hike_routes")
     public List<HikeRoute> getAllHikeRoute() {
         return hikeRouteRepository.findAll();
