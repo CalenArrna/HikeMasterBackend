@@ -3,12 +3,13 @@ package org.backend.Controllers;
 
 import org.backend.DTOs.ImageSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
+import org.backend.Model.HikeRoute;
 import org.backend.Model.Pictures;
+import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.ImageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,16 +31,20 @@ public class ImageController {
 
     @Autowired
     ImageRepository imageRepository;
+    @Autowired
+    HikeRouteRepository hikeRouteRepository;
 
-    @PostMapping("/image/upload")
-    public ResponseDTO uplaodImage(@RequestBody MultipartFile file) throws IOException {
+    @PostMapping("/image/{hikeRouteId}/upload")
+    public ResponseDTO uploadImage(@PathVariable(value = "hikeRouteId") Long hikeRouteId, @RequestBody MultipartFile file) throws IOException {
         System.out.println("Original Image Byte Size - " + file.getBytes().length);
         Pictures img = new Pictures(file.getOriginalFilename(), file.getContentType(), compressBytes(file.getBytes()));
+        Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
+        img.setHikeRoute(hikeRoute.get());
         imageRepository.save(img);
         return new ImageSuccessDTO(img);
     }
 
-    @GetMapping(path = {"/get/{imageId}"})
+    @GetMapping(path = {"/image/get/{imageId}"})
     public ResponseEntity<byte[]> getImage(@PathVariable(name = "imageId") Long picturesId) throws IOException {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);

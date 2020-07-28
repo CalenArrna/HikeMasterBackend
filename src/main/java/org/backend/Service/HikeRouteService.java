@@ -71,7 +71,7 @@ public class HikeRouteService {
 
     }
     @Transactional
-    public void addNewHikeRoute(HikeRouteDTO hikeRouteDTO){
+    public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO){
         HikeRoute hikeRoute=new HikeRoute();
         hikeRoute.setRate(hikeRouteDTO.getRate());
         hikeRoute.setDifficulty(hikeRouteDTO.getDifficulty());
@@ -80,6 +80,7 @@ public class HikeRouteService {
         hikeRoute.setText(hikeRouteDTO.getDescription());
         hikeRoute.setTitle(hikeRouteDTO.getTitle());
         em.persist(hikeRoute);
+        return hikeRoute.getRouteId();
 
     }
 

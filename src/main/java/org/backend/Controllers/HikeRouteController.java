@@ -38,7 +38,6 @@ public class HikeRouteController {
             return new HikeRouteErrorDTO();
         } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
-            hikeRouteSuccessDTO.setHikeRoute(hikeRoute);
             return hikeRouteSuccessDTO;
         }
     }
@@ -68,8 +67,8 @@ public class HikeRouteController {
 
     @PostMapping(value = "/hike_route/upload")
     public ResponseDTO addNewHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO){
-            hikeRouteService.addNewHikeRoute(hikeRouteDTO);
-            return new HikeRouteSuccessDTO();
+        Long hikeRouteId = hikeRouteService.addNewHikeRoute(hikeRouteDTO);
+        return new HikeRouteSuccessDTO(hikeRouteId);
 
     }
 }

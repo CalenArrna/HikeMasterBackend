@@ -8,10 +8,14 @@ import java.util.List;
 public class HikeRouteSuccessDTO extends ResponseDTO {
 
     private List<HikeRoute> hikeRoutes;
-    private HikeRoute hikeRoute;
+
+
+    public HikeRouteSuccessDTO(Long hikeRouteId) {
+       id=hikeRouteId;
+        success = true;
+    }
 
     public HikeRouteSuccessDTO() {
-        success = true;
     }
 
     public List<HikeRoute> getHikeRoutes() {
@@ -22,11 +26,5 @@ public class HikeRouteSuccessDTO extends ResponseDTO {
         this.hikeRoutes = hikeRoutes;
     }
 
-    public HikeRoute getHikeRoute() {
-        return hikeRoute;
-    }
 
-    public void setHikeRoute(HikeRoute hikeRoute) {
-        this.hikeRoute = hikeRoute;
-    }
 }
