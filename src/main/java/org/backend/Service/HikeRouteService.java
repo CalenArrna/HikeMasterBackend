@@ -1,17 +1,15 @@
 package org.backend.Service;
 
-import org.backend.CoordinateDistanceCalculator.Haversine;
-import org.backend.DTOs.HikeRouteSuccessDTO;
-import org.backend.DTOs.MarkerDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.backend.DTOs.MarkerInputDTO;
-import org.backend.DTOs.ResponseDTO;
-import org.backend.DTOs.HikeRouteDTO;
+import org.backend.CoordinateDistanceCalculator.Haversine;
+import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.Pictures;
 import org.backend.Model.QHikeRoute;
 import org.backend.Repository.HikeRouteRepository;
+import org.backend.Repository.ImageRepository;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +27,7 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 //TODO: username to creation
 //TODO: TimeStamp
@@ -51,6 +50,9 @@ public class HikeRouteService {
 
     @Autowired
     HikeRouteRepository hikeRouteRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     @Transactional
     public HikeRoute getHikeRouteOf(long hikeRouteId) {
@@ -119,7 +121,7 @@ public class HikeRouteService {
     }
 
     @Transactional
-    public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO)  {
+    public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO) {
         HikeRoute hikeRoute = new HikeRoute();
         hikeRoute.setRate(hikeRouteDTO.getRate());
         hikeRoute.setDifficulty(hikeRouteDTO.getDifficulty());
@@ -213,5 +215,21 @@ public class HikeRouteService {
 
     public List<HikeRoute> getAllHikeRoute() {
         return em.createQuery("SELECT c FROM HikeRoute c").getResultList();
+    }
+
+    public HikeRoute updateHikeRoute(HikeRouteDTO hikeRouteDTO) {
+        Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteDTO.getHikeRouteId());
+        if (hikeRouteDTO.getTitle() != null) {
+            hikeRoute.ifPresent(route -> route.setTitle(hikeRouteDTO.getTitle()));
+        }
+        if (hikeRouteDTO.getDescription() != null) {
+            hikeRoute.ifPresent(route -> route.setText(hikeRouteDTO.getDescription()));
+        }
+        return hikeRoute.orElse(null);
+    }
+    public Pictures imageApproval(PictureDTO pictureDTO){
+        Optional<Pictures> pictures = imageRepository.findById(pictureDTO.getPictureId());
+            pictures.ifPresent(value -> value.setApprove(pictureDTO.getApprove()));
+        return pictures.orElse(null);
     }
 }
