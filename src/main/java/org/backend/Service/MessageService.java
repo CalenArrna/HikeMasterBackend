@@ -1,17 +1,19 @@
 package org.backend.Service;
 
-import org.backend.Model.HikeMasterUser;
-import org.backend.Model.HikeRoute;
+import antlr.debug.MessageAdapter;
 import org.backend.Model.Message;
+import org.backend.Repository.HikeRouteRepository;
+import org.backend.Repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 public class MessageService {
@@ -19,11 +21,30 @@ public class MessageService {
     @PersistenceContext
     EntityManager em;
 
-   // @Autowired
-   // public MessageService(EntityManager em) {
-   //     this.em = em;
-   // }
+    HikeRouteRepository hikeRouteRepository;
+    MessageRepository messageRepository;
 
+    @Autowired
+    public MessageService(HikeRouteRepository hikeRouteRepository, MessageRepository messageRepository) {
+        this.hikeRouteRepository = hikeRouteRepository;
+        this.messageRepository = messageRepository;
+    }
+
+    @Transactional
+    public String addMessage(Long routeId, Message message) {
+        if (hikeRouteRepository.findById(routeId).isPresent()) {
+            Message message1 = new Message();
+            message1.setTitle(message.getTitle());
+            message1.setText(message.getText());
+            message1.setMessageDate(LocalDateTime.now());
+            hikeRouteRepository.findById(routeId).get().getMessages().add(messageRepository.save(message1));
+            return "success";
+        } else {
+            return "failed";
+        }
+    }
+
+    /*
     @Transactional
     public List<Message> addMessage(Message message, Long routeId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,5 +74,7 @@ public class MessageService {
                 .setParameter("routeId", routeId)
                 .getResultList().get(0).getMessages().add(message);
     }
+
+     */
 
 }

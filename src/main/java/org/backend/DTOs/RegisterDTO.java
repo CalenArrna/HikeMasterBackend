@@ -1,7 +1,9 @@
 package org.backend.DTOs;
 
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+
 import javax.validation.constraints.Size;
 
 public class RegisterDTO {
@@ -17,8 +19,8 @@ public class RegisterDTO {
     @Email
     private String email;
     
-    @NotNull
-    private Boolean notification;
+   // @NotNull
+   // private Boolean notification;
     
     private String password;
   
@@ -51,13 +53,13 @@ public class RegisterDTO {
         this.email = email;
     }
 
-    public boolean isNotification() {
-        return notification;
-    }
-
-    public void setNotification(boolean notification) {
-        this.notification = notification;
-    }
+   // public boolean isNotification() {
+   //     return notification;
+   // }
+//
+   // public void setNotification(boolean notification) {
+   //     this.notification = notification;
+   // }
 
     public String getPassword() {
         return password;

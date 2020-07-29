@@ -2,16 +2,20 @@ package org.backend.DTOs;
 
 import org.backend.Model.HikeRoute;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class HikeRouteSuccessDTO extends ResponseDTO {
+    private  HikeRoute hikeRoute;
+    private List<HikeRoute> hikeRoutes;
 
-    private List<HikeRoute> hikeRoutes ;
-    private HikeRoute hikeRoute;
+
+    public HikeRouteSuccessDTO(Long hikeRouteId) {
+       id=hikeRouteId;
+        success = true;
+    }
 
     public HikeRouteSuccessDTO() {
-        success=true;
     }
 
     public List<HikeRoute> getHikeRoutes() {

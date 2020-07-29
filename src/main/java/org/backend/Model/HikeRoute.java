@@ -12,7 +12,7 @@ import java.util.List;
 public class HikeRoute {
     @Id
     @GeneratedValue
-    private long routeId;
+    private Long routeId;
     @Column
     private String title;
     @JsonIgnore
@@ -25,21 +25,21 @@ public class HikeRoute {
     @Column
     private String routeKML;
     @Column
-    private double startLat;
+    private Double startLat;
     @Column
-    private double startLong;
+    private Double startLong;
     @Column
-    private double endLat;
+    private Double endLat;
     @Column
-    private double endLong;
+    private Double endLong;
     @Column
-    private double tourLenght;
+    private Double tourLenght;
     @Column
-    private int levelRise;
+    private Integer levelRise;
     @Column
     private String difficulty;
     @Column
-    private double distanceFromLoc;
+    private Double distanceFromLoc;
     @Column
     private String routeType;
     @Column
@@ -47,12 +47,14 @@ public class HikeRoute {
     @Column
     private String text;
 
+    @OneToMany
+    private List<Pictures> picturesList = new ArrayList<>();
 
-    public long getRouteId() {
+    public Long getRouteId() {
         return routeId;
     }
 
-    public void setRouteId(long routeId) {
+    public void setRouteId(Long routeId) {
         this.routeId = routeId;
     }
 
@@ -96,51 +98,51 @@ public class HikeRoute {
         this.routeKML = routeKML;
     }
 
-    public double getStartLat() {
+    public Double getStartLat() {
         return startLat;
     }
 
-    public void setStartLat(double startLat) {
+    public void setStartLat(Double startLat) {
         this.startLat = startLat;
     }
 
-    public double getStartLong() {
+    public Double getStartLong() {
         return startLong;
     }
 
-    public void setStartLong(double startLong) {
+    public void setStartLong(Double startLong) {
         this.startLong = startLong;
     }
 
-    public double getEndLat() {
+    public Double getEndLat() {
         return endLat;
     }
 
-    public void setEndLat(double endLat) {
+    public void setEndLat(Double endLat) {
         this.endLat = endLat;
     }
 
-    public double getEndLong() {
+    public Double getEndLong() {
         return endLong;
     }
 
-    public void setEndLong(double endLong) {
+    public void setEndLong(Double endLong) {
         this.endLong = endLong;
     }
 
-    public double getTourLenght() {
+    public Double getTourLenght() {
         return tourLenght;
     }
 
-    public void setTourLenght(double tourLenght) {
+    public void setTourLenght(Double tourLenght) {
         this.tourLenght = tourLenght;
     }
 
-    public int getLevelRise() {
+    public Integer getLevelRise() {
         return levelRise;
     }
 
-    public void setLevelRise(int levelRise) {
+    public void setLevelRise(Integer levelRise) {
         this.levelRise = levelRise;
     }
 
@@ -152,11 +154,11 @@ public class HikeRoute {
         this.difficulty = difficulty;
     }
 
-    public double getDistanceFromLoc() {
+    public Double getDistanceFromLoc() {
         return distanceFromLoc;
     }
 
-    public void setDistanceFromLoc(double distanceFromLoc) {
+    public void setDistanceFromLoc(Double distanceFromLoc) {
         this.distanceFromLoc = distanceFromLoc;
     }
 
@@ -182,6 +184,14 @@ public class HikeRoute {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public List<Pictures> getPicturesList() {
+        return picturesList;
+    }
+
+    public void setPicturesList(List<Pictures> picturesList) {
+        this.picturesList = picturesList;
     }
 
     public static HikeRoute createRouteFrom(List<Coordinate> list) {

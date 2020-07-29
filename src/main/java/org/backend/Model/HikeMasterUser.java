@@ -1,10 +1,13 @@
 package org.backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.backend.Repository.HikeMasterUserRepository;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.*;
@@ -15,6 +18,7 @@ public class HikeMasterUser implements UserDetails {
     @Id
     @GeneratedValue
     private long id;
+    private static final String ROLE_PREFIX = "ROLE_";
     @Column
     private String role;
     @Column
@@ -93,13 +97,6 @@ public class HikeMasterUser implements UserDetails {
         return authoritySet;
     }
 
-    public void setAuthorityList(Set<Authority> authorityList) {
-        this.authoritySet = authorityList;
-    }
-
-//    public GrantedAuthority setAuthority(String authority) {
-//        return new SimpleGrantedAuthority(authority);
-//    }
 
 
     public Set<Authority> getAuthoritySet() {
@@ -158,9 +155,11 @@ public class HikeMasterUser implements UserDetails {
         return true;
     }
 
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-        list.add(new SimpleGrantedAuthority(role));
+        list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role));
         return list;
     }
 }

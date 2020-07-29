@@ -1,15 +1,21 @@
 package org.backend.Controllers;
 
 import org.backend.DTOs.*;
+import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
+import org.backend.Repository.HikeMasterUserRepository;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.MessageRepository;
 import org.backend.Service.HikeRouteService;
+import org.backend.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.time.LocalDateTime;
 import javax.xml.stream.XMLStreamException;
 import java.util.List;
 
@@ -18,16 +24,18 @@ import java.util.List;
 public class HikeRouteController {
 
     HikeRouteService hikeRouteService;
-    HikeRouteService messageService;
+    MessageService messageService;
     HikeRouteRepository hikeRouteRepository;
     MessageRepository messageRepository;
+    HikeMasterUserRepository hikeMasterUserRepository;
 
     @Autowired
-    public HikeRouteController(HikeRouteService hikeRouteService, HikeRouteService messageService,HikeRouteRepository hikeRouteRepository, MessageRepository messageRepository) {
+    public HikeRouteController(HikeRouteService hikeRouteService, MessageService messageService,HikeRouteRepository hikeRouteRepository, MessageRepository messageRepository, HikeMasterUserRepository hikeMasterUserRepository) {
         this.hikeRouteService = hikeRouteService;
         this.messageService = messageService;
         this.hikeRouteRepository=hikeRouteRepository;
         this.messageRepository = messageRepository;
+        this.hikeMasterUserRepository = hikeMasterUserRepository;
     }
 
     @GetMapping(value = "/hike_route/{route_Id}")
@@ -43,8 +51,9 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-    public ResponseDTO postHikeRoute(String tour_type, String route_type, String difficultly, Integer tour_length, Integer level_rise, Integer rate) {
-        List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(tour_type, route_type, difficultly, tour_length, level_rise, rate);
+
+    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
+       List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO("Hiba van itt is"); //TODO: need valid error message
         } else {
@@ -71,11 +80,24 @@ public class HikeRouteController {
 
     @RequestMapping(value = "/hike_route/{route_Id}/messages", method = RequestMethod.POST)
     public String addMessageToRoute(@PathVariable Long route_Id, @RequestBody Message message ) {
-        if(hikeRouteRepository.findById(route_Id).isPresent()){
+        if (hikeRouteRepository.findById(route_Id).isPresent()) {
+            message.setHikeRoute(hikeRouteRepository.findById(route_Id).get());
+            message.setMessageDate(LocalDateTime.now());
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof HikeMasterUser){
+                HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
+                message.setHikeMasterUser(hikeMasterUser);
+            }
+            if (principal instanceof OidcUser){
+                OidcUser oidcUser= (OidcUser) principal;
+                message.setHikeMasterUser((HikeMasterUser)oidcUser);
+            }
             hikeRouteRepository.findById(route_Id).get().getMessages().add(messageRepository.save(message));
             return "success";
-        }
-        else {
+        } else {
             return "failed";
         }
     }
