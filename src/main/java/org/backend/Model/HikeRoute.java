@@ -15,7 +15,6 @@ public class HikeRoute {
     private Long routeId;
     @Column
     private String title;
-    @JsonIgnore
     @OneToMany
     private  List<Message>messages=new ArrayList<>();
     @Column

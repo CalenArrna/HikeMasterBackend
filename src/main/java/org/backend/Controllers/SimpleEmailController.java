@@ -25,12 +25,10 @@ public class SimpleEmailController {
             helper.setFrom(emailDTO.getName());
             helper.setText(emailDTO.getMessage());
             helper.setSubject(emailDTO.getSubject());
-
             sender.send(message);
             return "Email Sent!";
         } catch (Exception e) {
           return "Error in sending email:" +Arrays.toString(e.getStackTrace());
         }
-
     }
 }
