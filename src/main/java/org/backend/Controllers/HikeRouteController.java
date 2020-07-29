@@ -54,7 +54,7 @@ public class HikeRouteController {
         }
     }
 
-    @PostMapping(value = "/createHikeRoute")
+    @PostMapping(value = "/kml/{}/upload")
     public ResponseDTO createHikeRoute(@RequestParam("file") MultipartFile kml) throws XMLStreamException {
         try {
             hikeRouteService.createNewHikeRouteFrom(kml);
@@ -64,14 +64,24 @@ public class HikeRouteController {
         }
     }
 
-    @PostMapping(value = "/rest/hike_route/area")
-    public List<MarkerDTO> getHikeRouteListOfArea(@RequestParam double latitude, @RequestParam double longitude,
-                                                  @RequestParam int radius) {
-        return hikeRouteService.hikeRouteInArea(latitude, longitude, radius);
+    @PostMapping(value = "/hike_route/area")
+    public List<MarkerDTO> getHikeRouteListOfArea(@RequestBody MarkerInputDTO areaData) {
+        return hikeRouteService.hikeRouteInArea(areaData);
     }
 
     @RequestMapping(value = "/hike_route/{route_Id}/messages", method = RequestMethod.POST)
     public String addMessageToRoute(@PathVariable Long route_Id, @RequestBody Message message ) {
+        if(hikeRouteRepository.findById(route_Id).isPresent()){
+            hikeRouteRepository.findById(route_Id).get().getMessages().add(messageRepository.save(message));
+            return "success";
+        }
+        else {
+            return "failed";
+        }
+    }
+    
+    @GetMapping(value = "/hike_route/{route_Id}/kml")
+    public String getKMLOf(@PathVariable Long route_Id, @RequestBody Message message ) {
         if(hikeRouteRepository.findById(route_Id).isPresent()){
             hikeRouteRepository.findById(route_Id).get().getMessages().add(messageRepository.save(message));
             return "success";

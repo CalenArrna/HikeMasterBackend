@@ -1,10 +1,13 @@
 package org.backend.Service;
 
 import org.backend.CoordinateDistanceCalculator.Haversine;
+import org.backend.DTOs.HikeRouteSuccessDTO;
 import org.backend.DTOs.MarkerDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.backend.DTOs.MarkerInputDTO;
+import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.HikeRoute;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
@@ -20,8 +23,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,21 +150,39 @@ public class HikeRouteService {
     }
 
 
-    public List<MarkerDTO> hikeRouteInArea(double latitude, double longitude, int radius) {
-        return getFilteredList(latitude, longitude, radius);
+    public List<MarkerDTO> hikeRouteInArea(MarkerInputDTO areaToSearch) {
+        return getFilteredList(areaToSearch);
     }
 
-    private List<MarkerDTO> getFilteredList(double latitude, double longitude, int radius) {
+    private List<MarkerDTO> getFilteredList(MarkerInputDTO areaToSearch) {
         List<HikeRoute> all = getAllHikeRoute();
         List<MarkerDTO> filtered = new ArrayList<>();
         for (HikeRoute hikeRoute : all) {
-            double distance = Haversine.distance(latitude, longitude,
+            double distance = Haversine.distance(areaToSearch.getLatitude(),areaToSearch.getLongitude(),
                     hikeRoute.getStartLat(), hikeRoute.getStartLong());
-            if (distance <= radius) {
+            if (distance <= areaToSearch.getRadius()) {
                 filtered.add(mapper.map(hikeRoute, MarkerDTO.class));
             }
         }
         return filtered;
+    }
+    public ResponseDTO getTheRouteKmlOf (Long id) {
+        String kmlText = hikeRouteDetails(id).getRouteKML();
+        FileOutputStream stream = getOutputStreamFrom(kmlText);
+        return new HikeRouteSuccessDTO();
+    }
+    
+    public FileOutputStream getOutputStreamFrom (String kmlText) {
+        FileOutputStream kmlFileStream = null;
+        try {
+            kmlFileStream = new FileOutputStream("route.kml", true);
+            PrintWriter writer = new PrintWriter(kmlFileStream);
+            writer.println(kmlText);
+            return kmlFileStream;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public List<HikeRoute> getAllHikeRoute() {

@@ -8,11 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="HikeMasterBackEnd" />
         <module name="HikeMasterBackend" />
+        <module name="HikeMaster" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="HikeMaster" options="-parameters" />
       <module name="HikeMasterBackEnd" options="-parameters" />
       <module name="HikeMasterBackend" options="-parameters" />
     </option>
