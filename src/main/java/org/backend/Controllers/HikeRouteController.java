@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import javax.xml.stream.XMLStreamException;
 import java.util.List;
@@ -110,5 +111,10 @@ public class HikeRouteController {
         else {
             return "failed";
         }
+    }
+    @PostMapping(value = "/hike_route/upload")
+    public ResponseDTO addNewHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO){
+        Long hikeRouteId = hikeRouteService.addNewHikeRoute(hikeRouteDTO);
+        return new HikeRouteSuccessDTO(hikeRouteId);
     }
 }

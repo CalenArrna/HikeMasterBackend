@@ -26,7 +26,7 @@ public class AdminController {
 
     }
     @DeleteMapping("/hike_routes/{hikeRouteId}")
-    public ResponseDTO deleteHikeRoute(@PathVariable long hikeRouteId) {
+    public ResponseDTO deleteHikeRoute(@PathVariable Long hikeRouteId) {
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
         if (hikeRoute.isPresent()) {
             hikeRouteRepository.deleteById(hikeRouteId);
@@ -46,6 +46,7 @@ public class AdminController {
     @PutMapping("/hike_routes")
     public List<HikeRoute> modifyHikeRoute(@RequestBody HikeRoute hikeRoute) {
         hikeRouteRepository.save(hikeRoute);
+
         return hikeRouteRepository.findAll();
     }
 
