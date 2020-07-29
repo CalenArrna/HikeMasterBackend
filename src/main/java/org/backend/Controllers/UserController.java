@@ -88,7 +88,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/user_role")
-    public String getUserRole(HikeMasterUser hikeMasterUser) {
+    public String getUserRole(@RequestBody HikeMasterUser hikeMasterUser) {
         return service.getRoleOfUser(hikeMasterUser);
     }
 
