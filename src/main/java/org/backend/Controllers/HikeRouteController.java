@@ -4,6 +4,7 @@ import org.backend.DTOs.*;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
+import org.backend.Model.Pictures;
 import org.backend.Repository.HikeMasterUserRepository;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.MessageRepository;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import javax.persistence.GeneratedValue;
 import javax.xml.stream.XMLStreamException;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -117,5 +120,10 @@ public class HikeRouteController {
     public ResponseDTO addNewHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO){
         Long hikeRouteId = hikeRouteService.addNewHikeRoute(hikeRouteDTO);
         return new HikeRouteSuccessDTO(hikeRouteId);
+    }
+    @GetMapping(value = "/hike_route/{hikeRouteId}/images")
+    public List<Pictures> getImagesByHikeRouteId(@PathVariable(value = "hikeRouteId") Long hikeRouteId){
+        Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
+        return hikeRoute.map(HikeRoute::getPicturesList).orElse(null);
     }
 }
