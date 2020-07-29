@@ -60,7 +60,7 @@ public class UserService implements UserDetailsService {
 
 
     public Authority getUserAuthority() {
-        return em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'", Authority.class).getSingleResult();
+        return em.createQuery("select a FROM Authority a WHERE a.roleName='USER'", Authority.class).getSingleResult();
     }
 
     @Transactional

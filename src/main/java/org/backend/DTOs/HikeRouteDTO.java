@@ -1,5 +1,7 @@
 package org.backend.DTOs;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class HikeRouteDTO {
     private String tourType;
     private String routeType;
@@ -9,6 +11,15 @@ public class HikeRouteDTO {
     private Integer rate;
     private String title;
     private  String description;
+    private MultipartFile kml;
+
+    public MultipartFile getKml() {
+        return kml;
+    }
+
+    public void setKml(MultipartFile kml) {
+        this.kml = kml;
+    }
 
     public String getTitle() {
         return title;
