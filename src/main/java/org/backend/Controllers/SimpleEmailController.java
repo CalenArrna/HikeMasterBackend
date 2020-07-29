@@ -22,7 +22,8 @@ public class SimpleEmailController {
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         try {
-            helper.setTo(emailDTO.getEmail());
+            helper.setFrom(emailDTO.getEmail());
+            helper.setTo("hikemasteradm@gmail.com");
             helper.setText(emailDTO.getMessage());
             helper.setSubject(emailDTO.getSubject());
 
