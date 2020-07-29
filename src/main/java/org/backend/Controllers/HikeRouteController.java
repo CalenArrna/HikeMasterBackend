@@ -93,12 +93,14 @@ public class HikeRouteController {
             if (principal instanceof HikeMasterUser){
                 HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
                 message.setHikeMasterUser(hikeMasterUser);
+                hikeMasterUser.getUserMessageList().add(message);
             }
             if (principal instanceof OidcUser){
                 OidcUser oidcUser= (OidcUser) principal;
                 message.setHikeMasterUser((HikeMasterUser)oidcUser);
             }
-            hikeRouteRepository.findById(route_Id).get().getMessages().add(messageRepository.save(message));
+            hikeRouteRepository.findById(route_Id).get().getMessages().add(message);
+            messageRepository.save(message);
             return "success";
         } else {
             return "failed";
