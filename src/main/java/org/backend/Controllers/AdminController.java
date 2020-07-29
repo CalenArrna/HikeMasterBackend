@@ -46,6 +46,7 @@ public class AdminController {
     @PutMapping("/hike_routes")
     public List<HikeRoute> modifyHikeRoute(@RequestBody HikeRoute hikeRoute) {
         hikeRouteRepository.save(hikeRoute);
+
         return hikeRouteRepository.findAll();
     }
 

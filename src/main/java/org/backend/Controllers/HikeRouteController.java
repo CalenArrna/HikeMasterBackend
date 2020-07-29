@@ -113,4 +113,9 @@ public class HikeRouteController {
             return "failed";
         }
     }
+    @PostMapping(value = "/hike_route/upload")
+    public ResponseDTO addNewHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO){
+        Long hikeRouteId = hikeRouteService.addNewHikeRoute(hikeRouteDTO);
+        return new HikeRouteSuccessDTO(hikeRouteId);
+    }
 }
