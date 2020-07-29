@@ -40,7 +40,7 @@ public class HikeRouteController {
 
     @GetMapping(value = "/hike_route/{route_Id}")
     public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
-        HikeRoute hikeRoute = hikeRouteService.hikeRouteDetails(route_Id);
+        HikeRoute hikeRoute = hikeRouteService.getHikeRouteOf(route_Id);
         if (hikeRoute == null){
             return new HikeRouteErrorDTO("Itt is hiba van"); //TODO: also need valid message
         } else {
@@ -51,7 +51,6 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-
     public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
        List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
@@ -63,10 +62,10 @@ public class HikeRouteController {
         }
     }
 
-    @PostMapping(value = "/kml/{}/upload")
-    public ResponseDTO createHikeRoute(@RequestParam("file") MultipartFile kml) throws XMLStreamException {
+    @PostMapping(value = "/kml/{route_Id}/upload")
+    public ResponseDTO addKMLToHikeRouteOf(@PathVariable Integer route_Id, @RequestParam("file") MultipartFile kml) throws XMLStreamException {
         try {
-            hikeRouteService.createNewHikeRouteFrom(kml);
+            hikeRouteService.addKMLtoHikeRouteOf(route_Id,kml);
             return new HikeRouteSuccessDTO();
         } catch (Exception exception) {
             return new HikeRouteErrorDTO(exception.getMessage());//TODO: make a proper error handling here!

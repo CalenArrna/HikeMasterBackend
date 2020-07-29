@@ -8,9 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.backend.DTOs.MarkerInputDTO;
 import org.backend.DTOs.ResponseDTO;
-import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.backend.DTOs.HikeRouteDTO;
-import org.backend.DTOs.MarkerDTO;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.QHikeRoute;
 import org.backend.Repository.HikeRouteRepository;
@@ -55,7 +53,7 @@ public class HikeRouteService {
     HikeRouteRepository hikeRouteRepository;
 
     @Transactional
-    public HikeRoute hikeRouteDetails(long hikeRouteId) {
+    public HikeRoute getHikeRouteOf(long hikeRouteId) {
         List<HikeRoute> hikeRouteList = em.createQuery("select h from HikeRoute h where h.routeId = :hikeRouteId", HikeRoute.class)
                 .setParameter("hikeRouteId", hikeRouteId)
                 .getResultList();
@@ -107,9 +105,17 @@ public class HikeRouteService {
 
 
     @Transactional
-    public void createNewHikeRouteFrom(MultipartFile kml) throws XMLStreamException {
-        HikeRoute newHikeRoute = createHikeRouteObject(kml);
-        em.persist(newHikeRoute);
+    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException {
+        HikeRoute routeToUpdate = getHikeRouteOf(routeID);
+        HikeRoute kmlDatas = getHikeRouteDataFrom(kml);
+        routeToUpdate.setStartLat(kmlDatas.getStartLat());
+        routeToUpdate.setStartLong(kmlDatas.getStartLong());
+        routeToUpdate.setEndLat(kmlDatas.getEndLat());
+        routeToUpdate.setEndLong(kmlDatas.getEndLong());
+        routeToUpdate.setRouteKML(kmlDatas.getRouteKML());
+        routeToUpdate.setLevelRise(kmlDatas.getLevelRise());
+        routeToUpdate.setTourLenght(kmlDatas.getTourLenght());
+        em.persist(routeToUpdate);
     }
 
     @Transactional
@@ -126,7 +132,7 @@ public class HikeRouteService {
 
     }
 
-    private HikeRoute createHikeRouteObject(MultipartFile kml) throws XMLStreamException {
+    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException {
         List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
         HikeRoute route = HikeRoute.createRouteFrom(coordinates);
         route.setRouteKML(kml.toString());
@@ -153,8 +159,8 @@ public class HikeRouteService {
 
     private Coordinate getCoordinateFrom(String coordinates) {
         String[] arr = coordinates.split(" ");
-        double x = Double.parseDouble(arr[0]);
-        double y = Double.parseDouble(arr[1]);
+        double x = Double.parseDouble(arr[1]);
+        double y = Double.parseDouble(arr[0]);
         double z = Double.parseDouble(arr[2]);
         return new Coordinate(x, y, z);
     }
@@ -187,7 +193,7 @@ public class HikeRouteService {
     }
 
     public ResponseDTO getTheRouteKmlOf(Long id) {
-        String kmlText = hikeRouteDetails(id).getRouteKML();
+        String kmlText = getHikeRouteOf(id).getRouteKML();
         FileOutputStream stream = getOutputStreamFrom(kmlText);
         return new HikeRouteSuccessDTO();
     }
