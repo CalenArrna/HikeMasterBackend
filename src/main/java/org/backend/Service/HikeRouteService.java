@@ -125,12 +125,13 @@ public class HikeRouteService {
         return hikeRoute.getRouteId();
 
     }
-        private HikeRoute createHikeRouteObject (MultipartFile kml) throws XMLStreamException {
-            List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
-            HikeRoute route = HikeRoute.createRouteFrom(coordinates);
-            route.setRouteKML(kml.toString());
-            return route;
-        }
+
+    private HikeRoute createHikeRouteObject(MultipartFile kml) throws XMLStreamException {
+        List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
+        HikeRoute route = HikeRoute.createRouteFrom(coordinates);
+        route.setRouteKML(kml.toString());
+        return route;
+    }
 
     private List<Coordinate> parseKmlToListOfCoordinates(MultipartFile kml) throws XMLStreamException {
         List<Coordinate> listOfCoordinates = new ArrayList<>();
@@ -150,22 +151,22 @@ public class HikeRouteService {
         return listOfCoordinates;
     }
 
-        private Coordinate getCoordinateFrom (String coordinates){
-            String[] arr = coordinates.split(" ");
-            double x = Double.parseDouble(arr[0]);
-            double y = Double.parseDouble(arr[1]);
-            double z = Double.parseDouble(arr[2]);
-            return new Coordinate(x, y, z);
-        }
+    private Coordinate getCoordinateFrom(String coordinates) {
+        String[] arr = coordinates.split(" ");
+        double x = Double.parseDouble(arr[0]);
+        double y = Double.parseDouble(arr[1]);
+        double z = Double.parseDouble(arr[2]);
+        return new Coordinate(x, y, z);
+    }
 
 
-        private InputStream getValidFileStream (MultipartFile kml){ //TODO: do a valid exception/error handling!!!
-            try {
-                return kml.getInputStream();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    private InputStream getValidFileStream(MultipartFile kml) { //TODO: do a valid exception/error handling!!!
+        try {
+            return kml.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
 
 
     public List<MarkerDTO> hikeRouteInArea(MarkerInputDTO areaToSearch) {
@@ -176,7 +177,7 @@ public class HikeRouteService {
         List<HikeRoute> all = getAllHikeRoute();
         List<MarkerDTO> filtered = new ArrayList<>();
         for (HikeRoute hikeRoute : all) {
-            double distance = Haversine.distance(areaToSearch.getLatitude(),areaToSearch.getLongitude(),
+            double distance = Haversine.distance(areaToSearch.getLatitude(), areaToSearch.getLongitude(),
                     hikeRoute.getStartLat(), hikeRoute.getStartLong());
             if (distance <= areaToSearch.getRadius()) {
                 filtered.add(mapper.map(hikeRoute, MarkerDTO.class));
@@ -184,14 +185,15 @@ public class HikeRouteService {
         }
         return filtered;
     }
-    public ResponseDTO getTheRouteKmlOf (Long id) {
+
+    public ResponseDTO getTheRouteKmlOf(Long id) {
         String kmlText = hikeRouteDetails(id).getRouteKML();
         FileOutputStream stream = getOutputStreamFrom(kmlText);
         return new HikeRouteSuccessDTO();
     }
-    
-    public FileOutputStream getOutputStreamFrom (String kmlText) {
-        FileOutputStream kmlFileStream = null;
+
+    public FileOutputStream getOutputStreamFrom(String kmlText) {
+        FileOutputStream kmlFileStream;
         try {
             kmlFileStream = new FileOutputStream("route.kml", true);
             PrintWriter writer = new PrintWriter(kmlFileStream);
@@ -206,3 +208,4 @@ public class HikeRouteService {
     public List<HikeRoute> getAllHikeRoute() {
         return em.createQuery("SELECT c FROM HikeRoute c").getResultList();
     }
+}
