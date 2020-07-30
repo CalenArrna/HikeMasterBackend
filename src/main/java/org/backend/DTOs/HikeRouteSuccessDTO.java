@@ -12,10 +12,11 @@ public class HikeRouteSuccessDTO extends ResponseDTO {
 
     public HikeRouteSuccessDTO(Long hikeRouteId) {
        id=hikeRouteId;
-        success = true;
+       success = true;
     }
 
     public HikeRouteSuccessDTO() {
+        success=true;
     }
 
     public List<HikeRoute> getHikeRoutes() {

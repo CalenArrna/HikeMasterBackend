@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import javax.persistence.GeneratedValue;
 import javax.xml.stream.XMLStreamException;
 import java.util.List;
 import java.util.Optional;
