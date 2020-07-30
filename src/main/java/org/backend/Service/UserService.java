@@ -41,15 +41,6 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
-    public String getRoleOfUser(HikeMasterUser hikeMasterUser) {
-        if (hikeMasterUser.getRole().equals("USER")) {
-            return "USER";
-        } else if (hikeMasterUser.getRole().equals("ADMIN")) {
-            return "ADMIN";
-        } else {
-            return "ANONYMUS";
-        }
-    }
 
     public String getHikeMasterUser() {
         String name = getUserName();
