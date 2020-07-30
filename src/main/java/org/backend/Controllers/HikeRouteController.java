@@ -1,5 +1,6 @@
 package org.backend.Controllers;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
@@ -49,7 +50,7 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
+    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) throws ClientAbortException {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO("Hiba van itt is"); //TODO: need valid error message
@@ -68,6 +69,11 @@ public class HikeRouteController {
         } catch (Exception exception) {
             return new HikeRouteErrorDTO(exception.getMessage());//TODO: make a proper error handling here!
         }
+    }
+
+    @GetMapping(value = "/kml/{route_Id}")
+    public String getKMLFileOf (@PathVariable Long route_Id){
+        return hikeRouteService.getKmlStringOf(route_Id) ;
     }
 
     @PostMapping(value = "/hike_route/area")

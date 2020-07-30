@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 
 @Service
@@ -83,7 +84,12 @@ public class UserService implements UserDetailsService {
 
 
     public Authority getUserAuthority() {
-        return em.createQuery("select a FROM Authority a WHERE a.roleName='USER'", Authority.class).getSingleResult();
+        List<Authority> resultList = em.createQuery("select a FROM Authority a WHERE a.roleName='USER'", Authority.class).getResultList();
+        if(!resultList.isEmpty()){
+            return resultList.get(0);
+        }else{
+            return null;
+        }
     }
 
     @Transactional

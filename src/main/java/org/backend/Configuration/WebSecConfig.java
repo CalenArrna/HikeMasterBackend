@@ -65,7 +65,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**","/kml/{route_Id}/upload","/image/approve").permitAll()
+                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**/images","/kml/{route_Id}/upload","/image/approve","/user_role","/hike_route").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

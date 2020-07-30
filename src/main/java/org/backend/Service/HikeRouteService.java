@@ -1,9 +1,11 @@
 package org.backend.Service;
 
+import org.backend.CoordinateDistanceCalculator.Haversine;
+import org.backend.DTOs.HikeRouteSuccessDTO;
+import org.backend.DTOs.MarkerDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.backend.DTOs.*;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
@@ -100,7 +102,7 @@ public class HikeRouteService {
 
 
         List<HikeRoute> routes = queryFactory.selectFrom(QHikeRoute.hikeRoute)
-                .where(booleanBuilder)
+                .where(booleanBuilder).limit(1)
                 .fetch();
 
         if (routes == null) {
@@ -112,7 +114,7 @@ public class HikeRouteService {
 
 
     @Transactional
-    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException {
+    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException, IOException {
         HikeRoute routeToUpdate = getHikeRouteOf(routeID);
         HikeRoute kmlDatas = getHikeRouteDataFrom(kml);
         routeToUpdate.setStartLat(kmlDatas.getStartLat());
@@ -121,7 +123,7 @@ public class HikeRouteService {
         routeToUpdate.setEndLong(kmlDatas.getEndLong());
         routeToUpdate.setRouteKML(kmlDatas.getRouteKML());
         routeToUpdate.setLevelRise(kmlDatas.getLevelRise());
-        routeToUpdate.setTourLenght(kmlDatas.getTourLenght());
+        routeToUpdate.setTourLength(kmlDatas.getTourLength());
         em.persist(routeToUpdate);
     }
 
@@ -139,10 +141,10 @@ public class HikeRouteService {
 
     }
 
-    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException {
+    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException, IOException {
         List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
         HikeRoute route = HikeRoute.createRouteFrom(coordinates);
-        route.setRouteKML(kml.toString());
+        route.setRouteKML(new String(kml.getBytes()));
         return route;
     }
 
@@ -239,19 +241,11 @@ public class HikeRouteService {
         return pictures.orElse(null);
     }
 
-  // @Transactional
-  // public Set<HikeRoute> addRouteToWishList(Long route_id) {
-  //     if (hikeRouteRepository.findById(route_id).isPresent()) {
-  //         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-  //         Object principal = authentication.getPrincipal();
 
-  //         if (principal instanceof HikeMasterUser) {
-  //             HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
-  //             hikeMasterUser.getHikeRouteWishSet().add(hikeRouteRepository.findById(route_id).get());
-  //             hikeRouteRepository.findById(route_id).get().setWishToSeeUsers(hikeMasterUser);
-  //             return hikeMasterUser.getHikeRouteWishSet();
-  //         }
-  //     }
-  //     return null;
-  // }
+    public String getKmlStringOf(Long id) {
+        HikeRoute route = (HikeRoute) em.createQuery("select r from HikeRoute r where r.routeId = :routeID")
+                .setParameter("routeID", id)
+                .getSingleResult();
+        return route.getRouteKML();
+    }
 }
