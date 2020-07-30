@@ -1,6 +1,7 @@
 package org.backend.Controllers;
 
 
+import org.backend.DTOs.ImageErrorDTO;
 import org.backend.DTOs.ImageSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.HikeRoute;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -39,10 +41,16 @@ public class ImageController {
         System.out.println("Original Image Byte Size - " + file.getBytes().length);
         Pictures img = new Pictures(file.getOriginalFilename(), file.getContentType(), compressBytes(file.getBytes()));
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
-        img.setHikeRoute(hikeRoute.get());
-        hikeRoute.get().getPicturesList().add(img);
         imageRepository.save(img);
-        return new ImageSuccessDTO(img);
+        if(hikeRoute.isPresent()){
+            img.setHikeRoute(hikeRoute.get());
+            URL https=new URL(" https://hikemasterprog.herokuapp.com/image/get/"+img.getPicturesId());
+            hikeRoute.get().getPicturesList().add(https);
+            return new ImageSuccessDTO(img);
+        }
+
+        return new ImageErrorDTO();
+
     }
 
     @GetMapping(path = {"/image/get/{imageId}"})

@@ -5,6 +5,7 @@ import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.locationtech.jts.geom.Coordinate;
 
 import javax.persistence.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +48,17 @@ public class HikeRoute {
     private String tourType;
     @Column
     private String text;
-    @OneToMany
-    private List<Pictures> picturesList = new ArrayList<>();
+    @Lob
+    @Column
+    private List<URL> picturesList = new ArrayList<>();
+
+    public List<URL> getPicturesList() {
+        return picturesList;
+    }
+
+    public void setPicturesList(List<URL> picturesList) {
+        this.picturesList = picturesList;
+    }
 
     public Long getRouteId() {
         return routeId;
@@ -186,13 +196,6 @@ public class HikeRoute {
         this.text = text;
     }
 
-    public List<Pictures> getPicturesList() {
-        return picturesList;
-    }
-
-    public void setPicturesList(List<Pictures> picturesList) {
-        this.picturesList = picturesList;
-    }
 
     public static HikeRoute createRouteFrom(List<Coordinate> list) {
         HikeRoute route = new HikeRoute();
