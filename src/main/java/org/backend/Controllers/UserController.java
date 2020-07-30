@@ -26,7 +26,6 @@ public class UserController {
     private PasswordEncoder encoder;
     private ValidationService validationService;
 
-
     @Autowired
     public UserController(DozerBeanMapper mapper, UserService service, PasswordEncoder encoder, ValidationService validationService) {
         this.mapper = mapper;

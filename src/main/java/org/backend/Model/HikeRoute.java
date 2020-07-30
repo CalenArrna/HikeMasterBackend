@@ -15,13 +15,15 @@ public class HikeRoute {
     private Long routeId;
     @Column
     private String title;
+    @JsonIgnore
     @OneToMany
-    private  List<Message>messages=new ArrayList<>();
+    private  List<Message>messages = new ArrayList<>();
     @Column
     private Integer rate;
     @Column
     private String createdBy;
     @Column
+    @Lob
     private String routeKML;
     @Column
     private Double startLat;
@@ -32,7 +34,7 @@ public class HikeRoute {
     @Column
     private Double endLong;
     @Column
-    private Double tourLenght;
+    private Double tourLength;
     @Column
     private Integer levelRise;
     @Column
@@ -45,7 +47,6 @@ public class HikeRoute {
     private String tourType;
     @Column
     private String text;
-
     @OneToMany
     private List<Pictures> picturesList = new ArrayList<>();
 
@@ -129,12 +130,12 @@ public class HikeRoute {
         this.endLong = endLong;
     }
 
-    public Double getTourLenght() {
-        return tourLenght;
+    public Double getTourLength() {
+        return tourLength;
     }
 
-    public void setTourLenght(Double tourLenght) {
-        this.tourLenght = tourLenght;
+    public void setTourLength(Double tourLenght) {
+        this.tourLength = tourLenght;
     }
 
     public Integer getLevelRise() {
@@ -201,7 +202,7 @@ public class HikeRoute {
         route.setEndLong(end.y);
         route.setStartLat(start.x);
         route.setStartLong(start.y);
-        route.setTourLenght(calculateTourLength(list));
+        route.setTourLength(calculateTourLength(list));
         route.setLevelRise(calculateElevation(list));
         return route;
     }
