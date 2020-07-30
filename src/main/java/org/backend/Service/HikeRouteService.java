@@ -105,7 +105,7 @@ public class HikeRouteService {
 
 
     @Transactional
-    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException {
+    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException, IOException {
         HikeRoute routeToUpdate = getHikeRouteOf(routeID);
         HikeRoute kmlDatas = getHikeRouteDataFrom(kml);
         routeToUpdate.setStartLat(kmlDatas.getStartLat());
@@ -119,7 +119,7 @@ public class HikeRouteService {
     }
 
     @Transactional
-    public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO)  {
+    public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO) {
         HikeRoute hikeRoute = new HikeRoute();
         hikeRoute.setRate(hikeRouteDTO.getRate());
         hikeRoute.setDifficulty(hikeRouteDTO.getDifficulty());
@@ -132,10 +132,10 @@ public class HikeRouteService {
 
     }
 
-    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException {
+    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException, IOException {
         List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
         HikeRoute route = HikeRoute.createRouteFrom(coordinates);
-        route.setRouteKML(kml.toString());
+        route.setRouteKML(new String(kml.getBytes()));
         return route;
     }
 
@@ -213,5 +213,12 @@ public class HikeRouteService {
 
     public List<HikeRoute> getAllHikeRoute() {
         return em.createQuery("SELECT c FROM HikeRoute c").getResultList();
+    }
+
+    public String getKmlStringOf(Long id) {
+        HikeRoute route = (HikeRoute) em.createQuery("select r from HikeRoute r where r.routeId = :routeID")
+                .setParameter("routeID", id)
+                .getSingleResult();
+        return route.getRouteKML();
     }
 }

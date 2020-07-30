@@ -72,6 +72,11 @@ public class HikeRouteController {
             return new HikeRouteErrorDTO(exception.getMessage());//TODO: make a proper error handling here!
         }
     }
+    
+    @GetMapping(value = "/kml/{route_Id}")
+    public String getKMLFileOf (@PathVariable Long route_Id){
+        return hikeRouteService.getKmlStringOf(route_Id) ;
+    }
 
     @PostMapping(value = "/hike_route/area")
     public List<MarkerDTO> getHikeRouteListOfArea(@RequestBody MarkerInputDTO areaData) {

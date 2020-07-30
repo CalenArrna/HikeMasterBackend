@@ -5,6 +5,8 @@ import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.locationtech.jts.geom.Coordinate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class HikeRoute {
     @Column
     private String createdBy;
     @Column
+    @Lob
     private String routeKML;
     @Column
     private Double startLat;
