@@ -7,7 +7,9 @@ import org.locationtech.jts.geom.Coordinate;
 import javax.persistence.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class HikeRoute {
@@ -41,23 +43,21 @@ public class HikeRoute {
     @Column
     private String difficulty;
     @Column
-    private Double distanceFromLoc;
-    @Column
     private String routeType;
     @Column
     private String tourType;
     @Column
     private String text;
-    @Lob
-    @Column
-    private List<URL> picturesList = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany
+    private List<PictureURL> pictureUrlList = new ArrayList<>();
 
-    public List<URL> getPicturesList() {
-        return picturesList;
+    public List<PictureURL> getPictureUrlList() {
+        return pictureUrlList;
     }
 
-    public void setPicturesList(List<URL> picturesList) {
-        this.picturesList = picturesList;
+    public void setPictureUrlList(List<PictureURL> pictureUrlList) {
+        this.pictureUrlList = pictureUrlList;
     }
 
     public Long getRouteId() {
@@ -162,14 +162,6 @@ public class HikeRoute {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
-    }
-
-    public Double getDistanceFromLoc() {
-        return distanceFromLoc;
-    }
-
-    public void setDistanceFromLoc(Double distanceFromLoc) {
-        this.distanceFromLoc = distanceFromLoc;
     }
 
     public String getRouteType() {

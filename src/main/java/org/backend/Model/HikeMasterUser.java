@@ -1,13 +1,12 @@
 package org.backend.Model;
 
-import com.fasterxml.jackson.annotation.*;
-import org.backend.Repository.HikeMasterUserRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.*;
@@ -38,6 +37,17 @@ public class HikeMasterUser implements UserDetails {
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Message> userMessageList = new ArrayList<>();
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<HikeRoute> hikeRouteWishSet = new HashSet<>();
+
+    public Set<HikeRoute> getHikeRouteWishSet() {
+        return hikeRouteWishSet;
+    }
+
+    public void setHikeRouteWishSet(Set<HikeRoute> hikeRouteWishSet) {
+        this.hikeRouteWishSet = hikeRouteWishSet;
+    }
 
     public HikeMasterUser() {
         this.isDeactivated = false;

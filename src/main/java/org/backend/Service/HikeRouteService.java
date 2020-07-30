@@ -7,6 +7,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.backend.DTOs.*;
+import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Pictures;
 import org.backend.Model.QHikeRoute;
@@ -15,12 +16,15 @@ import org.backend.Repository.ImageRepository;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -30,6 +34,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 //TODO: username to creation
 //TODO: TimeStamp

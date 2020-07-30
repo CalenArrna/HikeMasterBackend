@@ -5,9 +5,11 @@ import org.backend.DTOs.ImageErrorDTO;
 import org.backend.DTOs.ImageSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.PictureURL;
 import org.backend.Model.Pictures;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.ImageRepository;
+import org.backend.Repository.URLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -29,12 +30,21 @@ import java.util.zip.Inflater;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class ImageController {
+    private PictureURL pictureURL;
+
+    @Autowired
+    public ImageController(PictureURL pictureURL) {
+        this.pictureURL = pictureURL;
+    }
+
     Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
     @Autowired
     ImageRepository imageRepository;
     @Autowired
     HikeRouteRepository hikeRouteRepository;
+    @Autowired
+    URLRepository urlRepository;
 
     @PostMapping("/image/{hikeRouteId}/upload")
     public ResponseDTO uploadImage(@PathVariable(value = "hikeRouteId") Long hikeRouteId, @RequestBody MultipartFile file) throws IOException {
@@ -44,8 +54,12 @@ public class ImageController {
         imageRepository.save(img);
         if(hikeRoute.isPresent()){
             img.setHikeRoute(hikeRoute.get());
+            PictureURL pictureURL=new PictureURL();
             URL https=new URL(" https://hikemasterprog.herokuapp.com/image/get/"+img.getPicturesId());
-            hikeRoute.get().getPicturesList().add(https);
+            pictureURL.setPictureUrl(https);
+            hikeRoute.get().getPictureUrlList().add(pictureURL);
+            pictureURL.setHikeRoute(hikeRoute.get());
+            urlRepository.save(pictureURL);
             return new ImageSuccessDTO(img);
         }
 
@@ -67,8 +81,6 @@ public class ImageController {
 
 
     }
-
-
     public byte[] compressBytes(byte[] data) {
         Deflater deflater = new Deflater();
         deflater.setInput(data);

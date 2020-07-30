@@ -65,7 +65,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**/images","/kml/{route_Id}/upload","/image/approve","/user_role","/hike_route","/hike_route/{route_Id}").permitAll()
+                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**/images","/kml/{route_Id}/upload","/image/approve","/user_role","/hike_route","/hike_route/{route_Id}","/hike_route/upload","/createRoute").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -82,11 +82,10 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {
                     httpServletResponse.setStatus(403);
                     httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
-                });
-//               .and()
-//               .logout()
-//               .invalidateHttpSession(true)
-//               .clearAuthentication(true)
+                }).and()
+
+               .logout();
+
 
 //               .deleteCookies("JSESSIONID")
 //               .permitAll()

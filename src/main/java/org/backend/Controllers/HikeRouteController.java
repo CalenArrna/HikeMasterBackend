@@ -4,6 +4,7 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
+import org.backend.Model.PictureURL;
 import org.backend.Repository.HikeMasterUserRepository;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.MessageRepository;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.stream.XMLStreamException;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,8 +98,18 @@ public class HikeRouteController {
     }
 
     @GetMapping(value = "/hike_route/{hikeRouteId}/images")
-    public List<URL> getImagesByHikeRouteId(@PathVariable(value = "hikeRouteId") Long hikeRouteId) {
+    public List<PictureURL> getImagesByHikeRouteId(@PathVariable(value = "hikeRouteId") Long hikeRouteId) {
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
-        return hikeRoute.map(HikeRoute::getPicturesList).orElse(null);
+        return hikeRoute.map(HikeRoute::getPictureUrlList).orElse(null);
     }
+
+
+//
+//    @PostMapping(value = "/hike_route/{route_Id}/route_wish")
+//    public String addRouteToUserWishList(@PathVariable Long route_Id){
+//        if (hikeRouteService.addRouteToWishList(route_Id) != null){
+//            return "success";
+//        }
+//        return "fail";
+//    }
 }

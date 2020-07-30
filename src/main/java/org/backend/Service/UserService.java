@@ -2,10 +2,13 @@ package org.backend.Service;
 
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
+import org.backend.Repository.HikeMasterUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +20,10 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-   // @Autowired
-   // PasswordEncoder passwordEncoder;
+    // @Autowired
+    // PasswordEncoder passwordEncoder;
+
+
 
     @PersistenceContext
     EntityManager em;
@@ -44,6 +49,25 @@ public class UserService implements UserDetailsService {
         } else {
             return "ANONYMUS";
         }
+    }
+
+    public String getHikeMasterUser() {
+        String name = getUserName();
+        if (name != null){
+            return em.createQuery("select u from HikeMasterUser u where u.username = :name", HikeMasterUser.class)
+                    .setParameter("name", name)
+                    .getResultList()
+                    .get(0).getRole();
+        }
+        return null;
+    }
+
+    public String getUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return authentication.getName();
+        }
+        return null;
     }
 
     @Transactional
