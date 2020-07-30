@@ -33,6 +33,7 @@ public class UserController {
         this.encoder = encoder;
         this.validationService = validationService;
         this.service = service;
+
     }
 
     @PostMapping(value = "/registration")
@@ -86,11 +87,9 @@ public class UserController {
     }
 
     @GetMapping(value = "/user_role")
-    public String getUserRole(HikeMasterUser hikeMasterUser) {
+    public String getUserRole(@RequestBody HikeMasterUser hikeMasterUser) {
         return service.getRoleOfUser(hikeMasterUser);
     }
-
-
 
 
 }

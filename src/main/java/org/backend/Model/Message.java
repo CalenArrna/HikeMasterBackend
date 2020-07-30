@@ -13,13 +13,12 @@ public class Message {
     private String text;
     @ManyToOne
     private HikeMasterUser hikeMasterUser;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private HikeRoute hikeRoute;
-    @Column
-    private String title;
     @Column
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm")
     private LocalDateTime messageDate;
+
 
     public LocalDateTime getMessageDate() {
         return messageDate;
@@ -27,14 +26,6 @@ public class Message {
 
     public void setMessageDate(LocalDateTime messageDate) {
         this.messageDate = messageDate;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public long getMassageId() {

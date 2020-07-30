@@ -46,6 +46,8 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
@@ -58,12 +60,12 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {
-                    httpServletResponse.setStatus(403);
-                    httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
+                    httpServletResponse.setStatus(httpServletResponse.getStatus());
+                    httpServletResponse.getWriter().write(String.valueOf("{\"response\": \"fail\"}"));
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/createHikeRoute","/rest/hike_route/area","/csrf","/hike_route","/registration","/login","/hike_routes/{route_Id}","/","/favicon.ico","/hike_routes", "/hike_route/{route_Id}/messages", "/send_email").permitAll()
+                .antMatchers("/csrf", "/hike_route","/rest/hike_route/area", "/registration", "/login", "/hike_routes/{route_Id}", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute", "/send_email","/contact").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -76,12 +78,12 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                         httpServletResponse.setStatus(200);
                         httpServletResponse.getWriter().write("{\"response\": \"success\"}");
                     }
-                })
-                .failureHandler((httpServletRequest, httpServletResponse, e) -> {
-                    httpServletResponse.setStatus(403);
-                    httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
                 });
-//               .and()
+               // .failureHandler((httpServletRequest, httpServletResponse, e) -> {
+               //     httpServletResponse.setStatus(403);
+               //     httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
+               // });
+//               .and()"{\"response\": \"fail\"}"
 //               .logout()
 //               .invalidateHttpSession(true)
 //               .clearAuthentication(true)
@@ -125,7 +127,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://hikemaster-fe.herokuapp.com/"));
+        configuration.setAllowedOrigins(Arrays.asList("https://hikemaster-fe.herokuapp.com","http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH"));
         // setAllowCredentials(true) is important, otherwise:

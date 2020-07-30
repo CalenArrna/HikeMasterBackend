@@ -1,6 +1,6 @@
 package org.backend.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import org.backend.Repository.HikeMasterUserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthoritiesContainer;
@@ -33,8 +33,8 @@ public class HikeMasterUser implements UserDetails {
     private Set<Authority> authoritySet = new HashSet<>();
     @Column
     private Boolean isDeactivated;
-    @Column
-    private Boolean notification;
+   // @Column
+   // private Boolean notification;
     @JsonIgnore
     @OneToMany
     private List<Message> userMessageList = new ArrayList<>();
@@ -77,13 +77,13 @@ public class HikeMasterUser implements UserDetails {
         isDeactivated = deactivated;
     }
 
-    public boolean isNotification() {
-        return notification;
-    }
+  // public boolean isNotification() {
+  //     return notification;
+  // }
 
-    public void setNotification(boolean notification) {
-        this.notification = notification;
-    }
+  // public void setNotification(boolean notification) {
+  //     this.notification = notification;
+  // }
 
     public String getRole() {
         return role;

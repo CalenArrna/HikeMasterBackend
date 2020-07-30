@@ -1,14 +1,17 @@
 package org.backend.Service;
 
-import org.backend.CoordinateDistanceCalculator.Haversine;
-import org.backend.DTOs.MarkerDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.backend.CoordinateDistanceCalculator.Haversine;
+import org.backend.DTOs.HikeRouteDTO;
+import org.backend.DTOs.MarkerDTO;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.QHikeRoute;
+import org.backend.Repository.HikeRouteRepository;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
-import org.backend.Model.QHikeRoute;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,15 +47,17 @@ public class HikeRouteService {
         this.mapper = mapper;
     }
 
+    @Autowired
+    HikeRouteRepository hikeRouteRepository;
+
     @Transactional
     public HikeRoute hikeRouteDetails(long hikeRouteId) {
         List<HikeRoute> hikeRouteList = em.createQuery("select h from HikeRoute h where h.routeId = :hikeRouteId", HikeRoute.class)
                 .setParameter("hikeRouteId", hikeRouteId)
                 .getResultList();
-        if (hikeRouteList.isEmpty()){
+        if (hikeRouteList.isEmpty()) {
             return null;
-        }
-        else{
+        } else {
             return hikeRouteList.get(0);
         }
     }
@@ -60,28 +65,28 @@ public class HikeRouteService {
     @PersistenceContext
     EntityManager hikeRouteEntityManager;
 
-    public List<HikeRoute> findHikeRoutesByParams(String tourType, String routeType, String difficultly, Integer length, Integer levelRise, Integer rate) {
+    public List<HikeRoute> findHikeRoutesByParams(HikeRouteDTO hikeRouteDTO) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(hikeRouteEntityManager);
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if(StringUtils.isNotBlank(tourType)){
-            booleanBuilder.and(QHikeRoute.hikeRoute.tourType.like(tourType));
+        if (StringUtils.isNotBlank(hikeRouteDTO.getTourType())) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourType.like(hikeRouteDTO.getTourType()));
         }
 
-        if(StringUtils.isNotBlank(routeType)) {
-            booleanBuilder.and(QHikeRoute.hikeRoute.routeType.like(routeType));
+        if (StringUtils.isNotBlank(hikeRouteDTO.getRouteType())) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.routeType.like(hikeRouteDTO.getRouteType()));
         }
-        if(StringUtils.isNotBlank(difficultly)){
-            booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(difficultly));
+        if (StringUtils.isNotBlank(hikeRouteDTO.getDifficulty())) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.difficulty.like(hikeRouteDTO.getDifficulty()));
         }
-        if(rate!=null){
-            booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe(rate));
+        if (hikeRouteDTO.getTourLength() != null) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(hikeRouteDTO.getTourLength()));
         }
-        if(length!=null){
-            booleanBuilder.and(QHikeRoute.hikeRoute.tourLength.loe(length));
+        if (hikeRouteDTO.getLevelRise() != null) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(hikeRouteDTO.getLevelRise()));
         }
-        if (levelRise!=null){
-            booleanBuilder.and(QHikeRoute.hikeRoute.levelRise.loe(levelRise));
+        if (hikeRouteDTO.getRate() != null) {
+            booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe((hikeRouteDTO.getRate())));
         }
 
 
@@ -89,20 +94,32 @@ public class HikeRouteService {
                 .where(booleanBuilder)
                 .fetch();
 
-        if (routes==null){
+        if (routes == null) {
             return null;
-        }else {
+        } else {
             return routes;
         }
     }
-
-
 
 
     @Transactional
     public void createNewHikeRouteFrom(MultipartFile kml) throws XMLStreamException {
         HikeRoute newHikeRoute = createHikeRouteObject(kml);
         em.persist(newHikeRoute);
+    }
+
+    @Transactional
+    public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO) {
+        HikeRoute hikeRoute = new HikeRoute();
+        hikeRoute.setRate(hikeRouteDTO.getRate());
+        hikeRoute.setDifficulty(hikeRouteDTO.getDifficulty());
+        hikeRoute.setTourType(hikeRouteDTO.getTourType());
+        hikeRoute.setRouteType(hikeRouteDTO.getRouteType());
+        hikeRoute.setText(hikeRouteDTO.getDescription());
+        hikeRoute.setTitle(hikeRouteDTO.getTitle());
+        em.persist(hikeRoute);
+        return hikeRoute.getRouteId();
+
     }
 
     private HikeRoute createHikeRouteObject(MultipartFile kml) throws XMLStreamException {
@@ -153,7 +170,7 @@ public class HikeRouteService {
     }
 
     private List<MarkerDTO> getFilteredList(double latitude, double longitude, int radius) {
-        List<HikeRoute> all = getAllHikeRoute();
+        List<HikeRoute> all = hikeRouteRepository.findAll();
         List<MarkerDTO> filtered = new ArrayList<>();
         for (HikeRoute hikeRoute : all) {
             double distance = Haversine.distance(latitude, longitude,
@@ -165,7 +182,7 @@ public class HikeRouteService {
         return filtered;
     }
 
-    public List<HikeRoute> getAllHikeRoute() {
-        return em.createQuery("SELECT c FROM HikeRoute c").getResultList();
-    }
+
 }
+
+
