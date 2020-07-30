@@ -1,13 +1,15 @@
 package org.backend.Controllers;
 
-import org.backend.DTOs.HikeRouteErrorDTO;
-import org.backend.DTOs.HikeRouteSuccessDTO;
-import org.backend.DTOs.ResponseDTO;
+import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
 import org.backend.Repository.HikeRouteRepository;
+import org.backend.Repository.ImageRepository;
 import org.backend.Service.HikeRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,8 @@ public class AdminController {
     HikeRouteService messageService;
     @Autowired
     HikeRouteRepository hikeRouteRepository;
+    @Autowired
+    ImageRepository imageRepository;
 
     @Autowired
     public AdminController(HikeRouteService hikeRouteService, HikeRouteService messageService) {
@@ -25,6 +29,7 @@ public class AdminController {
         this.messageService = messageService;
 
     }
+
     @DeleteMapping("/hike_routes/{hikeRouteId}")
     public ResponseDTO deleteHikeRoute(@PathVariable Long hikeRouteId) {
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
@@ -32,22 +37,27 @@ public class AdminController {
             hikeRouteRepository.deleteById(hikeRouteId);
             return new HikeRouteSuccessDTO();
 
-        }else {
+        } else {
             return new HikeRouteErrorDTO("Valami hiba van!"); // TODO: Need valid message!
         }
 
 
     }
+
     @GetMapping("/hike_routes")
     public List<HikeRoute> getAllHikeRoute() {
         return hikeRouteRepository.findAll();
     }
 
     @PutMapping("/hike_routes")
-    public List<HikeRoute> modifyHikeRoute(@RequestBody HikeRoute hikeRoute) {
-        hikeRouteRepository.save(hikeRoute);
-
+    public List<HikeRoute> modifyHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
+        hikeRouteRepository.save(hikeRouteService.updateHikeRoute(hikeRouteDTO));
         return hikeRouteRepository.findAll();
     }
 
+    @PostMapping(value = "/image/approve")
+    public ResponseEntity<Boolean> imageApprove(@RequestBody PictureDTO pictureDTO) {
+        imageRepository.save(hikeRouteService.imageApproval(pictureDTO));
+        return new ResponseEntity<Boolean>(hikeRouteService.imageApproval(pictureDTO).getApprove(), HttpStatus.ACCEPTED);
+    }
 }

@@ -1,5 +1,9 @@
 package org.backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -7,13 +11,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue
     private long id;
     @Column
     private String roleName;
-    @ManyToMany(mappedBy = "authoritySet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "authoritySet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<HikeMasterUser> securityHikeMasterUsers = new HashSet<>();
 
 

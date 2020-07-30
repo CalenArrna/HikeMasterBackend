@@ -19,7 +19,7 @@ public class HikeRoute {
     private String title;
     @JsonIgnore
     @OneToMany
-    private  List<Message>messages=new ArrayList<>();
+    private  List<Message>messages = new ArrayList<>();
     @Column
     private Integer rate;
     @Column
@@ -49,7 +49,6 @@ public class HikeRoute {
     private String tourType;
     @Column
     private String text;
-
     @OneToMany
     private List<Pictures> picturesList = new ArrayList<>();
 

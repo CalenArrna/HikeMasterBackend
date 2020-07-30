@@ -26,7 +26,6 @@ public class UserController {
     private PasswordEncoder encoder;
     private ValidationService validationService;
 
-
     @Autowired
     public UserController(DozerBeanMapper mapper, UserService service, PasswordEncoder encoder, ValidationService validationService) {
         this.mapper = mapper;
@@ -88,7 +87,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/user_role")
-    public String getUserRole(HikeMasterUser hikeMasterUser) {
+    public String getUserRole(@RequestBody HikeMasterUser hikeMasterUser) {
         return service.getRoleOfUser(hikeMasterUser);
     }
 
