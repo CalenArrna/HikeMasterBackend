@@ -97,7 +97,7 @@ public class HikeRouteService {
 
 
         List<HikeRoute> routes = queryFactory.selectFrom(QHikeRoute.hikeRoute)
-                .where(booleanBuilder).limit(1)
+                .where(booleanBuilder)
                 .fetch();
 
         if (routes == null) {
