@@ -14,7 +14,7 @@ public class Message {
     private String text;
     @Column
     private String userName;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     private HikeRoute hikeRoute;
     @Column
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm")

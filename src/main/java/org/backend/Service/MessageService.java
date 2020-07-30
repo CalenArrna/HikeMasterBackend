@@ -55,4 +55,24 @@ public class MessageService {
             return new MessageErrorDTO();
         }
     }
+
+    @Transactional
+    public ResponseDTO deleteMessage(Long messageId){
+        if(messageRepository.findById(messageId).isPresent()){
+            messageRepository.deleteById(messageId);
+            return new MessageSuccessDTO();
+        }else{
+            return new MessageErrorDTO();
+        }
+    }
+
+    @Transactional
+    public Message alterMessage(Long messageId, String text){
+        if(messageRepository.findById(messageId).isPresent()){
+            messageRepository.findById(messageId).get().setText(text);
+            return messageRepository.findById(messageId).get();
+        }else {
+            return null;
+        }
+    }
 }

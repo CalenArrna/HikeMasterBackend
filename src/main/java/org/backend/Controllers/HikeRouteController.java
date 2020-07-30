@@ -41,7 +41,7 @@ public class HikeRouteController {
     public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
         HikeRoute hikeRoute = hikeRouteService.getHikeRouteOf(route_Id);
         if (hikeRoute == null) {
-            return new HikeRouteErrorDTO("Itt is hiba van"); //TODO: also need valid message
+            return new HikeRouteErrorDTO("Nincs ilyen Id val rendelkezö tura"); //TODO: also need valid message
         } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
             hikeRouteSuccessDTO.setHikeRoute(hikeRoute);
@@ -81,15 +81,6 @@ public class HikeRouteController {
         return hikeRouteService.hikeRouteInArea(areaData);
     }
 
-    @RequestMapping(value = "/hike_route/{route_Id}/messages", method = RequestMethod.POST)
-    public ResponseDTO addMessageToRoute(@PathVariable Long route_Id, @RequestBody Message message) {
-        return messageService.addCommentToRoute(route_Id, message);
-    }
-
-    @GetMapping(value = "/hike_route/{route_Id}/messages")
-    public List<Message> getMessages(@PathVariable Long route_Id) {
-        return hikeRouteRepository.findById(route_Id).get().getMessages();
-    }
 
     @PostMapping(value = "/hike_route/upload")
     public ResponseDTO addNewHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
@@ -104,12 +95,11 @@ public class HikeRouteController {
     }
 
 
-//
-//    @PostMapping(value = "/hike_route/{route_Id}/route_wish")
-//    public String addRouteToUserWishList(@PathVariable Long route_Id){
-//        if (hikeRouteService.addRouteToWishList(route_Id) != null){
-//            return "success";
-//        }
-//        return "fail";
-//    }
+    // @PostMapping(value = "/hike_route/{route_Id}/route_wish")
+    // public String addRouteToUserWishList(@PathVariable Long route_Id){
+    //     if (hikeRouteService.addRouteToWishList(route_Id) != null){
+    //         return "success";
+    //     }
+    //     return "fail";
+    // }
 }
