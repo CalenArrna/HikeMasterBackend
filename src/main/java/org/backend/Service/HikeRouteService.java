@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.backend.DTOs.*;
+import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Pictures;
 import org.backend.Model.QHikeRoute;
@@ -13,12 +14,15 @@ import org.backend.Repository.ImageRepository;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -28,6 +32,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 //TODO: username to creation
 //TODO: TimeStamp
@@ -227,9 +232,26 @@ public class HikeRouteService {
         }
         return hikeRoute.orElse(null);
     }
-    public Pictures imageApproval(PictureDTO pictureDTO){
+
+    public Pictures imageApproval(PictureDTO pictureDTO) {
         Optional<Pictures> pictures = imageRepository.findById(pictureDTO.getPictureId());
-            pictures.ifPresent(value -> value.setApprove(pictureDTO.getApprove()));
+        pictures.ifPresent(value -> value.setApprove(pictureDTO.getApprove()));
         return pictures.orElse(null);
     }
+
+  // @Transactional
+  // public Set<HikeRoute> addRouteToWishList(Long route_id) {
+  //     if (hikeRouteRepository.findById(route_id).isPresent()) {
+  //         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  //         Object principal = authentication.getPrincipal();
+
+  //         if (principal instanceof HikeMasterUser) {
+  //             HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
+  //             hikeMasterUser.getHikeRouteWishSet().add(hikeRouteRepository.findById(route_id).get());
+  //             hikeRouteRepository.findById(route_id).get().setWishToSeeUsers(hikeMasterUser);
+  //             return hikeMasterUser.getHikeRouteWishSet();
+  //         }
+  //     }
+  //     return null;
+  // }
 }

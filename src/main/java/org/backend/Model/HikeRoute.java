@@ -6,7 +6,9 @@ import org.locationtech.jts.geom.Coordinate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class HikeRoute {
@@ -48,6 +50,16 @@ public class HikeRoute {
     private String text;
     @OneToMany
     private List<Pictures> picturesList = new ArrayList<>();
+    @ManyToMany(mappedBy = "hikeRouteWishSet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<HikeMasterUser> wishToSeeUsers = new HashSet<>();
+
+    public Set<HikeMasterUser> getWishToSeeUsers() {
+        return wishToSeeUsers;
+    }
+
+    public void setWishToSeeUsers(Set<HikeMasterUser> wishToSeeUsers) {
+        this.wishToSeeUsers = wishToSeeUsers;
+    }
 
     public Long getRouteId() {
         return routeId;

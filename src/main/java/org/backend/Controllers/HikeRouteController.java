@@ -96,4 +96,14 @@ public class HikeRouteController {
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
         return hikeRoute.map(HikeRoute::getPicturesList).orElse(null);
     }
+
+
+
+   // @PostMapping(value = "/hike_route/{route_Id}/route_wish")
+   // public String addRouteToUserWishList(@PathVariable Long route_Id){
+   //     if (hikeRouteService.addRouteToWishList(route_Id) != null){
+   //         return "success";
+   //     }
+   //     return "fail";
+   // }
 }

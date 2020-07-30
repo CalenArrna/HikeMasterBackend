@@ -86,9 +86,14 @@ public class UserController {
         return hikeMasterUserErrorDTO;
     }
 
+
     @GetMapping(value = "/user_role")
-    public String getUserRole(@RequestBody HikeMasterUser hikeMasterUser) {
-        return service.getRoleOfUser(hikeMasterUser);
+    public String getUser() {
+        if (service.getHikeMasterUser() != null) {
+            return service.getHikeMasterUser();
+        } else {
+            return "fail";
+        }
     }
 
 
