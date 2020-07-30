@@ -6,7 +6,6 @@ import org.backend.DTOs.MarkerDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Pictures;
@@ -119,7 +118,7 @@ public class HikeRouteService {
         routeToUpdate.setEndLong(kmlDatas.getEndLong());
         routeToUpdate.setRouteKML(kmlDatas.getRouteKML());
         routeToUpdate.setLevelRise(kmlDatas.getLevelRise());
-        routeToUpdate.setTourLenght(kmlDatas.getTourLenght());
+        routeToUpdate.setTourLength(kmlDatas.getTourLength());
         em.persist(routeToUpdate);
     }
 
@@ -230,9 +229,10 @@ public class HikeRouteService {
         }
         return hikeRoute.orElse(null);
     }
-    public Pictures imageApproval(PictureDTO pictureDTO){
+
+    public Pictures imageApproval(PictureDTO pictureDTO) {
         Optional<Pictures> pictures = imageRepository.findById(pictureDTO.getPictureId());
-            pictures.ifPresent(value -> value.setApprove(pictureDTO.getApprove()));
+        pictures.ifPresent(value -> value.setApprove(pictureDTO.getApprove()));
         return pictures.orElse(null);
     }
 
@@ -242,4 +242,5 @@ public class HikeRouteService {
                 .setParameter("routeID", id)
                 .getSingleResult();
         return route.getRouteKML();
+    }
 }
