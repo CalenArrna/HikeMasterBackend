@@ -41,12 +41,12 @@ public class MessageService {
 
             if (principal instanceof HikeMasterUser) {
                 HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
-                message.setHikeMasterUser(hikeMasterUser);
+                message.setUserName(hikeMasterUser.getUsername());
                 hikeMasterUser.getUserMessageList().add(message);
             }
             if (principal instanceof OidcUser) {
                 OidcUser oidcUser = (OidcUser) principal;
-                message.setHikeMasterUser((HikeMasterUser) oidcUser);
+                message.setUserName(oidcUser.getUserInfo().getNickName());
             }
             hikeRouteRepository.findById(route_Id).get().getMessages().add(message);
             messageRepository.save(message);
