@@ -36,7 +36,7 @@ public class HikeMasterUser implements UserDetails {
    // @Column
    // private Boolean notification;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Message> userMessageList = new ArrayList<>();
 
     public HikeMasterUser() {
@@ -126,9 +126,7 @@ public class HikeMasterUser implements UserDetails {
     public void setUsername(String username) {
         this.username = username;
     }
-//    public String getUsername(){
-//        return username;
-//    }
+
 
     @Override
     public String getUsername() {

@@ -4,11 +4,12 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.backend.CoordinateDistanceCalculator.Haversine;
-import org.backend.DTOs.HikeRouteDTO;
-import org.backend.DTOs.MarkerDTO;
+import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.Pictures;
 import org.backend.Model.QHikeRoute;
 import org.backend.Repository.HikeRouteRepository;
+import org.backend.Repository.ImageRepository;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 //TODO: username to creation
 //TODO: TimeStamp
@@ -50,8 +51,11 @@ public class HikeRouteService {
     @Autowired
     HikeRouteRepository hikeRouteRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @Transactional
-    public HikeRoute hikeRouteDetails(long hikeRouteId) {
+    public HikeRoute getHikeRouteOf(long hikeRouteId) {
         List<HikeRoute> hikeRouteList = em.createQuery("select h from HikeRoute h where h.routeId = :hikeRouteId", HikeRoute.class)
                 .setParameter("hikeRouteId", hikeRouteId)
                 .getResultList();
@@ -103,9 +107,17 @@ public class HikeRouteService {
 
 
     @Transactional
-    public void createNewHikeRouteFrom(MultipartFile kml) throws XMLStreamException {
-        HikeRoute newHikeRoute = createHikeRouteObject(kml);
-        em.persist(newHikeRoute);
+    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException {
+        HikeRoute routeToUpdate = getHikeRouteOf(routeID);
+        HikeRoute kmlDatas = getHikeRouteDataFrom(kml);
+        routeToUpdate.setStartLat(kmlDatas.getStartLat());
+        routeToUpdate.setStartLong(kmlDatas.getStartLong());
+        routeToUpdate.setEndLat(kmlDatas.getEndLat());
+        routeToUpdate.setEndLong(kmlDatas.getEndLong());
+        routeToUpdate.setRouteKML(kmlDatas.getRouteKML());
+        routeToUpdate.setLevelRise(kmlDatas.getLevelRise());
+        routeToUpdate.setTourLenght(kmlDatas.getTourLenght());
+        em.persist(routeToUpdate);
     }
 
     @Transactional
@@ -122,7 +134,7 @@ public class HikeRouteService {
 
     }
 
-    private HikeRoute createHikeRouteObject(MultipartFile kml) throws XMLStreamException {
+    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException {
         List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
         HikeRoute route = HikeRoute.createRouteFrom(coordinates);
         route.setRouteKML(kml.toString());
@@ -149,8 +161,8 @@ public class HikeRouteService {
 
     private Coordinate getCoordinateFrom(String coordinates) {
         String[] arr = coordinates.split(" ");
-        double x = Double.parseDouble(arr[0]);
-        double y = Double.parseDouble(arr[1]);
+        double x = Double.parseDouble(arr[1]);
+        double y = Double.parseDouble(arr[0]);
         double z = Double.parseDouble(arr[2]);
         return new Coordinate(x, y, z);
     }
@@ -165,24 +177,59 @@ public class HikeRouteService {
     }
 
 
-    public List<MarkerDTO> hikeRouteInArea(double latitude, double longitude, int radius) {
-        return getFilteredList(latitude, longitude, radius);
+    public List<MarkerDTO> hikeRouteInArea(MarkerInputDTO areaToSearch) {
+        return getFilteredList(areaToSearch);
     }
 
-    private List<MarkerDTO> getFilteredList(double latitude, double longitude, int radius) {
-        List<HikeRoute> all = hikeRouteRepository.findAll();
+    private List<MarkerDTO> getFilteredList(MarkerInputDTO areaToSearch) {
+        List<HikeRoute> all = getAllHikeRoute();
         List<MarkerDTO> filtered = new ArrayList<>();
         for (HikeRoute hikeRoute : all) {
-            double distance = Haversine.distance(latitude, longitude,
+            double distance = Haversine.distance(areaToSearch.getLatitude(), areaToSearch.getLongitude(),
                     hikeRoute.getStartLat(), hikeRoute.getStartLong());
-            if (distance <= radius) {
+            if (distance <= areaToSearch.getRadius()) {
                 filtered.add(mapper.map(hikeRoute, MarkerDTO.class));
             }
         }
         return filtered;
     }
 
+    public ResponseDTO getTheRouteKmlOf(Long id) {
+        String kmlText = getHikeRouteOf(id).getRouteKML();
+        FileOutputStream stream = getOutputStreamFrom(kmlText);
+        return new HikeRouteSuccessDTO();
+    }
 
+    public FileOutputStream getOutputStreamFrom(String kmlText) {
+        FileOutputStream kmlFileStream;
+        try {
+            kmlFileStream = new FileOutputStream("route.kml", true);
+            PrintWriter writer = new PrintWriter(kmlFileStream);
+            writer.println(kmlText);
+            return kmlFileStream;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<HikeRoute> getAllHikeRoute() {
+        return em.createQuery("SELECT c FROM HikeRoute c").getResultList();
+    }
+
+    public HikeRoute updateHikeRoute(HikeRouteDTO hikeRouteDTO) {
+        Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteDTO.getHikeRouteId());
+        if (hikeRouteDTO.getTitle() != null) {
+            hikeRoute.ifPresent(route -> route.setTitle(hikeRouteDTO.getTitle()));
+        }
+        if (hikeRouteDTO.getDescription() != null) {
+            hikeRoute.ifPresent(route -> route.setText(hikeRouteDTO.getDescription()));
+        }
+        return hikeRoute.orElse(null);
+    }
+    public Pictures imageApproval(PictureDTO pictureDTO){
+        Optional<Pictures> pictures = imageRepository.findById(pictureDTO.getPictureId());
+            pictures.ifPresent(value -> value.setApprove(pictureDTO.getApprove()));
+        return pictures.orElse(null);
+    }
 }
-
-

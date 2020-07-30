@@ -15,15 +15,11 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 
 @Service
 public class MessageService {
 
-    @PersistenceContext
-    EntityManager em;
 
     HikeRouteRepository hikeRouteRepository;
     MessageRepository messageRepository;
@@ -35,7 +31,7 @@ public class MessageService {
     }
 
     @Transactional
-    public ResponseDTO addCommentToRoute(Long route_Id, Message message){
+    public ResponseDTO addCommentToRoute(Long route_Id, Message message) {
         if (hikeRouteRepository.findById(route_Id).isPresent()) {
             message.setHikeRoute(hikeRouteRepository.findById(route_Id).get());
             message.setMessageDate(LocalDateTime.now());

@@ -60,12 +60,12 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {
-                    httpServletResponse.setStatus(httpServletResponse.getStatus());
-                    httpServletResponse.getWriter().write(String.valueOf("{\"response\": \"fail\"}"));
+                    httpServletResponse.setStatus(403);
+                    httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/csrf", "/hike_route","/rest/hike_route/area", "/registration", "/login", "/hike_routes/{route_Id}", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute", "/send_email","/contact").permitAll()
+                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**","/kml/{route_Id}/upload","/image/approve").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -78,12 +78,12 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                         httpServletResponse.setStatus(200);
                         httpServletResponse.getWriter().write("{\"response\": \"success\"}");
                     }
+                })
+                .failureHandler((httpServletRequest, httpServletResponse, e) -> {
+                    httpServletResponse.setStatus(403);
+                    httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
                 });
-               // .failureHandler((httpServletRequest, httpServletResponse, e) -> {
-               //     httpServletResponse.setStatus(403);
-               //     httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
-               // });
-//               .and()"{\"response\": \"fail\"}"
+//               .and()
 //               .logout()
 //               .invalidateHttpSession(true)
 //               .clearAuthentication(true)
@@ -94,6 +94,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     }
+
 
 
     @Bean

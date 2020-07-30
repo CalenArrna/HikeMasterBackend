@@ -40,6 +40,7 @@ public class ImageController {
         Pictures img = new Pictures(file.getOriginalFilename(), file.getContentType(), compressBytes(file.getBytes()));
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
         img.setHikeRoute(hikeRoute.get());
+        hikeRoute.get().getPicturesList().add(img);
         imageRepository.save(img);
         return new ImageSuccessDTO(img);
     }
