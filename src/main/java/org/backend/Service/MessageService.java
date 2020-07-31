@@ -41,7 +41,7 @@ public class MessageService {
 
             if (principal instanceof HikeMasterUser) {
                 HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
-                message.setUserName(hikeMasterUser.getUsername());
+                message.setUserName("Csaba");
                 hikeMasterUser.getUserMessageList().add(message);
             }
             if (principal instanceof OidcUser) {
