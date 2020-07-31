@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -80,6 +81,10 @@ public class ImageController {
         return new ResponseEntity<byte[]>(decompressBytes(retrievedImage.get().getPicByte()), headers, HttpStatus.CREATED);
 
 
+    }
+    @GetMapping(value = "/images")
+    public List<PictureURL> getAllImageURL(){
+       return urlRepository.findAll();
     }
     public byte[] compressBytes(byte[] data) {
         Deflater deflater = new Deflater();
