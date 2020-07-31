@@ -40,10 +40,6 @@ public class UserController {
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         Authority userAuthority = service.getUserAuthority();
         PasswordData passwordData = mapper.map(newUser, PasswordData.class);
-        HikeMasterUser user = new HikeMasterUser();
-        user.getAuthoritySet().add(userAuthority);
-        userAuthority.getSecurityHikeMasterUsers().add(user);
-        user.setRole(userAuthority.getRoleName());
         boolean usernameValid = validationService.validateUsername(passwordData);
         boolean emailExistInDatabase = validationService.emailIsInDatabase(newUser);
         ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
@@ -71,6 +67,8 @@ public class UserController {
         HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
         validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
         validHikeMasterUser.setRole(userAuthority.getRoleName());
+        validHikeMasterUser.getAuthoritySet().add(userAuthority);
+        userAuthority.getSecurityHikeMasterUsers().add(validHikeMasterUser);
         service.addUserToDatabase(validHikeMasterUser);
         return new HikeMasterUserSuccessDTO(validHikeMasterUser.getRole());
     }

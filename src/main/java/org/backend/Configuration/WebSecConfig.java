@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -47,7 +48,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.cors().and()
                 .formLogin()
                 .successHandler(new AuthenticationSuccessHandler() {
                     @Override
@@ -79,16 +80,16 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {
                     httpServletResponse.setStatus(403);
                     httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
-                });
-//               .and()
-//               .logout()
-//               .invalidateHttpSession(true)
-//               .clearAuthentication(true)
+                })
+               .and()
+               .logout()
+               .invalidateHttpSession(true)
+               .clearAuthentication(true)
 
-//               .deleteCookies("JSESSIONID")
-//               .permitAll()
-//                .and()
-//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+               .deleteCookies("JSESSIONID")
+               .permitAll()
+                .and()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     }
 
