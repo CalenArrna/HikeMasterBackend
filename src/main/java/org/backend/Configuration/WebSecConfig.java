@@ -80,16 +80,15 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {
                     httpServletResponse.setStatus(403);
                     httpServletResponse.getWriter().write("{\"response\": \"fail\"}");
-                })
-               .and()
-               .logout()
-               .invalidateHttpSession(true)
-               .clearAuthentication(true)
-
-               .deleteCookies("JSESSIONID")
-               .permitAll()
-                .and()
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                });
+//               .and()
+//               .logout()
+//               .invalidateHttpSession(true)
+//               .clearAuthentication(true)
+//               .deleteCookies("JSESSIONID")
+//               .permitAll()
+//                .and()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     }
 

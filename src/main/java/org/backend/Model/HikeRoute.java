@@ -25,6 +25,8 @@ public class HikeRoute {
     private Integer rate;
     @Column
     private String createdBy;
+
+    @JsonIgnore
     @Column
     @Lob
     private String routeKML;
