@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.KMLfile;
 import org.backend.Model.Pictures;
 import org.backend.Model.QHikeRoute;
 import org.backend.Repository.HikeRouteRepository;
@@ -112,13 +113,19 @@ public class HikeRouteService {
     public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException, IOException {
         HikeRoute routeToUpdate = getHikeRouteOf(routeID);
         HikeRoute kmlDatas = getHikeRouteDataFrom(kml);
+        
+        KMLfile kmLfile = new KMLfile();
+        kmLfile.setRouteKMLInString(new String(kml.getBytes()));
+        
         routeToUpdate.setStartLat(kmlDatas.getStartLat());
         routeToUpdate.setStartLong(kmlDatas.getStartLong());
         routeToUpdate.setEndLat(kmlDatas.getEndLat());
         routeToUpdate.setEndLong(kmlDatas.getEndLong());
-        routeToUpdate.setRouteKML(kmlDatas.getRouteKML());
         routeToUpdate.setLevelRise(kmlDatas.getLevelRise());
         routeToUpdate.setTourLength(kmlDatas.getTourLength());
+        
+        kmLfile.setHikeRoute(routeToUpdate);
+        em.persist(kmLfile);
         em.persist(routeToUpdate);
     }
 
@@ -139,7 +146,8 @@ public class HikeRouteService {
     private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException, IOException {
         List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
         HikeRoute route = HikeRoute.createRouteFrom(coordinates);
-        route.setRouteKML(new String(kml.getBytes()));
+        KMLfile kmLfile = new KMLfile();
+      
         return route;
     }
 
@@ -196,11 +204,11 @@ public class HikeRouteService {
         return filtered;
     }
 
-    public ResponseDTO getTheRouteKmlOf(Long id) {
-        String kmlText = getHikeRouteOf(id).getRouteKML();
-        FileOutputStream stream = getOutputStreamFrom(kmlText);
-        return new HikeRouteSuccessDTO();
-    }
+//    public ResponseDTO getTheRouteKmlOf(Long id) {
+//        String kmlText = getHikeRouteOf(id).getKMLfile();
+//        FileOutputStream stream = getOutputStreamFrom(kmlText);
+//        return new HikeRouteSuccessDTO();
+//    }
 
     public FileOutputStream getOutputStreamFrom(String kmlText) {
         FileOutputStream kmlFileStream;
@@ -238,9 +246,9 @@ public class HikeRouteService {
 
 
     public String getKmlStringOf(Long id) {
-        HikeRoute route = (HikeRoute) em.createQuery("select r from HikeRoute r where r.routeId = :routeID")
+        KMLfile kmLfile = (KMLfile) em.createQuery("select k from KMLfile k where k.hikeRoute.routeId = :routeID")
                 .setParameter("routeID", id)
                 .getSingleResult();
-        return route.getRouteKML();
+        return kmLfile.getRouteKMLInString();
     }
 }

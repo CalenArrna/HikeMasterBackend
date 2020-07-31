@@ -23,9 +23,6 @@ public class HikeRoute {
     @Column
     private String createdBy;
     @Column
-    @Lob
-    private String routeKML;
-    @Column
     private Double startLat;
     @Column
     private Double startLong;
@@ -90,14 +87,6 @@ public class HikeRoute {
         this.createdBy = createdBy;
     }
 
-    public String getRouteKML() {
-        return routeKML;
-    }
-
-    public void setRouteKML(String routeKML) {
-        this.routeKML = routeKML;
-    }
-
     public Double getStartLat() {
         return startLat;
     }
@@ -134,8 +123,8 @@ public class HikeRoute {
         return tourLength;
     }
 
-    public void setTourLength(Double tourLenght) {
-        this.tourLength = tourLenght;
+    public void setTourLength(Double tourLength) {
+        this.tourLength = tourLength;
     }
 
     public Integer getLevelRise() {
