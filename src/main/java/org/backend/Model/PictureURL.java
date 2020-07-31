@@ -1,5 +1,6 @@
 package org.backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ public class PictureURL {
     private Long urlId;
     @Column
     private URL pictureUrl;
+    @JsonIgnore
     @ManyToOne
     private HikeRoute hikeRoute;
 

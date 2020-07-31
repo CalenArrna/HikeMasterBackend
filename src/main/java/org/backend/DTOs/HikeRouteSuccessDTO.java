@@ -1,13 +1,16 @@
 package org.backend.DTOs;
 
 import org.backend.Model.HikeRoute;
+import org.backend.Model.PictureURL;
 
 
 import java.util.List;
 
 public class HikeRouteSuccessDTO extends ResponseDTO {
+
     private  HikeRoute hikeRoute;
     private List<HikeRoute> hikeRoutes;
+
 
 
     public HikeRouteSuccessDTO(Long hikeRouteId) {

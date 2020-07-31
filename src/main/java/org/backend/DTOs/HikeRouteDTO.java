@@ -1,6 +1,9 @@
 package org.backend.DTOs;
 
+import org.backend.Model.PictureURL;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class HikeRouteDTO {
     private Long hikeRouteId;
@@ -13,6 +16,7 @@ public class HikeRouteDTO {
     private String title;
     private  String description;
     private MultipartFile kml;
+
 
     public MultipartFile getKml() {
         return kml;

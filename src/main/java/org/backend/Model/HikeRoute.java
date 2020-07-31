@@ -50,7 +50,7 @@ public class HikeRoute {
     private String tourType;
     @Column
     private String text;
-    @JsonIgnore
+    //@JsonIgnore
     @OneToMany
     private List<PictureURL> pictureUrlList = new ArrayList<>();
 
