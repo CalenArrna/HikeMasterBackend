@@ -1,12 +1,15 @@
 package org.backend.Controllers;
 
 
+import org.backend.DTOs.ImageErrorDTO;
 import org.backend.DTOs.ImageSuccessDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.PictureURL;
 import org.backend.Model.Pictures;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.ImageRepository;
+import org.backend.Repository.URLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -27,22 +30,41 @@ import java.util.zip.Inflater;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class ImageController {
+    private PictureURL pictureURL;
+
+    @Autowired
+    public ImageController(PictureURL pictureURL) {
+        this.pictureURL = pictureURL;
+    }
+
     Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
     @Autowired
     ImageRepository imageRepository;
     @Autowired
     HikeRouteRepository hikeRouteRepository;
+    @Autowired
+    URLRepository urlRepository;
 
     @PostMapping("/image/{hikeRouteId}/upload")
     public ResponseDTO uploadImage(@PathVariable(value = "hikeRouteId") Long hikeRouteId, @RequestBody MultipartFile file) throws IOException {
         System.out.println("Original Image Byte Size - " + file.getBytes().length);
         Pictures img = new Pictures(file.getOriginalFilename(), file.getContentType(), compressBytes(file.getBytes()));
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
-        img.setHikeRoute(hikeRoute.get());
-        hikeRoute.get().getPicturesList().add(img);
         imageRepository.save(img);
-        return new ImageSuccessDTO(img);
+        if(hikeRoute.isPresent()){
+            img.setHikeRoute(hikeRoute.get());
+            PictureURL pictureURL=new PictureURL();
+            URL https=new URL(" https://hikemasterprog.herokuapp.com/image/get/"+img.getPicturesId());
+            pictureURL.setPictureUrl(https);
+            hikeRoute.get().getPictureUrlList().add(pictureURL);
+            pictureURL.setHikeRoute(hikeRoute.get());
+            urlRepository.save(pictureURL);
+            return new ImageSuccessDTO(img);
+        }
+
+        return new ImageErrorDTO();
+
     }
 
     @GetMapping(path = {"/image/get/{imageId}"})
@@ -59,8 +81,6 @@ public class ImageController {
 
 
     }
-
-
     public byte[] compressBytes(byte[] data) {
         Deflater deflater = new Deflater();
         deflater.setInput(data);

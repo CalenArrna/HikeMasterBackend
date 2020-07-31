@@ -1,9 +1,10 @@
 package org.backend.Controllers;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.Message;
-import org.backend.Model.Pictures;
+import org.backend.Model.PictureURL;
 import org.backend.Repository.HikeMasterUserRepository;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.MessageRepository;
@@ -40,7 +41,7 @@ public class HikeRouteController {
     public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
         HikeRoute hikeRoute = hikeRouteService.getHikeRouteOf(route_Id);
         if (hikeRoute == null) {
-            return new HikeRouteErrorDTO("Itt is hiba van"); //TODO: also need valid message
+            return new HikeRouteErrorDTO("Nincs ilyen Id val rendelkezö tura"); //TODO: also need valid message
         } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
             hikeRouteSuccessDTO.setHikeRoute(hikeRoute);
@@ -49,7 +50,7 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
+    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) throws ClientAbortException {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO("Hiba van itt is"); //TODO: need valid error message
@@ -69,10 +70,10 @@ public class HikeRouteController {
             return new HikeRouteErrorDTO(exception.getMessage());//TODO: make a proper error handling here!
         }
     }
-    
+
     @GetMapping(value = "/kml/{route_Id}")
-    public String getKMLFileOf (@PathVariable Long route_Id){
-        return hikeRouteService.getKmlStringOf(route_Id) ;
+    public String getKMLFileOf(@PathVariable Long route_Id) {
+        return hikeRouteService.getKmlStringOf(route_Id);
     }
 
     @PostMapping(value = "/hike_route/area")
@@ -80,15 +81,6 @@ public class HikeRouteController {
         return hikeRouteService.hikeRouteInArea(areaData);
     }
 
-    @RequestMapping(value = "/hike_route/{route_Id}/messages", method = RequestMethod.POST)
-    public ResponseDTO addMessageToRoute(@PathVariable Long route_Id, @RequestBody Message message) {
-        return messageService.addCommentToRoute(route_Id, message);
-    }
-
-    @GetMapping(value = "/hike_route/{route_Id}/messages")
-    public List<Message> getMessages(@PathVariable Long route_Id) {
-        return hikeRouteRepository.findById(route_Id).get().getMessages();
-    }
 
     @PostMapping(value = "/hike_route/upload")
     public ResponseDTO addNewHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
@@ -97,8 +89,17 @@ public class HikeRouteController {
     }
 
     @GetMapping(value = "/hike_route/{hikeRouteId}/images")
-    public List<Pictures> getImagesByHikeRouteId(@PathVariable(value = "hikeRouteId") Long hikeRouteId) {
+    public List<PictureURL> getImagesByHikeRouteId(@PathVariable(value = "hikeRouteId") Long hikeRouteId) {
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
-        return hikeRoute.map(HikeRoute::getPicturesList).orElse(null);
+        return hikeRoute.map(HikeRoute::getPictureUrlList).orElse(null);
     }
+
+
+    // @PostMapping(value = "/hike_route/{route_Id}/route_wish")
+    // public String addRouteToUserWishList(@PathVariable Long route_Id){
+    //     if (hikeRouteService.addRouteToWishList(route_Id) != null){
+    //         return "success";
+    //     }
+    //     return "fail";
+    // }
 }

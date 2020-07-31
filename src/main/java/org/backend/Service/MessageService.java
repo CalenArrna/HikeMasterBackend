@@ -41,18 +41,38 @@ public class MessageService {
 
             if (principal instanceof HikeMasterUser) {
                 HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
-                message.setHikeMasterUser(hikeMasterUser);
+                message.setUserName(hikeMasterUser.getUsername());
                 hikeMasterUser.getUserMessageList().add(message);
             }
             if (principal instanceof OidcUser) {
                 OidcUser oidcUser = (OidcUser) principal;
-                message.setHikeMasterUser((HikeMasterUser) oidcUser);
+                message.setUserName(oidcUser.getUserInfo().getNickName());
             }
             hikeRouteRepository.findById(route_Id).get().getMessages().add(message);
             messageRepository.save(message);
             return new MessageSuccessDTO();
         } else {
             return new MessageErrorDTO();
+        }
+    }
+
+    @Transactional
+    public ResponseDTO deleteMessage(Long messageId){
+        if(messageRepository.findById(messageId).isPresent()){
+            messageRepository.deleteById(messageId);
+            return new MessageSuccessDTO();
+        }else{
+            return new MessageErrorDTO();
+        }
+    }
+
+    @Transactional
+    public Message alterMessage(Long messageId, String text){
+        if(messageRepository.findById(messageId).isPresent()){
+            messageRepository.findById(messageId).get().setText(text);
+            return messageRepository.findById(messageId).get();
+        }else {
+            return null;
         }
     }
 }

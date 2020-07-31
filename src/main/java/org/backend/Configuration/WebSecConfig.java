@@ -45,9 +45,6 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
         this.oidcUserService = oidcUserService;
     }
 
-
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
@@ -65,7 +62,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
                 .authorizeRequests()
-                .antMatchers("/csrf", "/hike_route","/kml/**", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**","/kml/{route_Id}/upload","/image/approve").permitAll()
+                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**/images","/kml/{route_Id}/upload","/image/approve","/user_role","/hike_route","/hike_route/{route_Id}","/hike_route/upload","/createRoute","/hike_route/{message_Id}/delete_message", "/messages", "/hike_route/{message_Id}/alter_message").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

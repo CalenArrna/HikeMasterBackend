@@ -12,14 +12,21 @@ public class Message {
     private long massageId;
     @Column
     private String text;
+    @Column
+    private String userName;
     @ManyToOne
-    private HikeMasterUser hikeMasterUser;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private HikeRoute hikeRoute;
     @Column
     @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm")
     private LocalDateTime messageDate;
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public LocalDateTime getMessageDate() {
         return messageDate;
@@ -45,13 +52,7 @@ public class Message {
         this.text = text;
     }
 
-    public HikeMasterUser getHikeMasterUser() {
-        return hikeMasterUser;
-    }
 
-    public void setHikeMasterUser(HikeMasterUser hikeMasterUser) {
-        this.hikeMasterUser = hikeMasterUser;
-    }
 
     public HikeRoute getHikeRoute() {
         return hikeRoute;

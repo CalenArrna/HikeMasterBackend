@@ -5,8 +5,11 @@ import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.locationtech.jts.geom.Coordinate;
 
 import javax.persistence.*;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class HikeRoute {
@@ -37,15 +40,22 @@ public class HikeRoute {
     @Column
     private String difficulty;
     @Column
-    private Double distanceFromLoc;
-    @Column
     private String routeType;
     @Column
     private String tourType;
     @Column
     private String text;
+    @JsonIgnore
     @OneToMany
-    private List<Pictures> picturesList = new ArrayList<>();
+    private List<PictureURL> pictureUrlList = new ArrayList<>();
+
+    public List<PictureURL> getPictureUrlList() {
+        return pictureUrlList;
+    }
+
+    public void setPictureUrlList(List<PictureURL> pictureUrlList) {
+        this.pictureUrlList = pictureUrlList;
+    }
 
     public Long getRouteId() {
         return routeId;
@@ -143,14 +153,6 @@ public class HikeRoute {
         this.difficulty = difficulty;
     }
 
-    public Double getDistanceFromLoc() {
-        return distanceFromLoc;
-    }
-
-    public void setDistanceFromLoc(Double distanceFromLoc) {
-        this.distanceFromLoc = distanceFromLoc;
-    }
-
     public String getRouteType() {
         return routeType;
     }
@@ -175,13 +177,6 @@ public class HikeRoute {
         this.text = text;
     }
 
-    public List<Pictures> getPicturesList() {
-        return picturesList;
-    }
-
-    public void setPicturesList(List<Pictures> picturesList) {
-        this.picturesList = picturesList;
-    }
 
     public static HikeRoute createRouteFrom(List<Coordinate> list) {
         HikeRoute route = new HikeRoute();
