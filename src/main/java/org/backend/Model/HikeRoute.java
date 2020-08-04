@@ -6,6 +6,7 @@ import org.locationtech.jts.geom.Coordinate;
 
 import javax.persistence.*;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,9 +46,19 @@ public class HikeRoute {
     private String tourType;
     @Column
     private String text;
+    @Column
+    private LocalDateTime tourDate;
     @JsonIgnore
     @OneToMany
     private List<PictureURL> pictureUrlList = new ArrayList<>();
+
+    public LocalDateTime getTourDate() {
+        return tourDate;
+    }
+
+    public void setTourDate(LocalDateTime tourDate) {
+        this.tourDate = tourDate;
+    }
 
     public List<PictureURL> getPictureUrlList() {
         return pictureUrlList;
