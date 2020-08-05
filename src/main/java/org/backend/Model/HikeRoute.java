@@ -19,13 +19,12 @@ public class HikeRoute {
     @Column
     private String title;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private  List<Message>messages = new ArrayList<>();
     @Column
     private Integer rate;
     @Column
     private String createdBy;
-
     @JsonIgnore
     @Column
     private Double startLat;
@@ -48,7 +47,7 @@ public class HikeRoute {
     @Column
     private String text;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<PictureURL> pictureUrlList = new ArrayList<>();
 
     public List<PictureURL> getPictureUrlList() {

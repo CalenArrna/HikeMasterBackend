@@ -12,6 +12,8 @@ public class PictureURL {
     @GeneratedValue
     private Long urlId;
     @Column
+    private Long pictureId;
+    @Column
     private URL pictureUrl;
     @JsonIgnore
     @ManyToOne
@@ -39,5 +41,13 @@ public class PictureURL {
 
     public void setHikeRoute(HikeRoute hikeRoute) {
         this.hikeRoute = hikeRoute;
+    }
+
+    public Long getPictureId() {
+        return pictureId;
+    }
+
+    public void setPictureId(Long pictureId) {
+        this.pictureId = pictureId;
     }
 }

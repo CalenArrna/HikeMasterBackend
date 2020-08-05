@@ -136,11 +136,11 @@ public class HikeRouteService {
 
     @Transactional
     public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        Object principal = authentication.getPrincipal();
-//        HikeMasterUser hikeMasterUser =(HikeMasterUser) principal;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        HikeMasterUser hikeMasterUser =(HikeMasterUser) principal;
         HikeRoute hikeRoute = new HikeRoute();
-        hikeRoute.setCreatedBy("Csaba");
+        hikeRoute.setCreatedBy(hikeMasterUser.getUsername());
         hikeRoute.setRate(hikeRouteDTO.getRate());
         hikeRoute.setDifficulty(hikeRouteDTO.getDifficulty());
         hikeRoute.setTourType(hikeRouteDTO.getTourType());
@@ -152,11 +152,10 @@ public class HikeRouteService {
 
     }
 
-    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException, IOException {
+    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException {
         List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
         HikeRoute route = HikeRoute.createRouteFrom(coordinates);
-        KMLfile kmLfile = new KMLfile();
-      
+
         return route;
     }
 
