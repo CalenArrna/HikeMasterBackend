@@ -1,5 +1,6 @@
 package org.backend.Service;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.backend.DTOs.HikeRouteSuccessDTO;
 import org.backend.DTOs.MarkerDTO;
@@ -32,6 +33,12 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -115,20 +122,21 @@ public class HikeRouteService {
 
 
     @Transactional
-    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException, IOException {
+    public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException, IOException, ParseException {
         HikeRoute routeToUpdate = getHikeRouteOf(routeID);
         HikeRoute kmlDatas = getHikeRouteDataFrom(kml);
-        
+
         KMLfile kmLfile = new KMLfile();
         kmLfile.setRouteKMLInString(new String(kml.getBytes()));
-        
+
         routeToUpdate.setStartLat(kmlDatas.getStartLat());
         routeToUpdate.setStartLong(kmlDatas.getStartLong());
         routeToUpdate.setEndLat(kmlDatas.getEndLat());
         routeToUpdate.setEndLong(kmlDatas.getEndLong());
         routeToUpdate.setLevelRise(kmlDatas.getLevelRise());
         routeToUpdate.setTourLength(kmlDatas.getTourLength());
-        
+        routeToUpdate.setTourDate(kmlDatas.getTourDate());
+
         kmLfile.setHikeRoute(routeToUpdate);
         em.persist(kmLfile);
         em.persist(routeToUpdate);
@@ -138,7 +146,7 @@ public class HikeRouteService {
     public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        HikeMasterUser hikeMasterUser =(HikeMasterUser) principal;
+        HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
         HikeRoute hikeRoute = new HikeRoute();
         hikeRoute.setCreatedBy(hikeMasterUser.getUsername());
         hikeRoute.setRate(hikeRouteDTO.getRate());
@@ -149,24 +157,29 @@ public class HikeRouteService {
         hikeRoute.setTitle(hikeRouteDTO.getTitle());
         em.persist(hikeRoute);
         return hikeRoute.getRouteId();
-
     }
 
-    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException {
-        List<Coordinate> coordinates = parseKmlToListOfCoordinates(kml);
-        HikeRoute route = HikeRoute.createRouteFrom(coordinates);
-
-        return route;
+    private HikeRoute getHikeRouteDataFrom(MultipartFile kml) throws XMLStreamException, ParseException {
+        DateAndCoordinatesDTO coordinatesAndDate = parseKmlToListOfCoordinates(kml);
+        HikeRoute newRoute = HikeRoute.createRouteFrom(coordinatesAndDate.getCoordinates());
+        newRoute.setTourDate(coordinatesAndDate.getDateOfRoute());
+        return newRoute;
     }
 
-    private List<Coordinate> parseKmlToListOfCoordinates(MultipartFile kml) throws XMLStreamException {
+    private DateAndCoordinatesDTO parseKmlToListOfCoordinates(MultipartFile kml) throws XMLStreamException {
         List<Coordinate> listOfCoordinates = new ArrayList<>();
+        LocalDateTime dateTimeOfRoute = null;
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = inputFactory.createXMLEventReader(getValidFileStream(kml));
         while (eventReader.hasNext()) {
             XMLEvent nextEvent = eventReader.nextEvent();
             if (nextEvent.isStartElement()) {
                 StartElement startElement = nextEvent.asStartElement();
+                if (startElement.getName().getLocalPart().equals("TimeStamp")) {
+                    nextEvent = eventReader.nextEvent();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    dateTimeOfRoute = LocalDateTime.parse(getValidDateTimeFrom(nextEvent), formatter);
+                }
                 if (startElement.getName().getLocalPart().equals("coord")) {
                     nextEvent = eventReader.nextEvent();
                     String coordinates = nextEvent.asCharacters().getData();
@@ -174,7 +187,13 @@ public class HikeRouteService {
                 }
             }
         }
-        return listOfCoordinates;
+        return new DateAndCoordinatesDTO(listOfCoordinates, dateTimeOfRoute);
+    }
+
+    private String getValidDateTimeFrom(XMLEvent dateTagDataInKML) {
+        String tryied = dateTagDataInKML.asCharacters().getData().split("\\.")[0];
+        String[] splitted = tryied.split("T");
+        return splitted[0] + " " + splitted[1];
     }
 
     private Coordinate getCoordinateFrom(String coordinates) {
@@ -210,25 +229,6 @@ public class HikeRouteService {
             }
         }
         return filtered;
-    }
-
-//    public ResponseDTO getTheRouteKmlOf(Long id) {
-//        String kmlText = getHikeRouteOf(id).getKMLfile();
-//        FileOutputStream stream = getOutputStreamFrom(kmlText);
-//        return new HikeRouteSuccessDTO();
-//    }
-
-    public FileOutputStream getOutputStreamFrom(String kmlText) {
-        FileOutputStream kmlFileStream;
-        try {
-            kmlFileStream = new FileOutputStream("route.kml", true);
-            PrintWriter writer = new PrintWriter(kmlFileStream);
-            writer.println(kmlText);
-            return kmlFileStream;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public List<HikeRoute> getAllHikeRoute() {
