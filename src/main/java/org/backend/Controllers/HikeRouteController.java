@@ -50,13 +50,14 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) throws ClientAbortException {
+    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO)  {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO("Hiba van itt is"); //TODO: need valid error message
         } else {
             HikeRouteSuccessDTO hikeRouteSuccessDTO = new HikeRouteSuccessDTO();
             hikeRouteSuccessDTO.setHikeRoutes(routesByParams);
+
             return hikeRouteSuccessDTO;
         }
     }

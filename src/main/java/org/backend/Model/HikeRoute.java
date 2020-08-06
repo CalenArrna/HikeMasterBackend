@@ -6,6 +6,7 @@ import org.locationtech.jts.geom.Coordinate;
 
 import javax.persistence.*;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,15 +20,12 @@ public class HikeRoute {
     @Column
     private String title;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private  List<Message>messages = new ArrayList<>();
     @Column
     private Integer rate;
     @Column
     private String createdBy;
-    @Column
-    @Lob
-    private String routeKML;
     @Column
     private Double startLat;
     @Column
@@ -48,8 +46,10 @@ public class HikeRoute {
     private String tourType;
     @Column
     private String text;
+    @Column
+    private LocalDateTime tourDate;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<PictureURL> pictureUrlList = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<HikeMasterUser> wisherUsers = new HashSet<>();
@@ -60,6 +60,14 @@ public class HikeRoute {
 
     public void setWisherUsers(Set<HikeMasterUser> wisherUsers) {
         this.wisherUsers = wisherUsers;
+    }
+
+    public LocalDateTime getTourDate() {
+        return tourDate;
+    }
+
+    public void setTourDate(LocalDateTime tourDate) {
+        this.tourDate = tourDate;
     }
 
     public List<PictureURL> getPictureUrlList() {
@@ -110,14 +118,6 @@ public class HikeRoute {
         this.createdBy = createdBy;
     }
 
-    public String getRouteKML() {
-        return routeKML;
-    }
-
-    public void setRouteKML(String routeKML) {
-        this.routeKML = routeKML;
-    }
-
     public Double getStartLat() {
         return startLat;
     }
@@ -154,8 +154,8 @@ public class HikeRoute {
         return tourLength;
     }
 
-    public void setTourLength(Double tourLenght) {
-        this.tourLength = tourLenght;
+    public void setTourLength(Double tourLength) {
+        this.tourLength = tourLength;
     }
 
     public Integer getLevelRise() {

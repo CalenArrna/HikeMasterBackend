@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -62,6 +63,7 @@ public class WebSecConfig extends WebSecurityConfigurerAdapter {
                 })
                 .and()
                 .authorizeRequests()
+                .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/","/kml/**", "/favicon.ico", "/hike_routes","/hike_route/area" ,"/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**/images","/kml/{route_Id}/upload","/image/approve","/user_role","/hike_route","/hike_route/{route_Id}","/hike_route/upload","/createRoute","/hike_route/{message_Id}/delete_message", "/messages", "/hike_route/{message_Id}/alter_message","/images").permitAll()
                 .antMatchers("/csrf", "/hike_route", "/registration", "/login", "/hike_routes/{route_Id}", "/", "/favicon.ico", "/hike_routes", "/hike_route/{route_Id}/messages","/hike_route/upload", "/api/registration","/image/**/upload","/image/get/**","/createHikeRoute","/hike_route/area","/contact","/hike_route/**/images","/hike_route/**/images","/kml/{route_Id}/upload","/image/approve","/user_role","/hike_route","/hike_route/{route_Id}","/hike_route/upload","/createRoute","/hike_route/{message_Id}/delete_message", "/messages", "/hike_route/{message_Id}/alter_message", "/hike_route/{route_Id}/wish_list").permitAll()
                 .anyRequest()
                 .authenticated()
