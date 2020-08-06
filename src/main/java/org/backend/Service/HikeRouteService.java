@@ -1,18 +1,11 @@
 package org.backend.Service;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.backend.CoordinateDistanceCalculator.Haversine;
-import org.backend.DTOs.HikeRouteSuccessDTO;
-import org.backend.DTOs.MarkerDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.backend.DTOs.*;
-import org.backend.Model.HikeMasterUser;
-import org.backend.Model.HikeRoute;
-import org.backend.Model.KMLfile;
-import org.backend.Model.Pictures;
-import org.backend.Model.QHikeRoute;
+import org.backend.Model.*;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.ImageRepository;
 import org.dozer.DozerBeanMapper;
@@ -21,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -32,17 +24,14 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.*;
-import java.text.DateFormat;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 //TODO: username to creation
 //TODO: TimeStamp
@@ -106,6 +95,9 @@ public class HikeRouteService {
         }
         if (hikeRouteDTO.getRate() != null) {
             booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe((hikeRouteDTO.getRate())));
+        }
+        if(StringUtils.isNotBlank(hikeRouteDTO.getCreatedBy())){
+            booleanBuilder.and(QHikeRoute.hikeRoute.createdBy.like(hikeRouteDTO.getCreatedBy()));
         }
 
 

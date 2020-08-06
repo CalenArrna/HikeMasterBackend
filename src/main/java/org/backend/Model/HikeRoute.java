@@ -5,12 +5,9 @@ import org.backend.CoordinateDistanceCalculator.Haversine;
 import org.locationtech.jts.geom.Coordinate;
 
 import javax.persistence.*;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class HikeRoute {
@@ -21,7 +18,7 @@ public class HikeRoute {
     private String title;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
-    private  List<Message>messages = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
     @Column
     private Integer rate;
     @Column
@@ -64,9 +61,6 @@ public class HikeRoute {
         return pictureUrlList;
     }
 
-    public void setPictureUrlList(List<PictureURL> pictureUrlList) {
-        this.pictureUrlList = pictureUrlList;
-    }
 
     public Long getRouteId() {
         return routeId;
