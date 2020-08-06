@@ -50,7 +50,7 @@ public class MessageController {
     }
 
     @PostMapping(value = "/hike_route/{message_Id}/alter_message")
-    public Message alterMessage(@PathVariable Long message_Id, @RequestBody String text) {
-        return messageService.alterMessage(message_Id, text);
+    public Message alterMessage(@PathVariable Long message_Id, @RequestBody Message message) {
+        return messageService.alterMessage(message_Id, message);
     }
 }

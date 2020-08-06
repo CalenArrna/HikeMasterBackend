@@ -18,7 +18,7 @@ public class Authority implements GrantedAuthority {
     private long id;
     @Column
     private String roleName;
-    @ManyToMany(mappedBy = "authoritySet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "authoritySet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<HikeMasterUser> securityHikeMasterUsers = new HashSet<>();
 
 

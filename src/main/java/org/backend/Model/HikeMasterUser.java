@@ -28,7 +28,7 @@ public class HikeMasterUser implements UserDetails {
     private String fullName;
     @Column
     private String password;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Authority> authoritySet = new HashSet<>();
     @Column
     private Boolean isDeactivated;
@@ -37,8 +37,8 @@ public class HikeMasterUser implements UserDetails {
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Message> userMessageList = new ArrayList<>();
-    @ManyToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
+
+    @ManyToMany(mappedBy = "wisherUsers", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<HikeRoute> hikeRouteWishSet = new HashSet<>();
 
     public Set<HikeRoute> getHikeRouteWishSet() {
@@ -48,6 +48,8 @@ public class HikeMasterUser implements UserDetails {
     public void setHikeRouteWishSet(Set<HikeRoute> hikeRouteWishSet) {
         this.hikeRouteWishSet = hikeRouteWishSet;
     }
+
+
 
     public HikeMasterUser() {
         this.isDeactivated = false;

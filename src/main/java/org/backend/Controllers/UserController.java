@@ -6,6 +6,7 @@ import org.backend.DTOs.RegisterDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
+import org.backend.Repository.HikeRouteRepository;
 import org.backend.Service.UserService;
 import org.backend.Service.ValidationService;
 import org.dozer.DozerBeanMapper;
@@ -25,14 +26,16 @@ public class UserController {
     private UserService service;
     private PasswordEncoder encoder;
     private ValidationService validationService;
+    HikeRouteRepository hikeRouteRepository;
 
     @Autowired
-    public UserController(DozerBeanMapper mapper, UserService service, PasswordEncoder encoder, ValidationService validationService) {
+    public UserController(DozerBeanMapper mapper, UserService service, PasswordEncoder encoder, ValidationService validationService, HikeRouteRepository hikeRouteRepository) {
         this.mapper = mapper;
         this.service = service;
         this.encoder = encoder;
         this.validationService = validationService;
         this.service = service;
+        this.hikeRouteRepository = hikeRouteRepository;
 
     }
 
@@ -84,7 +87,6 @@ public class UserController {
         return hikeMasterUserErrorDTO;
     }
 
-
     @GetMapping(value = "/user_role")
     public String getUser() {
         if (service.getHikeMasterUser() != null) {
@@ -94,5 +96,8 @@ public class UserController {
         }
     }
 
-
+    @PostMapping(value = "/hike_route/{route_Id}/wish_list")
+    public ResponseDTO addRouteToUserWishList(@PathVariable Long route_Id) {
+        return service.addRouteToWishList(route_Id);
+    }
 }

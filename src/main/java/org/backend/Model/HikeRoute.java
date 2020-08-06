@@ -51,6 +51,16 @@ public class HikeRoute {
     @JsonIgnore
     @OneToMany
     private List<PictureURL> pictureUrlList = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<HikeMasterUser> wisherUsers = new HashSet<>();
+
+    public Set<HikeMasterUser> getWisherUsers() {
+        return wisherUsers;
+    }
+
+    public void setWisherUsers(Set<HikeMasterUser> wisherUsers) {
+        this.wisherUsers = wisherUsers;
+    }
 
     public List<PictureURL> getPictureUrlList() {
         return pictureUrlList;

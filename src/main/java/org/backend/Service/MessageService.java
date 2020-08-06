@@ -67,9 +67,9 @@ public class MessageService {
     }
 
     @Transactional
-    public Message alterMessage(Long messageId, String text){
+    public Message alterMessage(Long messageId, Message message){
         if(messageRepository.findById(messageId).isPresent()){
-            messageRepository.findById(messageId).get().setText(text);
+            messageRepository.findById(messageId).get().setText(message.getText());
             return messageRepository.findById(messageId).get();
         }else {
             return null;
