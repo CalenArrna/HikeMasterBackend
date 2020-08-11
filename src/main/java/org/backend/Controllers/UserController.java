@@ -1,9 +1,6 @@
 package org.backend.Controllers;
 
-import org.backend.DTOs.HikeMasterUserErrorDTO;
-import org.backend.DTOs.HikeMasterUserSuccessDTO;
-import org.backend.DTOs.RegisterDTO;
-import org.backend.DTOs.ResponseDTO;
+import org.backend.DTOs.*;
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Repository.HikeRouteRepository;
@@ -12,6 +9,8 @@ import org.backend.Service.ValidationService;
 import org.dozer.DozerBeanMapper;
 import org.passay.PasswordData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -97,5 +96,31 @@ public class UserController {
     @PostMapping(value = "/hike_route/{route_Id}/wish_list")
     public ResponseDTO addRouteToUserWishList(@PathVariable Long route_Id) {
         return service.addRouteToWishList(route_Id);
+    }
+
+    @GetMapping(value = "user/profile")
+    public UserProfileDTO getUserData() {
+        return convertHikeMasterUserToDTO(service.getSignedInHikeMasterUser());
+    }
+
+    private UserProfileDTO convertHikeMasterUserToDTO(HikeMasterUser user) {
+        return mapper.map(user, UserProfileDTO.class);
+    }
+
+    @PostMapping(value = "user/profile/edit")
+    public ResponseDTO editUserProfile(@RequestBody @Valid ProfileEditDTO changes, BindingResult validation) { //TODO: Put in password validation
+        if (!changes.getPassword().equals(changes.getPasswordConfirm())) {
+            HikeMasterUserErrorDTO error = new HikeMasterUserErrorDTO();//TODO: Separate validation from RequestHandling, remove duplication
+            error.setPassword(new String[]{"Passwords don't match!"});
+            return error;
+        }
+
+        if (changes.getPassword() != null) changes.setPassword(encoder.encode(changes.getPassword()));
+
+        if (validation.hasErrors()) {
+            return validationService.validateSpringResults(validation);
+        } else {
+            return service.editProfile(changes);
+        }
     }
 }
