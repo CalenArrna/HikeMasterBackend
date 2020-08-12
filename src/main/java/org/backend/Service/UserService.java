@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService {
 
 
     public Authority getUserAuthority() {
-        List<Authority> resultList = em.createQuery("select a FROM Authority a WHERE a.roleName='USER'", Authority.class).getResultList();
+        List<Authority> resultList = em.createQuery("select a FROM Authority a WHERE a.roleName='ADMIN'", Authority.class).getResultList();
         if (!resultList.isEmpty()) {
             return resultList.get(0);
         } else {
