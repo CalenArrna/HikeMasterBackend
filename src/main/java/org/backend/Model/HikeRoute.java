@@ -7,7 +7,9 @@ import org.locationtech.jts.geom.Coordinate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class HikeRoute {
@@ -48,6 +50,16 @@ public class HikeRoute {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<PictureURL> pictureUrlList = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<HikeMasterUser> wisherUsers = new HashSet<>();
+
+    public Set<HikeMasterUser> getWisherUsers() {
+        return wisherUsers;
+    }
+
+    public void setWisherUsers(Set<HikeMasterUser> wisherUsers) {
+        this.wisherUsers = wisherUsers;
+    }
 
     public LocalDateTime getTourDate() {
         return tourDate;

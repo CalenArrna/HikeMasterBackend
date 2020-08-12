@@ -100,7 +100,6 @@ public class HikeRouteService {
             booleanBuilder.and(QHikeRoute.hikeRoute.createdBy.like(hikeRouteDTO.getCreatedBy()));
         }
 
-
         List<HikeRoute> routes = queryFactory.selectFrom(QHikeRoute.hikeRoute)
                 .where(booleanBuilder)
                 .fetch();
@@ -111,7 +110,6 @@ public class HikeRouteService {
             return routes;
         }
     }
-
 
     @Transactional
     public void addKMLtoHikeRouteOf(Integer routeID, MultipartFile kml) throws XMLStreamException, IOException, ParseException {
@@ -243,6 +241,7 @@ public class HikeRouteService {
         pictures.ifPresent(value -> value.setApprove(pictureDTO.getApprove()));
         return pictures.orElse(null);
     }
+
 
 
     public String getKmlStringOf(Long id) {

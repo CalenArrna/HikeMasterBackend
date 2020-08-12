@@ -1,8 +1,13 @@
 package org.backend.Service;
 
+import org.backend.DTOs.ResponseDTO;
+import org.backend.DTOs.WishListErrorDTO;
+import org.backend.DTOs.WishRouteSuccessDTO;
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
+import org.backend.Model.HikeRoute;
 import org.backend.Repository.HikeMasterUserRepository;
+import org.backend.Repository.HikeRouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,13 +25,14 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-    // @Autowired
-    // PasswordEncoder passwordEncoder;
-
-
-
     @PersistenceContext
     EntityManager em;
+
+    @Autowired
+    HikeRouteRepository hikeRouteRepository;
+
+    @Autowired
+    HikeMasterUserRepository hikeMasterUserRepository;
 
 
     @Override
@@ -44,7 +50,7 @@ public class UserService implements UserDetailsService {
 
     public String getHikeMasterUser() {
         String name = getUserName();
-        if (name != null){
+        if (name != null) {
             return em.createQuery("select u from HikeMasterUser u where u.username = :name", HikeMasterUser.class)
                     .setParameter("name", name)
                     .getResultList()
@@ -76,9 +82,9 @@ public class UserService implements UserDetailsService {
 
     public Authority getUserAuthority() {
         List<Authority> resultList = em.createQuery("select a FROM Authority a WHERE a.roleName='USER'", Authority.class).getResultList();
-        if(!resultList.isEmpty()){
+        if (!resultList.isEmpty()) {
             return resultList.get(0);
-        }else{
+        } else {
             return null;
         }
     }
@@ -89,4 +95,21 @@ public class UserService implements UserDetailsService {
                 .setParameter("lookFor", email)
                 .getResultList().isEmpty();
     }
+
+    @Transactional
+    public ResponseDTO addRouteToWishList(Long route_Id) {
+        if (hikeRouteRepository.findById(route_Id).isPresent()) {
+            HikeRoute hikeRoute = hikeRouteRepository.findById(route_Id).get();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+            HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
+            hikeRoute.getWisherUsers().add(hikeMasterUser);
+            hikeMasterUser.getHikeRouteWishSet().add(hikeRoute);
+            hikeRouteRepository.save(hikeRoute);
+
+            return new WishRouteSuccessDTO(hikeRoute);
+        }
+        return new WishListErrorDTO();
+    }
+
 }

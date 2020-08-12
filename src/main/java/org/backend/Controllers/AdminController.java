@@ -15,8 +15,10 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class AdminController {
+
     HikeRouteService hikeRouteService;
     HikeRouteService messageService;
+
     @Autowired
     HikeRouteRepository hikeRouteRepository;
     @Autowired
