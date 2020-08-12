@@ -1,9 +1,7 @@
 package org.backend.Controllers;
 
-import org.apache.catalina.connector.ClientAbortException;
 import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
-import org.backend.Model.Message;
 import org.backend.Model.PictureURL;
 import org.backend.Repository.HikeMasterUserRepository;
 import org.backend.Repository.HikeRouteRepository;
@@ -50,7 +48,7 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/hike_route")
-    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO)  {
+    public ResponseDTO searchHikeRoute(@RequestBody HikeRouteDTO hikeRouteDTO) {
         List<HikeRoute> routesByParams = hikeRouteService.findHikeRoutesByParams(hikeRouteDTO);
         if (routesByParams.isEmpty()) {
             return new HikeRouteErrorDTO("Hiba van itt is"); //TODO: need valid error message
@@ -96,11 +94,4 @@ public class HikeRouteController {
     }
 
 
-    // @PostMapping(value = "/hike_route/{route_Id}/route_wish")
-    // public String addRouteToUserWishList(@PathVariable Long route_Id){
-    //     if (hikeRouteService.addRouteToWishList(route_Id) != null){
-    //         return "success";
-    //     }
-    //     return "fail";
-    // }
 }

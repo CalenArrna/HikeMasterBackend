@@ -1,6 +1,9 @@
 package org.backend.Controllers;
 
-import org.backend.DTOs.*;
+import org.backend.DTOs.HikeMasterUserErrorDTO;
+import org.backend.DTOs.HikeMasterUserSuccessDTO;
+import org.backend.DTOs.RegisterDTO;
+import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Repository.HikeRouteRepository;
@@ -9,8 +12,6 @@ import org.backend.Service.ValidationService;
 import org.dozer.DozerBeanMapper;
 import org.passay.PasswordData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

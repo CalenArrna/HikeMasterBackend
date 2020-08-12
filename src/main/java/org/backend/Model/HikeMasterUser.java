@@ -49,6 +49,8 @@ public class HikeMasterUser implements UserDetails {
         this.hikeRouteWishSet = hikeRouteWishSet;
     }
 
+
+
     public HikeMasterUser() {
         this.isDeactivated = false;
     }
