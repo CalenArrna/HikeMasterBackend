@@ -111,7 +111,7 @@ public class UserController {
     public ResponseDTO editUserProfile(@RequestBody @Valid ProfileEditDTO changes, BindingResult validation) { //TODO: Put in password validation
         if (!changes.getPassword().equals(changes.getPasswordConfirm())) {
             HikeMasterUserErrorDTO error = new HikeMasterUserErrorDTO();//TODO: Separate validation from RequestHandling, remove duplication
-            error.setPassword(new String[]{"Passwords don't match!"});
+            error.setPasswordConfirm(new String[]{"Passwords don't match!"});
             return error;
         }
 
