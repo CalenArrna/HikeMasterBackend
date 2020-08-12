@@ -9,6 +9,7 @@ public class HikeMasterUserErrorDTO extends ResponseDTO{
     String[] username;
     String[] email;
     String[] password;
+    String[] passwordConfirm;
     String[] fullName;
     
     public HikeMasterUserErrorDTO() {
@@ -35,6 +36,14 @@ public class HikeMasterUserErrorDTO extends ResponseDTO{
         return password;
     }
 
+    public String[] getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String[] passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
     public void setPassword(String[] password) {
         this.password = password;
     }
@@ -51,7 +60,7 @@ public class HikeMasterUserErrorDTO extends ResponseDTO{
         String[] errorMessage = new String[1];
         errorMessage[0] = "password and confirmation password do not match";
         HikeMasterUserErrorDTO passConfError =  new HikeMasterUserErrorDTO();
-        passConfError.setPassword(errorMessage);
+        passConfError.setPasswordConfirm(errorMessage);
         return passConfError;
     }
 
