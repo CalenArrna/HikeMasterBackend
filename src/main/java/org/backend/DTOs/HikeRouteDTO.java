@@ -1,11 +1,12 @@
 package org.backend.DTOs;
 
-import org.backend.Model.PictureURL;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+
 
 public class HikeRouteDTO {
+
     private Long hikeRouteId;
     private String tourType;
     private String routeType;
@@ -16,6 +17,7 @@ public class HikeRouteDTO {
     private String title;
     private  String description;
     private MultipartFile kml;
+    private String createdBy;
 
 
     public MultipartFile getKml() {
@@ -96,5 +98,13 @@ public class HikeRouteDTO {
 
     public void setHikeRouteId(Long hikeRouteId) {
         this.hikeRouteId = hikeRouteId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }
