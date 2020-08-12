@@ -1,9 +1,6 @@
 package org.backend.Controllers;
 
-import org.backend.DTOs.HikeMasterUserErrorDTO;
-import org.backend.DTOs.HikeMasterUserSuccessDTO;
-import org.backend.DTOs.RegisterDTO;
-import org.backend.DTOs.ResponseDTO;
+import org.backend.DTOs.*;
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Repository.HikeRouteRepository;
@@ -124,4 +121,6 @@ public class UserController {
             return service.editProfile(changes);
         }
     }
+
+
 }
