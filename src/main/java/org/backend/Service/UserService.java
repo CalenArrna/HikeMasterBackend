@@ -1,8 +1,6 @@
 package org.backend.Service;
 
-import org.backend.DTOs.ResponseDTO;
-import org.backend.DTOs.WishListErrorDTO;
-import org.backend.DTOs.WishRouteSuccessDTO;
+import org.backend.DTOs.*;
 import org.backend.Model.Authority;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
@@ -59,6 +57,12 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
+    public HikeMasterUser getUserBy(String username) {
+        return em.createQuery("select u from HikeMasterUser u where u.username = :name", HikeMasterUser.class)
+                .setParameter("name", username)
+                .getSingleResult();
+    }
+
     public String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -110,6 +114,31 @@ public class UserService implements UserDetailsService {
             return new WishRouteSuccessDTO(hikeRoute);
         }
         return new WishListErrorDTO();
+    }
+
+    public HikeMasterUser getSignedInHikeMasterUser() {
+        String signedInUsername = getUserName();
+        return getUserBy(signedInUsername);
+    }
+
+    @Transactional
+    public ResponseDTO editProfile(ProfileEditDTO dataToChange) {
+        try {
+            HikeMasterUser originalData = getSignedInHikeMasterUser();
+            if (dataToChange.getFullName() != null) {
+                originalData.setFullName(dataToChange.getFullName());
+            }
+            if (dataToChange.getPassword() != null) {
+                originalData.setPassword(dataToChange.getPassword());
+            }
+            if (dataToChange.getEmail() != null) {
+                originalData.setEmail(dataToChange.getEmail());
+            }
+            em.persist(originalData);
+            return new HikeMasterUserSuccessDTO();
+        } catch (Exception e) {
+            return new HikeMasterUserErrorDTO();
+        }
     }
 
 }
