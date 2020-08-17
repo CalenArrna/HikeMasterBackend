@@ -1,29 +1,22 @@
 package org.backend.DTOs;
 
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-
 import javax.validation.constraints.Size;
 
-public class RegisterDTO extends ProfileEditDTO{
+public abstract class UserData {
+
     @NotNull
-    @Size(min = 3, max = 30)
-    private String username;
+    @Size(min = 5, max = 30)
+    protected String fullName;
 
-   // @NotNull
-   // private Boolean notification;
+    @NotNull
+    @Email
+    protected String email;
 
-    public RegisterDTO() {
-    }
+    protected String password;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    protected String passwordConfirm;
 
     public String getFullName() {
         return fullName;
@@ -40,14 +33,6 @@ public class RegisterDTO extends ProfileEditDTO{
     public void setEmail(String email) {
         this.email = email;
     }
-
-   // public boolean isNotification() {
-   //     return notification;
-   // }
-//
-   // public void setNotification(boolean notification) {
-   //     this.notification = notification;
-   // }
 
     public String getPassword() {
         return password;
