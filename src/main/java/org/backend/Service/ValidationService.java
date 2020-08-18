@@ -1,9 +1,7 @@
 package org.backend.Service;
 
-import org.backend.DTOs.HikeMasterUserErrorDTO;
-import org.backend.DTOs.RegisterDTO;
-import org.backend.DTOs.ResponseDTO;
-import org.backend.DTOs.HikeMasterUserSuccessDTO;
+import org.backend.DTOs.*;
+import org.dozer.DozerBeanMapper;
 import org.passay.PasswordData;
 import org.passay.PasswordValidator;
 import org.passay.RuleResult;
@@ -20,17 +18,21 @@ import java.util.List;
 public class ValidationService {
     private PasswordValidator passwordValidator;
     private UserService userService;
+    private DozerBeanMapper mapper;
 
 
     @Autowired
-    public ValidationService(UserService us, PasswordValidator pv) {
+    public ValidationService(UserService us, PasswordValidator pv, DozerBeanMapper mapper) {
+        this.mapper = mapper;
         this.passwordValidator = pv;
         this.userService = us;
     }
 
 
-    public ResponseDTO validatePassword(PasswordData passwordData) {
+    public ResponseDTO validatePassword(UserData userData) {
+        PasswordData passwordData = mapper.map(userData, PasswordData.class);
         RuleResult validationResult = passwordValidator.validate(passwordData);
+
         if (validationResult.isValid()) {
             return new HikeMasterUserSuccessDTO();
         } else {
@@ -54,8 +56,8 @@ public class ValidationService {
         return !userService.userExists(passwordData.getUsername());
     }
 
-    public boolean emailIsInDatabase(RegisterDTO newUser) {
-        return userService.isEmailExists(newUser.getEmail());
+    public boolean emailIsInDatabase(UserData data) {
+        return userService.isEmailExists(data.getEmail());
     }
 
     public ResponseDTO validateSpringResults(BindingResult bindingResult) {

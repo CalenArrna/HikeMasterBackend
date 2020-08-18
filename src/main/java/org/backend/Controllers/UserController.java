@@ -31,7 +31,6 @@ public class UserController {
         this.service = service;
         this.encoder = encoder;
         this.validationService = validationService;
-        this.service = service;
         this.hikeRouteRepository = hikeRouteRepository;
 
     }
@@ -39,25 +38,39 @@ public class UserController {
     @PostMapping(value = "/registration")
     public ResponseDTO registration(@Valid @RequestBody RegisterDTO newUser, BindingResult bindingResult) {
         Authority userAuthority = service.getUserAuthority();
-        PasswordData passwordData = mapper.map(newUser, PasswordData.class);
-        boolean usernameValid = validationService.validateUsername(passwordData);
-        boolean emailExistInDatabase = validationService.emailIsInDatabase(newUser);
-        ResponseDTO passwordValidation = validationService.validatePassword(passwordData);
+        ResponseDTO response = handleRequestValidations(newUser, bindingResult);
+        if (response.getSuccess()) {
+            return addValidUserToDatabase(newUser, userAuthority);
+        } else {
+            return response;
+        }
+    }
+
+    private ResponseDTO handleRequestValidations(UserData data, BindingResult bindingResult) {
+        PasswordData passwordData = mapper.map(data, PasswordData.class);
         ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
 
-        if (!newUser.getPassword().equals(newUser.getPasswordConfirm())) {
-            return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
-        }
-        if (!usernameValid) {
+        if (data instanceof RegisterDTO && !validationService.validateUsername(passwordData)) {
             return HikeMasterUserErrorDTO.getUsernameAlreadyExistErrorDTO();
         }
-        if (emailExistInDatabase) {
+        if (data.getEmail() != null && validationService.emailIsInDatabase(data)) {
             return HikeMasterUserErrorDTO.getEmailAlreadyExistErrorDTO();
         }
 
-        if (passwordValidation.getSuccess()
+        ResponseDTO passwordValidation = null;
+        if (data.getPassword() != null) {
+            if (!data.getPassword().equals(data.getPasswordConfirm())) {
+                return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
+            } else {
+                passwordValidation = validationService.validatePassword(data);
+            }
+        }
+
+        if (passwordValidation != null && passwordValidation.getSuccess()
                 && springValidation.getSuccess()) {
-            return addValidUserToDatabase(newUser, userAuthority);
+            return new HikeMasterUserSuccessDTO();
+        } else if (passwordValidation == null && springValidation.getSuccess()) {
+            return new HikeMasterUserSuccessDTO();
         } else {
             return collectErrorsToDTO(passwordValidation, springValidation);
         }
@@ -76,7 +89,8 @@ public class UserController {
     private ResponseDTO collectErrorsToDTO(ResponseDTO passwordValidation, ResponseDTO springValidation) {
         HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
         mapper.map(springValidation, hikeMasterUserErrorDTO);
-        if (!passwordValidation.getSuccess()) {
+        if (passwordValidation != null && !passwordValidation.getSuccess()) {
+            if (hikeMasterUserErrorDTO.getSuccess()) hikeMasterUserErrorDTO.setSuccess(false);
             hikeMasterUserErrorDTO.setPassword(((HikeMasterUserErrorDTO) passwordValidation).getPassword());
         }
         return hikeMasterUserErrorDTO;
@@ -107,18 +121,12 @@ public class UserController {
 
     @PostMapping(value = "user/profile/edit")
     public ResponseDTO editUserProfile(@RequestBody @Valid ProfileEditDTO changes, BindingResult validation) { //TODO: Put in password validation
-        if (!changes.getPassword().equals(changes.getPasswordConfirm())) {
-            HikeMasterUserErrorDTO error = new HikeMasterUserErrorDTO();//TODO: Separate validation from RequestHandling, remove duplication
-            error.setPasswordConfirm(new String[]{"Passwords don't match!"});
-            return error;
-        }
-
-        if (changes.getPassword() != null) changes.setPassword(encoder.encode(changes.getPassword()));
-
-        if (validation.hasErrors()) {
-            return validationService.validateSpringResults(validation);
-        } else {
+        ResponseDTO response = handleRequestValidations(changes, validation);
+        if (response.getSuccess()) {
+            if (changes.getPassword() != null) changes.setPassword(encoder.encode(changes.getPassword()));
             return service.editProfile(changes);
+        } else {
+            return response;
         }
     }
 
