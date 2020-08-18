@@ -30,10 +30,6 @@ public class ValidationService {
 
 
     public ResponseDTO validatePassword(UserData userData) {
-        if (!userData.getPassword().equals(userData.getPasswordConfirm())) {
-            return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
-        }
-
         PasswordData passwordData = mapper.map(userData, PasswordData.class);
         RuleResult validationResult = passwordValidator.validate(passwordData);
 

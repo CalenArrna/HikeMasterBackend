@@ -46,7 +46,7 @@ public class UserController {
         }
     }
 
-    private ResponseDTO handleRequestValidations (UserData data, BindingResult bindingResult) {
+    private ResponseDTO handleRequestValidations(UserData data, BindingResult bindingResult) {
         PasswordData passwordData = mapper.map(data, PasswordData.class);
         ResponseDTO springValidation = validationService.validateSpringResults(bindingResult);
 
@@ -58,14 +58,20 @@ public class UserController {
         }
 
         ResponseDTO passwordValidation = null;
-        if (data.getPassword() != null) passwordValidation = validationService.validatePassword(data);
+        if (data.getPassword() != null) {
+            if (!data.getPassword().equals(data.getPasswordConfirm())) {
+                return HikeMasterUserErrorDTO.getPasswordConfirmationErrorDTO();
+            } else {
+                passwordValidation = validationService.validatePassword(data);
+            }
+        }
 
         if (passwordValidation != null && passwordValidation.getSuccess()
                 && springValidation.getSuccess()) {
             return new HikeMasterUserSuccessDTO();
-        }else if (passwordValidation == null && springValidation.getSuccess()) {
+        } else if (passwordValidation == null && springValidation.getSuccess()) {
             return new HikeMasterUserSuccessDTO();
-        }else {
+        } else {
             return collectErrorsToDTO(passwordValidation, springValidation);
         }
     }
@@ -84,6 +90,7 @@ public class UserController {
         HikeMasterUserErrorDTO hikeMasterUserErrorDTO = new HikeMasterUserErrorDTO();
         mapper.map(springValidation, hikeMasterUserErrorDTO);
         if (passwordValidation != null && !passwordValidation.getSuccess()) {
+            if (hikeMasterUserErrorDTO.getSuccess()) hikeMasterUserErrorDTO.setSuccess(false);
             hikeMasterUserErrorDTO.setPassword(((HikeMasterUserErrorDTO) passwordValidation).getPassword());
         }
         return hikeMasterUserErrorDTO;
@@ -114,7 +121,7 @@ public class UserController {
 
     @PostMapping(value = "user/profile/edit")
     public ResponseDTO editUserProfile(@RequestBody @Valid ProfileEditDTO changes, BindingResult validation) { //TODO: Put in password validation
-        ResponseDTO response = handleRequestValidations(changes,validation);
+        ResponseDTO response = handleRequestValidations(changes, validation);
         if (response.getSuccess()) {
             if (changes.getPassword() != null) changes.setPassword(encoder.encode(changes.getPassword()));
             return service.editProfile(changes);
