@@ -47,7 +47,6 @@ public class HikeRoute {
     private String text;
     @Column
     private LocalDateTime tourDate;
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     private List<PictureURL> pictureUrlList = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
