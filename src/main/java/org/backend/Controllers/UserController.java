@@ -120,7 +120,7 @@ public class UserController {
     }
 
     @PostMapping(value = "user/profile/edit")
-    public ResponseDTO editUserProfile(@RequestBody @Valid ProfileEditDTO changes, BindingResult validation) { //TODO: Put in password validation
+    public ResponseDTO editUserProfile(@RequestBody @Valid ProfileEditDTO changes, BindingResult validation) {
         ResponseDTO response = handleRequestValidations(changes, validation);
         if (response.getSuccess()) {
             if (changes.getPassword() != null) changes.setPassword(encoder.encode(changes.getPassword()));

@@ -214,7 +214,7 @@ public class HikeRoute {
         return (int) (max.getZ() - min.getZ());
     }
 
-    public static double calculateTourLength(List<Coordinate> list) { // TODO: make it work with timeStamps
+    public static double calculateTourLength(List<Coordinate> list) {
         List<Coordinate> shortenedList = shortenListToMinutes(list);
         double elevation = 0;
         Coordinate coordinate1 = null;

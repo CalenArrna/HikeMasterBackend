@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: username to creation
-//TODO: TimeStamp
 //TODO: HIkreRoute ERrror messages
 //TODO: Make database store Geometry types
 //TODO: Repair database connection, now have to drop database...
