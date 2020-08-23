@@ -99,7 +99,7 @@ public class ImageService {
         if (hikeRoute.isPresent()) {
             img.setHikeRoute(hikeRoute.get());
             PictureURL pictureURL = new PictureURL();
-            URL https = new URL(" https://hikemasterprog.herokuapp.com/image/get/" + img.getPicturesId());
+            URL https = new URL(" https://hikemaster-bd.herokuapp.com/image/get/" + img.getPicturesId());
             pictureURL.setPictureUrl(https);
             pictureURL.setPictureId(img.getPicturesId());
             hikeRoute.get().getPictureUrlList().add(pictureURL);
