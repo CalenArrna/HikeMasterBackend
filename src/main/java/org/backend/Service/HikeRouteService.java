@@ -36,7 +36,8 @@ import java.util.Optional;
 //TODO: HIkreRoute ERrror messages
 //TODO: Make database store Geometry types
 //TODO: Repair database connection, now have to drop database...
-//TODO: Insert End Point Elevation data!
+
+//TODO: OrganisedTour feature, create Entity, Userlist of WillBeThere & Maybe users, HikeRoute...
 
 
 @Service
@@ -132,11 +133,8 @@ public class HikeRouteService {
 
     @Transactional
     public Long addNewHikeRoute(HikeRouteDTO hikeRouteDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        HikeMasterUser hikeMasterUser = (HikeMasterUser) principal;
         HikeRoute hikeRoute = new HikeRoute();
-        hikeRoute.setCreatedBy(hikeMasterUser.getUsername());
+        hikeRoute.setCreatedBy(hikeRouteDTO.getCreatedBy());
         hikeRoute.setRate(hikeRouteDTO.getRate());
         hikeRoute.setDifficulty(hikeRouteDTO.getDifficulty());
         hikeRoute.setTourType(hikeRouteDTO.getTourType());
