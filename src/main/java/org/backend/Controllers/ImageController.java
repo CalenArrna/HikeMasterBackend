@@ -40,6 +40,4 @@ public class ImageController {
     public List<PictureURL> getAllImageURL() {
         return imageService.getAllNotApprovedImage();
     }
-
-
 }
