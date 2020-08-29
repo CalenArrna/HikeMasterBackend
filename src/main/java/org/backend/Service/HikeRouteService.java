@@ -11,6 +11,7 @@ import org.backend.Repository.ImageRepository;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -245,5 +246,16 @@ public class HikeRouteService {
                 .setParameter("routeID", id)
                 .getSingleResult();
         return kmLfile.getRouteKMLInString();
+    }
+
+    @Transactional
+    public void createOrganisedTour (OrganisedTourDTO DTO) {
+        OrganisedTour tour = new OrganisedTour(DTO.getName(),DTO.getCreatedBy(),DTO.getHikeRouteId(),DTO.getBeginningOfEvent());
+        em.persist(tour);
+
+    }
+
+    public boolean DateTimeIsBeforeNow(LocalDateTime eventDate) {
+        return eventDate.isBefore(LocalDateTime.now());
     }
 }

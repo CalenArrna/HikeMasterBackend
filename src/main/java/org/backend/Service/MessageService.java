@@ -2,7 +2,7 @@ package org.backend.Service;
 
 
 import org.backend.DTOs.MessageErrorDTO;
-import org.backend.DTOs.MessageSuccessDTO;
+import org.backend.DTOs.SuccessDTO;
 import org.backend.DTOs.ResponseDTO;
 import org.backend.Model.HikeMasterUser;
 import org.backend.Model.Message;
@@ -50,7 +50,7 @@ public class MessageService {
             }
             hikeRouteRepository.findById(route_Id).get().getMessages().add(message);
             messageRepository.save(message);
-            return new MessageSuccessDTO();
+            return new SuccessDTO();
         } else {
             return new MessageErrorDTO();
         }
@@ -60,7 +60,7 @@ public class MessageService {
     public ResponseDTO deleteMessage(Long messageId){
         if(messageRepository.findById(messageId).isPresent()){
             messageRepository.deleteById(messageId);
-            return new MessageSuccessDTO();
+            return new SuccessDTO();
         }else{
             return new MessageErrorDTO();
         }

@@ -9,9 +9,12 @@ import org.backend.Repository.MessageRepository;
 import org.backend.Service.HikeRouteService;
 import org.backend.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.xml.stream.XMLStreamException;
 import java.util.List;
 import java.util.Optional;
@@ -93,5 +96,33 @@ public class HikeRouteController {
         return hikeRoute.map(HikeRoute::getPictureUrlList).orElse(null);
     }
 
+    @PostMapping(value = "/createOrganisedHikeRoute")
+    public ResponseDTO createOrganisedRoute(@RequestBody @Valid OrganisedTourDTO organisedTourData,
+                                            BindingResult bindingResult) {
+        if (hikeRouteService.getHikeRouteOf(organisedTourData.getHikeRouteId()) == null) {
+            bindingResult.addError(new FieldError("OrganisedTourDTO", "hikeRouteId", "No such tour in database!"));
+        }
+        if (organisedTourData.getBeginningOfEvent() != null &&
+                hikeRouteService.DateTimeIsBeforeNow(organisedTourData.getBeginningOfEvent())) {
+            bindingResult.addError(new FieldError("OrganisedTourDTO", "beginningOfEvent",
+                    "Event date can not be in the Past!"));
+        }
+        if (bindingResult.hasErrors()) {
+            return OrganisedTourErrorDTO.collectSpringErrorsFrom(bindingResult);
+        } else {
+            hikeRouteService.createOrganisedTour(organisedTourData);
+            return new SuccessDTO();
+        }
+    }
 
+//    @GetMapping(value = "/getOrganisedRoute/{orgRouteId}")
+//    public ResponseDTO getOrganisedRouteOf(@PathVariable(value = "orgRouteId")Long organisedRouteID)  {
+//
+//    }
+//
+//    @GetMapping(value = "/getAllOrganisedRoute")
+//    public ResponseDTO getOrganisedRoutes()  {
+//
+//    }
+    //TODO: Automated Delete of Orgenised Tours / Check it daily
 }
