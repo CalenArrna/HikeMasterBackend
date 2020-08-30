@@ -15,6 +15,7 @@ public class PictureURL {
     private Long pictureId;
     @Column
     private URL pictureUrl;
+
     @JsonIgnore
     @ManyToOne
     private HikeRoute hikeRoute;
