@@ -35,7 +35,7 @@ public class HikeMasterUser implements UserDetails {
    // @Column
    // private Boolean notification;
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Message> userMessageList = new ArrayList<>();
 
     @ManyToMany(mappedBy = "wisherUsers", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

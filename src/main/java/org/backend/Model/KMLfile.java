@@ -15,7 +15,7 @@ public class KMLfile {
     @Lob
     private String routeKMLInString;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
     private HikeRoute hikeRoute;
 

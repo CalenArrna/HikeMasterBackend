@@ -19,7 +19,7 @@ public class HikeRoute {
     @Column
     private String title;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST,orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
     @Column
     private Integer rate;
@@ -48,7 +48,7 @@ public class HikeRoute {
     @Column
     private LocalDateTime tourDate;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true,cascade = CascadeType.PERSIST)
     private List<PictureURL> pictureUrlList = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<HikeMasterUser> wisherUsers = new HashSet<>();

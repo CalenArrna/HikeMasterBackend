@@ -69,9 +69,9 @@ public class UserController {
     private ResponseDTO addValidUserToDatabase(RegisterDTO newUser, Authority userAuthority) {
         HikeMasterUser validHikeMasterUser = mapper.map(newUser, HikeMasterUser.class);
         validHikeMasterUser.setPassword(encoder.encode(validHikeMasterUser.getPassword()));
-        validHikeMasterUser.setRole(userAuthority.getRoleName());
+//        validHikeMasterUser.setRole(userAuthority.getRoleName());
         validHikeMasterUser.getAuthoritySet().add(userAuthority);
-        userAuthority.getSecurityHikeMasterUsers().add(validHikeMasterUser);
+//        userAuthority.getSecurityHikeMasterUsers().add(validHikeMasterUser);
         service.addUserToDatabase(validHikeMasterUser);
         return new HikeMasterUserSuccessDTO(validHikeMasterUser.getRole());
     }
