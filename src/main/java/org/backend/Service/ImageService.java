@@ -92,21 +92,24 @@ public class ImageService {
                 .filter(pictureURL1 -> notApprovedPictureIdList.contains(pictureURL1.getPictureId()))
                 .collect(Collectors.toList());
     }
-    public ResponseDTO imageUpload(Long hikeRouteId,MultipartFile file) throws IOException {
-        Pictures img = new Pictures(file.getOriginalFilename(), file.getContentType(), compressBytes(file.getBytes()));
+    public ResponseDTO imageUpload(Long hikeRouteId,List<MultipartFile> files) throws IOException {
         Optional<HikeRoute> hikeRoute = hikeRouteRepository.findById(hikeRouteId);
-        imageRepository.save(img);
         if (hikeRoute.isPresent()) {
-            img.setHikeRoute(hikeRoute.get());
-            PictureURL pictureURL = new PictureURL();
-            URL https = new URL(" https://hikemasterprog.herokuapp.com/image/get/" + img.getPicturesId());
-            pictureURL.setPictureUrl(https);
-            pictureURL.setPictureId(img.getPicturesId());
-            hikeRoute.get().getPictureUrlList().add(pictureURL);
-            pictureURL.setHikeRoute(hikeRoute.get());
-            urlRepository.save(pictureURL);
-            return new ImageSuccessDTO(img);
+            for (MultipartFile file : files) {
+                Pictures img = new Pictures(file.getOriginalFilename(), file.getContentType(), compressBytes(file.getBytes()));
+                imageRepository.save(img);
+                img.setHikeRoute(hikeRoute.get());
+                PictureURL pictureURL = new PictureURL();
+                URL https = new URL(" https://hikemasterprog.herokuapp.com/image/get/" + img.getPicturesId());
+                pictureURL.setPictureUrl(https);
+                pictureURL.setPictureId(img.getPicturesId());
+                hikeRoute.get().getPictureUrlList().add(pictureURL);
+                pictureURL.setHikeRoute(hikeRoute.get());
+                urlRepository.save(pictureURL);
+            }
+            return new ImageSuccessDTO();
         }
+
 
         return new ImageErrorDTO();
 
@@ -117,7 +120,11 @@ public class ImageService {
         LOGGER.debug("pictureId: {}", picturesId);
         final Optional<Pictures> retrievedImage = imageRepository.findById(picturesId);
         LOGGER.debug("image found");
-        return new ResponseEntity<byte[]>(decompressBytes(retrievedImage.get().getPicByte()), headers, HttpStatus.CREATED);
+        byte[] picByte = new byte[0];
+        if(retrievedImage.isPresent()){
+          picByte  = retrievedImage.get().getPicByte();
+        }
+        return new ResponseEntity<>(decompressBytes(picByte), headers, HttpStatus.CREATED);
 
     }
 }

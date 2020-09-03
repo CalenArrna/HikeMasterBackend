@@ -26,9 +26,12 @@ public class ImageController {
     }
 
     @PostMapping("/image/{hikeRouteId}/upload")
-    public ResponseDTO uploadImage(@PathVariable(value = "hikeRouteId") Long hikeRouteId, @RequestBody MultipartFile file) throws IOException {
-        System.out.println("Original Image Byte Size - " + file.getBytes().length);
-        return imageService.imageUpload(hikeRouteId, file);
+    public ResponseDTO uploadImage(@PathVariable(value = "hikeRouteId") Long hikeRouteId, @RequestBody List<MultipartFile> files) throws IOException {
+        for (MultipartFile file : files) {
+            System.out.println("Original Image Byte Size - " + file.getBytes().length);
+        }
+
+        return imageService.imageUpload(hikeRouteId, files);
     }
 
     @GetMapping(path = {"/image/get/{imageId}"})
