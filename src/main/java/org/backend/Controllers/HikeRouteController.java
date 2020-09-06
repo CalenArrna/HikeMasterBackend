@@ -2,6 +2,7 @@ package org.backend.Controllers;
 
 import org.backend.DTOs.*;
 import org.backend.Model.HikeRoute;
+import org.backend.Model.OrganisedTour;
 import org.backend.Model.PictureURL;
 import org.backend.Repository.HikeMasterUserRepository;
 import org.backend.Repository.HikeRouteRepository;
@@ -96,7 +97,7 @@ public class HikeRouteController {
         return hikeRoute.map(HikeRoute::getPictureUrlList).orElse(null);
     }
 
-    @PostMapping(value = "/createOrganisedHikeRoute")
+    @PostMapping(value = "/OrganisedTour/create")
     public ResponseDTO createOrganisedRoute(@RequestBody @Valid OrganisedTourDTO organisedTourData,
                                             BindingResult bindingResult) {
         if (hikeRouteService.getHikeRouteOf(organisedTourData.getHikeRouteId()) == null) {
@@ -115,14 +116,14 @@ public class HikeRouteController {
         }
     }
 
-//    @GetMapping(value = "/getOrganisedRoute/{orgRouteId}")
-//    public ResponseDTO getOrganisedRouteOf(@PathVariable(value = "orgRouteId")Long organisedRouteID)  {
-//
-//    }
-//
-//    @GetMapping(value = "/getAllOrganisedRoute")
-//    public ResponseDTO getOrganisedRoutes()  {
-//
-//    }
+    @GetMapping(value = "/OrganisedTour/{orgRouteId}")
+    public OrganisedTourDTO getOrganisedRouteOf(@PathVariable(value = "orgRouteId") Long organisedRouteID) {
+        return hikeRouteService.getOrganisedTourOf(organisedRouteID);
+    }
+
+    @GetMapping(value = "/OrganisedTour/getAll")
+    public List<OrganisedTourDTO> getOrganisedRoutes() {
+        return hikeRouteService.allOrganisedTours();
+    }
     //TODO: Automated Delete of Orgenised Tours / Check it daily
 }

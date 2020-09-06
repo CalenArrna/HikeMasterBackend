@@ -8,6 +8,7 @@ import org.backend.DTOs.*;
 import org.backend.Model.*;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.ImageRepository;
+import org.backend.Repository.OrganisedTourRepository;
 import org.dozer.DozerBeanMapper;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class HikeRouteService {
     @PersistenceContext
     EntityManager em;
 
-    private DozerBeanMapper mapper;
+    private final DozerBeanMapper mapper;
 
     public HikeRouteService(DozerBeanMapper mapper) {
         this.mapper = mapper;
@@ -57,6 +58,9 @@ public class HikeRouteService {
 
     @Autowired
     ImageRepository imageRepository;
+
+    @Autowired
+    OrganisedTourRepository organisedTourRepository;
 
     @Transactional
     public HikeRoute getHikeRouteOf(long hikeRouteId) {
@@ -96,7 +100,7 @@ public class HikeRouteService {
         if (hikeRouteDTO.getRate() != null) {
             booleanBuilder.and(QHikeRoute.hikeRoute.rate.loe((hikeRouteDTO.getRate())));
         }
-        if(StringUtils.isNotBlank(hikeRouteDTO.getCreatedBy())){
+        if (StringUtils.isNotBlank(hikeRouteDTO.getCreatedBy())) {
             booleanBuilder.and(QHikeRoute.hikeRoute.createdBy.like(hikeRouteDTO.getCreatedBy()));
         }
 
@@ -240,7 +244,6 @@ public class HikeRouteService {
     }
 
 
-
     public String getKmlStringOf(Long id) {
         KMLfile kmLfile = (KMLfile) em.createQuery("select k from KMLfile k where k.hikeRoute.routeId = :routeID")
                 .setParameter("routeID", id)
@@ -249,13 +252,31 @@ public class HikeRouteService {
     }
 
     @Transactional
-    public void createOrganisedTour (OrganisedTourDTO DTO) {
-        OrganisedTour tour = new OrganisedTour(DTO.getName(),DTO.getCreatedBy(),DTO.getHikeRouteId(),DTO.getBeginningOfEvent());
+    public void createOrganisedTour(OrganisedTourDTO DTO) {
+        OrganisedTour tour = new OrganisedTour(DTO.getName(), DTO.getCreatedBy(), DTO.getHikeRouteId(), DTO.getBeginningOfEvent());
         em.persist(tour);
 
     }
 
     public boolean DateTimeIsBeforeNow(LocalDateTime eventDate) {
         return eventDate.isBefore(LocalDateTime.now());
+    }
+
+    public OrganisedTourDTO getOrganisedTourOf(Long id) {
+        OrganisedTourDTO organisedTour = mapper.map(organisedTourRepository.findById(id).get(),OrganisedTourDTO.class);
+        return organisedTour;
+    }
+
+
+    public List<OrganisedTourDTO> allOrganisedTours () {
+        return convertOrganisedToursToDTO(organisedTourRepository.findAll());
+    }
+
+    private List<OrganisedTourDTO> convertOrganisedToursToDTO (List<OrganisedTour> listToConvert) {
+        ArrayList<OrganisedTourDTO> converted = new ArrayList<>();
+        for (OrganisedTour tour : listToConvert) {
+            converted.add(mapper.map(tour,OrganisedTourDTO.class));
+        }
+        return converted;
     }
 }
