@@ -42,6 +42,7 @@ public class ImageController {
     @GetMapping(value = "/images")
     public List<PictureURL> getAllImageURL() {
         return imageService.getAllNotApprovedImage();
+
     }
 
 
