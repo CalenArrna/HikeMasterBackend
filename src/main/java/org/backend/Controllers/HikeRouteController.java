@@ -10,6 +10,7 @@ import org.backend.Repository.MessageRepository;
 import org.backend.Service.HikeRouteService;
 import org.backend.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.xml.stream.XMLStreamException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,18 @@ public class HikeRouteController {
         this.messageRepository = messageRepository;
         this.hikeMasterUserRepository = hikeMasterUserRepository;
     }
+
+    @Scheduled(cron = "0 59 23 * * *")
+    public void autoDeleteOutdatedOrganisedTours() {
+        List<OrganisedTour> allOrganisedTours = hikeRouteService.getAllOrganisedTours();
+        LocalDateTime now = LocalDateTime.now();
+        for (OrganisedTour tour : allOrganisedTours) {
+            if (tour.getBeginningOfEvent().isBefore(now)) {
+                hikeRouteService.deleteOutdatedOrganisedTourOf(tour.getId());
+            }
+        }
+    }
+
 
     @GetMapping(value = "/hike_route/{route_Id}")
     public ResponseDTO getHikeRouteDetails(@PathVariable Long route_Id) {
@@ -123,7 +137,7 @@ public class HikeRouteController {
 
     @GetMapping(value = "/OrganisedTour/getAll")
     public List<OrganisedTourDTO> getOrganisedRoutes() {
-        return hikeRouteService.allOrganisedTours();
+        return hikeRouteService.allOrganisedToursInDTO();
     }
     //TODO: Automated Delete of Orgenised Tours / Check it daily
 }

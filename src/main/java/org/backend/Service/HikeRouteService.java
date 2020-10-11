@@ -268,8 +268,12 @@ public class HikeRouteService {
     }
 
 
-    public List<OrganisedTourDTO> allOrganisedTours () {
+    public List<OrganisedTourDTO> allOrganisedToursInDTO() {
         return convertOrganisedToursToDTO(organisedTourRepository.findAll());
+    }
+
+    public List<OrganisedTour> getAllOrganisedTours () {
+        return organisedTourRepository.findAll();
     }
 
     private List<OrganisedTourDTO> convertOrganisedToursToDTO (List<OrganisedTour> listToConvert) {
@@ -278,5 +282,9 @@ public class HikeRouteService {
             converted.add(mapper.map(tour,OrganisedTourDTO.class));
         }
         return converted;
+    }
+
+    public void deleteOutdatedOrganisedTourOf(long id) {
+        organisedTourRepository.deleteById(id);
     }
 }
