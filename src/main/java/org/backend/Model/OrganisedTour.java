@@ -26,12 +26,10 @@ public class OrganisedTour {
     private long hikeRouteId;
 
     @Column
-    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     private List<HikeMasterUser> usersWillBeThere;
 
     @Column
-    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     private List<HikeMasterUser> usersMightBeThere;
 
@@ -75,17 +73,11 @@ public class OrganisedTour {
         return usersWillBeThere;
     }
 
-    public void setUsersWillBeThere(List<HikeMasterUser> usersWillBeThere) {
-        this.usersWillBeThere = usersWillBeThere;
-    }
 
     public List<HikeMasterUser> getUsersMightBeThere() {
         return usersMightBeThere;
     }
 
-    public void setUsersMightBeThere(List<HikeMasterUser> usersMightBeThere) {
-        this.usersMightBeThere = usersMightBeThere;
-    }
 
     public String getName() {
         return name;

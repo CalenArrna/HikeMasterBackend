@@ -1,14 +1,17 @@
 package org.backend.Controllers;
 
 import org.backend.DTOs.*;
+import org.backend.Model.HikeMasterUser;
 import org.backend.Model.HikeRoute;
 import org.backend.Model.OrganisedTour;
 import org.backend.Model.PictureURL;
 import org.backend.Repository.HikeMasterUserRepository;
 import org.backend.Repository.HikeRouteRepository;
 import org.backend.Repository.MessageRepository;
+import org.backend.Repository.OrganisedTourRepository;
 import org.backend.Service.HikeRouteService;
 import org.backend.Service.MessageService;
+import org.backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.BindingResult;
@@ -27,18 +30,22 @@ import java.util.Optional;
 public class HikeRouteController {
 
     HikeRouteService hikeRouteService;
+    UserService userService;
     MessageService messageService;
     HikeRouteRepository hikeRouteRepository;
     MessageRepository messageRepository;
     HikeMasterUserRepository hikeMasterUserRepository;
+    OrganisedTourRepository organisedTourRepository;
 
     @Autowired
-    public HikeRouteController(HikeRouteService hikeRouteService, MessageService messageService, HikeRouteRepository hikeRouteRepository, MessageRepository messageRepository, HikeMasterUserRepository hikeMasterUserRepository) {
+    public HikeRouteController(HikeRouteService hikeRouteService,UserService userService, OrganisedTourRepository organisedTourRepository ,MessageService messageService, HikeRouteRepository hikeRouteRepository, MessageRepository messageRepository, HikeMasterUserRepository hikeMasterUserRepository) {
         this.hikeRouteService = hikeRouteService;
         this.messageService = messageService;
         this.hikeRouteRepository = hikeRouteRepository;
         this.messageRepository = messageRepository;
         this.hikeMasterUserRepository = hikeMasterUserRepository;
+        this.userService = userService;
+        this.organisedTourRepository = organisedTourRepository;
     }
 
     @Scheduled(cron = "0 59 23 * * *")
@@ -139,5 +146,31 @@ public class HikeRouteController {
     public List<OrganisedTourDTO> getOrganisedRoutes() {
         return hikeRouteService.allOrganisedToursInDTO();
     }
-    //TODO: Automated Delete of Orgenised Tours / Check it daily
+
+    @PostMapping(value = "/OrganisedTour/addUserToMaybeList")
+    public ResponseDTO addUserToOrganisedTourMaybeListOf (@RequestParam("tourID") Long organisedTourId ) {
+        try {
+            HikeMasterUser user = userService.getSignedInHikeMasterUser();
+            OrganisedTour tour = organisedTourRepository.getOne(organisedTourId);
+            hikeRouteService.addUserToMaybeListOf(tour, user);
+            return new SuccessDTO();
+        } catch (Exception e) {
+            return new ErrorDTO(e.getMessage());
+        }
+    }
+
+    //TODO: Unhandled Anonymous User? Need to implement remove feature, also need to have a get or modify DTO?
+
+    @PostMapping(value = "/OrganisedTour/addUserToWillBeList")
+    public ResponseDTO addUserToOrganisedTourWillBeThereListOf (@RequestParam("tourID") Long organisedTourId ) {
+        try {
+            HikeMasterUser user = userService.getSignedInHikeMasterUser();
+            OrganisedTour tour = organisedTourRepository.getOne(organisedTourId);
+            hikeRouteService.addUserToWillBeListOf(tour, user);
+            return new SuccessDTO();
+        } catch (Exception e) {
+            return new ErrorDTO(e.getMessage());
+        }
+    }
+
 }

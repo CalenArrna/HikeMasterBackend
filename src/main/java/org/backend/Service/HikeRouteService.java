@@ -284,6 +284,18 @@ public class HikeRouteService {
         return converted;
     }
 
+    @Transactional
+    public void addUserToMaybeListOf (OrganisedTour tour, HikeMasterUser userSignedIn) {
+        tour.addUserToMaybeList(userSignedIn);
+        em.persist(tour);
+    }
+
+    @Transactional
+    public void addUserToWillBeListOf (OrganisedTour tour, HikeMasterUser userSignedIn) {
+        tour.addUserToWillBeList(userSignedIn);
+        em.persist(tour);
+    }
+
     public void deleteOutdatedOrganisedTourOf(long id) {
         organisedTourRepository.deleteById(id);
     }
