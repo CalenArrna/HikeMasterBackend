@@ -1,7 +1,5 @@
 package org.backend.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,7 +76,6 @@ public class OrganisedTour {
         return usersMightBeThere;
     }
 
-
     public String getName() {
         return name;
     }
@@ -96,10 +93,18 @@ public class OrganisedTour {
     }
 
     public void addUserToWillBeList (HikeMasterUser user) {
-        usersWillBeThere.add(user);
+        if (!usersWillBeThere.contains(user)) usersWillBeThere.add(user);
+    }
+
+    public void removeUserFromWillBeList (HikeMasterUser user) {
+        usersWillBeThere.remove(user);
     }
 
     public void addUserToMaybeList(HikeMasterUser user) {
-        usersMightBeThere.add(user);
+        if (!usersMightBeThere.contains(user)) usersMightBeThere.add(user);
+    }
+
+    public void removeUserFromMaybeList (HikeMasterUser user) {
+        usersMightBeThere.remove(user);
     }
 }

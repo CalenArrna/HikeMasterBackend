@@ -161,7 +161,8 @@ public class HikeRouteController {
         }
     }
 
-    //TODO: Unhandled Anonymous User? Need to implement remove feature, also need to have a get or modify DTO?
+    //TODO: Need to implement remove user from lists feature
+    //TODO: Should implement a modify organisedTour feature,  also need to have a get or modify DTO?!
 
     @PostMapping(value = "/OrganisedTour/addUserToWillBeList")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -170,6 +171,32 @@ public class HikeRouteController {
             HikeMasterUser user = userService.getSignedInHikeMasterUser();
             OrganisedTour tour = organisedTourRepository.getOne(organisedTourId);
             hikeRouteService.addUserToWillBeListOf(tour, user);
+            return new SuccessDTO();
+        } catch (Exception e) {
+            return new ErrorDTO(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/OrganisedTour/removeUserFromMaybeList")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseDTO removeUserToOrganisedTourMaybeListOf (@RequestParam("tourID") Long organisedTourId ) {
+        try {
+            HikeMasterUser user = userService.getSignedInHikeMasterUser();
+            OrganisedTour tour = organisedTourRepository.getOne(organisedTourId);
+            hikeRouteService.removeUserFromMaybeListOf(tour, user);
+            return new SuccessDTO();
+        } catch (Exception e) {
+            return new ErrorDTO(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/OrganisedTour/removeUserFromWillBeList")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseDTO removeUserToOrganisedTourWillBeThereListOf (@RequestParam("tourID") Long organisedTourId ) {
+        try {
+            HikeMasterUser user = userService.getSignedInHikeMasterUser();
+            OrganisedTour tour = organisedTourRepository.getOne(organisedTourId);
+            hikeRouteService.removeUserFromWillBeListOf(tour, user);
             return new SuccessDTO();
         } catch (Exception e) {
             return new ErrorDTO(e.getMessage());
