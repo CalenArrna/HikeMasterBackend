@@ -14,6 +14,7 @@ import org.backend.Service.MessageService;
 import org.backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -148,6 +149,7 @@ public class HikeRouteController {
     }
 
     @PostMapping(value = "/OrganisedTour/addUserToMaybeList")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseDTO addUserToOrganisedTourMaybeListOf (@RequestParam("tourID") Long organisedTourId ) {
         try {
             HikeMasterUser user = userService.getSignedInHikeMasterUser();
@@ -162,6 +164,7 @@ public class HikeRouteController {
     //TODO: Unhandled Anonymous User? Need to implement remove feature, also need to have a get or modify DTO?
 
     @PostMapping(value = "/OrganisedTour/addUserToWillBeList")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseDTO addUserToOrganisedTourWillBeThereListOf (@RequestParam("tourID") Long organisedTourId ) {
         try {
             HikeMasterUser user = userService.getSignedInHikeMasterUser();
