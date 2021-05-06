@@ -1,5 +1,7 @@
 package org.backend.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,8 +22,9 @@ public class Pictures {
     @Column(name = "picByte", length = 16_000_000)
     @Lob
     private byte[] picByte;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private HikeRoute hikeRoute;
+
 
     public Pictures(String name, String type, byte[] picByte) {
        this.name=name;

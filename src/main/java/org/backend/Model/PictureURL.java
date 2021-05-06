@@ -15,8 +15,9 @@ public class PictureURL {
     private Long pictureId;
     @Column
     private URL pictureUrl;
+
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private HikeRoute hikeRoute;
 
     public Long getUrlId() {
